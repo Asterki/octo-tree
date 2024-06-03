@@ -1,22 +1,34 @@
 from flask import Flask
-from flask_cors import CORS
+import flask_socketio
 
-from waitress import serve
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "secret!"
+
+
+socketio = flask_socketio.SocketIO(app, cors_allowed_origins="*")
+
+
+@socketio.on("connect")
+def test_connect(auth):
+    print("Client connected")
+
+
+@socketio.on("disconnect")
+def test_disconnect():
+    print("Client disconnected")
+
+@socketio.on("random")
+def handle_random(data):
+    print("Received data: ", data)
+    socketio.emit("random", data)
+
+
+if __name__ == "__main__":
+    socketio.run(app)
 
 class App:
-    def __init__(self, port=8080):
+    def __init__(self):
         self.app = Flask(__name__)
-        CORS(self.app)
-
-        self.port = port
-
-    def run(self):
-        @self.app.route('/')
-        def index():
-            return 'Hello, World!'
+        self.app.config["SECRET"] = "secret!"
+        self.socketio = flask_socketio.SocketIO(self.app, cors_allowed_origins="*")
         
-        serve(self.app, host='0.0.0.0', port=self.port)
-        print(f"Server is running on port {self.port}")
-
-app = App()
-app.run()
