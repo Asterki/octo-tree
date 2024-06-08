@@ -4,3 +4,4 @@ venv/
 *.env
 
 database.db
+dist

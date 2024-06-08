@@ -4,17 +4,15 @@ import { Socket, io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import axios from "axios";
-
 function App() {
     const [socket, setSocket] = React.useState<Socket | null>(null);
     const [value, setValue] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         (async () => {
-            let newSocket = io("http://127.0.0.1:5000", {
+            const newSocket = io("http://192.168.0.12:5000", {
                 autoConnect: true,
-            })
+            });
 
             newSocket.on("connect", () => {
                 console.log("Connected to server");
@@ -26,24 +24,28 @@ function App() {
     const random = async () => {
         if (socket === null) return;
 
-        console.log("Sent light")
-        socket.emit("light", { value: value ? 0 : 1});
+        console.log("Sent light");
+        socket.emit("light", { value: value ? "on" : "off" });
         setValue(!value);
-    }
-
+    };
 
     return (
-        <div className="bg-green-500 min-h-screen flex items-center justify-center flex-col">
-            <div className="rounded-full w-32 h-32 bg-white flex items-center justify-center animate-pulse shadow-md">
-                <FontAwesomeIcon
-                    icon={socket !== null ? faCheck : faTimes}
-                    className={`text-6xl ${
-                        socket !== null ? "text-green-500" : "text-red-500"
-                    }`}
-                />
-
+        <div className="bg-gray-800 min-h-screen flex items-center justify-center flex-col">
+            <div className="flex items-center gap-2">
+                <p className="text-white">Connected to host:</p>
+                <div className="rounded-full w-8 h-8 bg-white flex items-center justify-center animate-pulse shadow-md">
+                    <FontAwesomeIcon
+                        icon={socket !== null ? faCheck : faTimes}
+                        className={`text-2xl ${
+                            socket !== null ? "text-green-500" : "text-red-500"
+                        }`}
+                    />
+                </div>
             </div>
-            <button className="pointer-events-auto my-2 bg-white rounded-md shadow-md p-2 " onClick={random}>random</button>
+            <div className="flex items-center justify-center gap-2">
+                <label htmlFor="Turn on light" className="text-white">Turn on light</label>
+                <input type="checkbox" defaultChecked={value} onClick={random} />
+            </div>
         </div>
     );
 }
