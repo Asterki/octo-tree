@@ -8,6 +8,7 @@ import axios from "axios";
 
 function App() {
     const [socket, setSocket] = React.useState<Socket | null>(null);
+    const [value, setValue] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         (async () => {
@@ -24,7 +25,10 @@ function App() {
 
     const random = async () => {
         if (socket === null) return;
-        socket.emit("random", { value: Math.random() });
+
+        console.log("Sent light")
+        socket.emit("light", { value: value ? 0 : 1});
+        setValue(!value);
     }
 
 
@@ -39,7 +43,7 @@ function App() {
                 />
 
             </div>
-            <button className="my-2 bg-white rounded-md shadow-md p-2" onClick={random}>random</button>
+            <button className="pointer-events-auto my-2 bg-white rounded-md shadow-md p-2 " onClick={random}>random</button>
         </div>
     );
 }
