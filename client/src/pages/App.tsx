@@ -10,7 +10,7 @@ function App() {
 
     React.useEffect(() => {
         (async () => {
-            const newSocket = io("http://192.168.0.12:5000", {
+            const newSocket = io("http://localhost:5000", {
                 autoConnect: true,
             });
 
@@ -29,6 +29,13 @@ function App() {
         setValue(!value);
     };
 
+    const random2 = async () => {
+        if (socket === null) return;
+
+        console.log("Sent sound");
+        socket.emit("sound", { value: 1 });
+    };
+
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center flex-col">
             <div className="flex items-center gap-2">
@@ -43,9 +50,16 @@ function App() {
                 </div>
             </div>
             <div className="flex items-center justify-center gap-2">
-                <label htmlFor="Turn on light" className="text-white">Turn on light</label>
-                <input type="checkbox" defaultChecked={value} onClick={random} />
+                <label htmlFor="Turn on light" className="text-white">
+                    Turn on light
+                </label>
+                <input
+                    type="checkbox"
+                    defaultChecked={value}
+                    onClick={random}
+                />
             </div>
+            <button onClick={random2} className="mt-2 bg-white rounded-md shadow-md p-2 text">Play sound</button>
         </div>
     );
 }
