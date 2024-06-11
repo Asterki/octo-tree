@@ -6,7 +6,6 @@ import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
     const [socket, setSocket] = React.useState<Socket | null>(null);
-    const [value, setValue] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         (async () => {
@@ -21,20 +20,15 @@ function App() {
         })();
     }, []);
 
-    const random = async () => {
+    const update = async (relay: number, value: number) => {
         if (socket === null) return;
-
-        console.log("Sent light");
-        socket.emit("light", { value: value ? "on" : "off" });
-        setValue(!value);
+        socket.emit("relay", { relay: relay, value: value })
     };
 
-    const random2 = async () => {
+    const searchAngle = async () => {
         if (socket === null) return;
-
-        console.log("Sent sound");
-        socket.emit("sound", { value: 1 });
-    };
+        socket.emit("angle", { value: 1 })
+    }
 
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center flex-col">
@@ -51,15 +45,66 @@ function App() {
             </div>
             <div className="flex items-center justify-center gap-2">
                 <label htmlFor="Turn on light" className="text-white">
-                    Turn on light
+                    Relay 1
                 </label>
                 <input
                     type="checkbox"
-                    defaultChecked={value}
-                    onClick={random}
+                    defaultChecked={true}
+                    onClick={(event) => {
+                        update(1, !event.currentTarget.checked ? 1 : 0)
+                    }}
                 />
             </div>
-            <button onClick={random2} className="mt-2 bg-white rounded-md shadow-md p-2 text">Play sound</button>
+
+            <div className="flex items-center justify-center gap-2">
+                <label htmlFor="Turn on light" className="text-white">
+                    Relay 2
+                </label>
+                <input
+                    type="checkbox"
+                    defaultChecked={true}
+                    onClick={(event) => {
+                        update(2, !event.currentTarget.checked ? 1 : 0)
+                    }}
+                />
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+                <label htmlFor="Turn on light" className="text-white">
+                    Relay 3
+                </label>
+                <input
+                    type="checkbox"
+                    defaultChecked={true}
+                    onClick={(event) => {
+                        update(3, !event.currentTarget.checked ? 1 : 0)
+                    }}
+                />
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+                <label htmlFor="Turn on light" className="text-white">
+                    Relay 4
+                </label>
+                <input
+                    type="checkbox"
+                    defaultChecked={true}
+                    onClick={(event) => {
+                        update(4, !event.currentTarget.checked ? 1 : 0)
+                    }}
+                />
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+                <button
+                    onClick={() => {
+                        searchAngle()
+                    }}
+                    className="bg-white text-gray-800 px-4 py-2 rounded-md"
+                >
+                    Search Angle
+                </button>
+            </div>
         </div>
     );
 }
