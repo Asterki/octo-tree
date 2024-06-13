@@ -1,6 +1,5 @@
 import flask_socketio
 import pyfirmata
-import threading
 import time
 
 board = pyfirmata.Arduino("/dev/ttyACM1")

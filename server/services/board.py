@@ -1,7 +1,4 @@
-import threading
-
 import pyfirmata
-import time
 
 class BoardService:
     instance = None
@@ -12,8 +9,13 @@ class BoardService:
         self.board.iterate()
         self.it.start()
 
-        self.led = self.board.get_pin('d:13:o')
-        self.button = self.board.get_pin('d:2:i')
+        self.sensors = [
+            self.board.get_pin('a:1:i'),
+            self.board.get_pin('a:2:i'),
+            self.board.get_pin('a:3:i'),
+            self.board.get_pin('a:4:i'),
+            self.board.get_pin('a:5:i'),
+        ]
         
         if BoardService.instance is None:
             BoardService.instance = self
@@ -29,10 +31,8 @@ class BoardService:
     def write_pin(self, pin, value):
         self.board.digital[pin].write(value)
         
-    def read_pin(self,):
-        return self.button.read()
+    def read_sensor(self, sensor):
+        self.sensors[sensor].enable_reporting()
+        return self.sensors[sensor].read()
 
-    def start(self):
-        t = threading.Thread(target=self.blink)
-        t.start()
         
