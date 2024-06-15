@@ -6,6 +6,7 @@ from services.database import DatabaseService
 
 class App:
     def __init__(self):
+        # Call the services 
         self.app = Flask(__name__, static_folder='dist')
         self.socket_server = SocketService(self.app).get_instance(self.app)
         self.database = DatabaseService().get_instance()
@@ -14,6 +15,7 @@ class App:
         self.start_app()
         
     def register_routes(self):
+        # Load static files from the client
         @self.app.route('/', defaults={'path': ''})
         @self.app.route('/<path:path>')
         def serve(path):
@@ -22,6 +24,7 @@ class App:
             else:
                 return send_from_directory(self.app.static_folder, 'index.html')
         
+    # Run the app
     def start_app(self):
         self.app.run()
         
