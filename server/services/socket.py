@@ -1,8 +1,6 @@
 import flask_socketio
-import pyfirmata
 import time
 
-from services.database import DatabaseService
 from services.board import BoardService
 
 
