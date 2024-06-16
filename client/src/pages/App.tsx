@@ -2,36 +2,37 @@ import * as React from "react";
 import { Socket, io } from "socket.io-client";
 
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 import faker from "faker";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faPerson, faQuestion, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCheck,
+    faPerson,
+    faQuestion,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    BarElement,
+    PointElement,
+    LineElement,
     Title,
     Tooltip,
     Legend
-);
+  );
 
 export const options = {
-    plugins: {
-        title: {
-            display: true,
-            text: "Stacked dataset - Production",
-        },
-    },
     responsive: true,
     interaction: {
         mode: "index" as const,
@@ -47,37 +48,36 @@ export const options = {
     },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const labels = ["Jun 10th", "Jun 11th", "Jun 12th", "Jun 13th", "Jun 14th", "Jun 15th", "Jun 16th"];
 
-export const data = {
+export const temperature_data = {
     labels,
     datasets: [
         {
-            label: "Dataset 1",
+            label: "Historical Data",
             data: labels.map(() =>
-                faker.datatype.number({ min: -1000, max: 1000 })
+                faker.datatype.number({ min: 0, max: 50 })
             ),
             backgroundColor: "rgb(255, 99, 132)",
             stack: "Stack 0",
         },
+    ],
+};
+
+export const humidity_data = {
+    labels,
+    datasets: [
         {
-            label: "Dataset 2",
+            label: "Historical Data",
             data: labels.map(() =>
-                faker.datatype.number({ min: -1000, max: 1000 })
+                faker.datatype.number({ min: 0, max: 100 })
             ),
-            backgroundColor: "rgb(75, 192, 192)",
+            backgroundColor: "rgb(255, 99, 132)",
             stack: "Stack 0",
-        },
-        {
-            label: "Dataset 3",
-            data: labels.map(() =>
-                faker.datatype.number({ min: -1000, max: 1000 })
-            ),
-            backgroundColor: "rgb(53, 162, 235)",
-            stack: "Stack 1",
         },
     ],
 };
+
 
 function App() {
     const [socket, setSocket] = React.useState<Socket | null>(null);
@@ -118,8 +118,8 @@ function App() {
             </div>
 
             <main className="grid grid-cols-12 grid-rows-12 gap-4 p-4">
-                <section className="flex flex-col items-center justify-center gap-2 col-span-2 row-span-1 rounded-md shadow-lg bg-white p-4">
-                    <p className="text-2xl">Connected to host:</p>
+                <section className="flex flex-col items-center justify-start gap-2 col-span-2 row-span-1 rounded-md shadow-lg bg-white p-4">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Connection Status</h1>
                     <div
                         className={`${
                             socket == null ? "bg-red-500" : "bg-green-500"
@@ -141,7 +141,7 @@ function App() {
                     </button>
                 </section>
 
-                <section className="flex flex-col items-center justify-center bg-white shadow-lg rounded-md p-2 row-start-2 col-span-2">
+                <section className="flex flex-col items-center justify-start bg-white shadow-lg rounded-md p-2 row-start-2 col-span-2">
                     <h1 className="text-2xl font-bold text-center">
                         IoT Relay Control
                     </h1>
@@ -190,19 +190,29 @@ function App() {
                     </div>
                 </section>
 
-                <section className="flex gap-2">
+                <section className="flex flex-col items-center justify-start gap-2 col-span-2 bg-white shadow-lg rounded-md p-4">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Panel Angle Control</h1>
+
                     <button
                         onClick={() => {
                             searchAngle();
                         }}
-                        className="px-4 py-2 rounded-md bg-white shadow-md"
+                        className="px-4 py-2 rounded-md bg-slate-100 shadow-md"
+                    >
+                        Search Angle
+                    </button>
+                    <button
+                        onClick={() => {
+                            searchAngle();
+                        }}
+                        className="px-4 py-2 rounded-md bg-slate-100 shadow-md"
                     >
                         Search Angle
                     </button>
                 </section>
 
                 <section className="flex flex-col justify-between col-start-6 row-start-1 row-span-2 col-span-2 bg-white shadow-lg rounded-md p-4">
-                    <h1 className="text-2xl text-center">Add Routine</h1>
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Add Routine</h1>
 
                     <div>
                         <label htmlFor="Routine Name">Routine Name</label>
@@ -240,7 +250,7 @@ function App() {
                 </section>
 
                 <section className="flex flex-col col-start-8 row-span-2 col-span-5 bg-white shadow-lg rounded-md p-2 ">
-                    <h1 className="text-2xl text-center">Routines</h1>
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Routines</h1>
 
                     <div className="flex justify-between items-center p-4 bg-slate-100 rounded-md my-2">
                         <p className="text-lg">Routine 1</p>
@@ -253,7 +263,13 @@ function App() {
                 <section className="items"></section>
 
                 <section className="col-start-1 row-start-3 col-span-3 row-span-2 bg-white rounded-md shadow-lg p-2">
-                    <Bar options={options} data={data} />;
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Temperature</h1>
+                    <Line options={options} data={temperature_data} />
+                </section>
+
+                <section className="col-start-4 row-start-3 col-span-3 row-span-2 bg-white rounded-md shadow-lg p-2">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">Humidity</h1>
+                    <Line options={options} data={humidity_data} />
                 </section>
 
                 <section className="col-start-9 row-start-3 col-span-4 row-span-1 bg-white rounded-md shadow-lg p-2">
