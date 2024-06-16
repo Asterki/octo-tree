@@ -7,7 +7,7 @@ from services.board import BoardService
 class SocketService:
     instance = None
 
-    def _init_(self, app):  # The app is passed as an argument, flask app instance
+    def __init__(self, app):  # The app is passed as an argument, flask app instance
         self.app = app
         self.socketio = flask_socketio.SocketIO(self.app, cors_allowed_origins="*")
 
