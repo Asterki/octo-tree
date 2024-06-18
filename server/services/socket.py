@@ -1,8 +1,7 @@
 import flask_socketio
 import time
 
-from services.board import BoardService
-
+# from services.board import BoardService
 
 class SocketService:
     instance = None
@@ -33,27 +32,21 @@ class SocketService:
             print("Client disconnected")
 
     def register_client_events(self):
-        @self.socketio.on("relay")
-        def relays(data):
-            relays = [2, 3, 4, 5]
-            BoardService().get_instance().write_pin(
-                relays[data["relay"] - 1], data["value"]
-            )
+        # Related to controlling the board
+        # @self.socketio.on("relay")
+        # def relays(data):
+        #     board.write_relay(data["relay"] - 1, data["value"])
 
-        @self.socketio.on("angle")
-        def angle(data):
-            self.servo_pin.write(0)
-            time.sleep(0.1)
+        # @self.socketio.on("angle")
+        # def angle(data):
+        #     self.servo_pin.write(0)
+        #     time.sleep(0.1)
 
-            for i in range(0, 15, 30, 45, 60, 75, 90):
-                print(i)
-                self.servo_pin.write(i)
-                time.sleep(0.5)
-
-        @self.socketio.on("date")
-        def datething(data):
-            global_date = data
-            print(global_date)
+        #     for i in range(0, 15, 30, 45, 60, 75, 90):
+        #         print(i)
+        #         self.servo_pin.write(i)
+        #         time.sleep(0.5)
+        pass
 
     def start_socket_server(self):
         self.socketio.run(self.app)

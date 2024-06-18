@@ -4,12 +4,12 @@ import os
 from services.socket import SocketService
 from services.database import DatabaseService
 
+database = DatabaseService().get_instance()
 class App:
     def __init__(self):
         # Call the services 
         self.app = Flask(__name__, static_folder='dist')
         self.socket_server = SocketService(self.app).get_instance(self.app)
-        self.database = DatabaseService().get_instance()
         
         self.register_routes()
         self.start_app()
@@ -23,6 +23,11 @@ class App:
                 return send_from_directory(self.app.static_folder, path)
             else:
                 return send_from_directory(self.app.static_folder, 'index.html')
+            
+        @self.app.route('/api/routines', methods=['GET'])
+        def get_routines():
+            routines = database.get("routines")
+            return {"routines": routines}
         
     # Run the app
     def start_app(self):

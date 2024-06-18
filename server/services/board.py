@@ -2,34 +2,43 @@ import pyfirmata
 import time
 import threading
 
+board = pyfirmata.Arduino('/dev/ttyACM1')
+it = pyfirmata.util.Iterator(board)
+
+sensors = [
+    board.get_pin('a:1:i'),
+    board.get_pin('a:2:i'),
+    board.get_pin('a:3:i'),
+    board.get_pin('a:4:i'),
+    board.get_pin('a:5:i'),
+]
+
+servos = [
+    board.get_pin('d:6:s'),
+    board.get_pin('d:7:s'),
+    board.get_pin('d:8:s'),
+    board.get_pin('d:9:s'),
+    board.get_pin('d:10:s'),
+]
+
+relay_pins = [
+    board.get_pin('d:2:o'),
+    board.get_pin('d:3:o'),
+    board.get_pin('d:4:o'),
+    board.get_pin('d:5:o'),
+]
+
 class BoardService:
     instance = None
     
     def __init__(self):
         # Connect to the board
-        self.board = pyfirmata.Arduino('/dev/ttyACM0')
-        self.it = pyfirmata.util.Iterator(self.board)
         
         # Start the iterator
-        self.board.iterate()
-        self.it.start()
+        # board.iterate()
+        #self.it.start()
 
-        # Define de Ax pins
-        self.sensors = [
-            self.board.get_pin('a:1:i'),
-            self.board.get_pin('a:2:i'),
-            self.board.get_pin('a:3:i'),
-            self.board.get_pin('a:4:i'),
-            self.board.get_pin('a:5:i'),
-        ]
         
-        self.servos = [
-            self.board.get_pin('d:6:s'),
-            self.board.get_pin('d:7:s'),
-            self.board.get_pin('d:8:s'),
-            self.board.get_pin('d:9:s'),
-            self.board.get_pin('d:10:s'),
-        ]
         
         # Singleton
         if BoardService.instance is None:
@@ -41,14 +50,18 @@ class BoardService:
         return self.instance
     
     def get_board(self):
-        return self.board
+        return board
 
     def write_pin(self, pin, value):
-        self.board.digital[pin].write(value)  # Write the value to the pin
+        board.digital[pin].write(value)  # Write the value to the pin
         
     def read_sensor(self, sensor):
         self.sensors[sensor].enable_reporting()  # Enable the reporting
         return self.sensors[sensor].read()  # Read the value
+    
+    def write_relay(self, relay, value):
+        print(relay, value)
+        relay_pins[relay].write(value)  # Write the value to the relay
 
     def move_servo(self, servo, angle, speed):
         # Move the servo

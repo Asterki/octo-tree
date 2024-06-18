@@ -4,7 +4,7 @@ class DatabaseService:
     instance = None
 
     def __init__(self):
-        self.conn = sqlite3.connect('database.db')
+        self.conn = sqlite3.connect('database.db', check_same_thread=False)
         self.cursor = self.conn.cursor()
         self.create_tables()
 
@@ -20,14 +20,11 @@ class DatabaseService:
     def create_tables(self):
         try:
             self.cursor.execute('''
-                        CREATE TABLE IF NOT EXISTS employees (
+                        CREATE TABLE IF NOT EXISTS routines (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
-                            hired_since TEXT NOT NULL,
-                            admin BOOLEAN NOT NULL,
-                            phone_number TEXT NOT NULL,
-                            movies_sold INTEGER NOT NULL,
-                            password TEXT NOT NULL
+                            time TEXT NOT NULL,
+                            repeat TEXT NOT NULL
                         )
                     ''')
 

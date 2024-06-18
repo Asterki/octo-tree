@@ -1,18 +1,19 @@
 import * as React from "react";
 import { Socket, io } from "socket.io-client";
+import axios from "axios"
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import faker from "faker";
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { faker } from "@faker-js/faker";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -30,7 +31,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend
-  );
+);
 
 export const options = {
     responsive: true,
@@ -48,16 +49,22 @@ export const options = {
     },
 };
 
-const labels = ["Jun 10th", "Jun 11th", "Jun 12th", "Jun 13th", "Jun 14th", "Jun 15th", "Jun 16th"];
+const labels = [
+    "Jun 10th",
+    "Jun 11th",
+    "Jun 12th",
+    "Jun 13th",
+    "Jun 14th",
+    "Jun 15th",
+    "Jun 16th",
+];
 
 export const temperature_data = {
     labels,
     datasets: [
         {
             label: "Historical Data",
-            data: labels.map(() =>
-                faker.datatype.number({ min: 0, max: 50 })
-            ),
+            data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
             backgroundColor: "rgb(255, 99, 132)",
             stack: "Stack 0",
         },
@@ -69,18 +76,19 @@ export const humidity_data = {
     datasets: [
         {
             label: "Historical Data",
-            data: labels.map(() =>
-                faker.datatype.number({ min: 0, max: 100 })
-            ),
+            data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
             backgroundColor: "rgb(255, 99, 132)",
             stack: "Stack 0",
         },
     ],
 };
 
-
 function App() {
     const [socket, setSocket] = React.useState<Socket | null>(null);
+
+    const [routines, setRoutines] = React.useState<
+        { name: string; time: string; action: string }[]
+    >([]);
 
     React.useEffect(() => {
         (async () => {
@@ -91,12 +99,24 @@ function App() {
             newSocket.on("connect", () => {
                 console.log("Connected to server");
                 setSocket(newSocket);
+
+                newSocket.on("routines", (data) => {
+                    console.log(data);
+                    setRoutines(data);
+                });
             });
 
             newSocket.on("disconnect", () => {
                 console.log("Disconnected from server");
                 setSocket(null);
             });
+
+            const response = await axios({
+                url: "http://localhost:5000/api/routines",
+                method: "get"
+            })
+
+            setRoutines(response.data)
         })();
     }, []);
 
@@ -110,16 +130,23 @@ function App() {
         socket.emit("angle", { value: 1 });
     };
 
+    const addRoutine = async () => {
+        if (socket === null) return;
+        socket.emit("routine", { value: 1 });
+    };
+
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
             {/* Navbar */}
-            <div className="bg-emerald-700 shadow-md text-white col-span-full row-span-1 flex items-center justify-between px-4">
+            <div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4">
                 <h1 className="text-3xl font-bold p-4">Octo Tree</h1>
             </div>
 
-            <main className="grid grid-cols-12 grid-rows-12 gap-4 p-4">
+            <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
                 <section className="flex flex-col items-center justify-start gap-2 col-span-2 row-span-1 rounded-md shadow-lg bg-white p-4">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Connection Status</h1>
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Connection Status
+                    </h1>
                     <div
                         className={`${
                             socket == null ? "bg-red-500" : "bg-green-500"
@@ -191,7 +218,9 @@ function App() {
                 </section>
 
                 <section className="flex flex-col items-center justify-start gap-2 col-span-2 bg-white shadow-lg rounded-md p-4">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Panel Angle Control</h1>
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Panel Angle Control
+                    </h1>
 
                     <button
                         onClick={() => {
@@ -211,8 +240,10 @@ function App() {
                     </button>
                 </section>
 
-                <section className="flex flex-col justify-between col-start-6 row-start-1 row-span-2 col-span-2 bg-white shadow-lg rounded-md p-4">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Add Routine</h1>
+                <section className="flex flex-col justify-between col-start-9 row-start-1 row-span-2 col-span-2 bg-white shadow-lg rounded-md p-4">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Add Routine
+                    </h1>
 
                     <div>
                         <label htmlFor="Routine Name">Routine Name</label>
@@ -237,10 +268,10 @@ function App() {
                             id=""
                             className="bg-slate-100 p-2 rounded-md mb-2 w-full"
                         >
-                            <option value=""></option>
-                            <option value=""></option>
-                            <option value=""></option>
-                            <option value=""></option>
+                            <option value="">Turn Relay 1 On</option>
+                            <option value="">Turn Relay 2 On</option>
+                            <option value="">Turn Relay 3 On</option>
+                            <option value="">Turn Relay 4 On</option>
                         </select>
                     </div>
 
@@ -249,38 +280,55 @@ function App() {
                     </button>
                 </section>
 
-                <section className="flex flex-col col-start-8 row-span-2 col-span-5 bg-white shadow-lg rounded-md p-2 ">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Routines</h1>
+                <section className="flex flex-col col-start-5 row-span-2 col-span-4 bg-white shadow-lg rounded-md p-2 ">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Routines
+                    </h1>
 
-                    <div className="flex justify-between items-center p-4 bg-slate-100 rounded-md my-2">
-                        <p className="text-lg">Routine 1</p>
-                        <button className="bg-red-500 p-2 text-white rounded-md">
-                            Delete
-                        </button>
-                    </div>
+                    {routines.map((routine) => (
+                        <div className="flex justify-between items-center p-4 bg-slate-100 rounded-md my-2">
+                            <div>
+                                <p className="text-lg">{routine.name}</p>
+                                <p className="">20:30 Every Day</p>
+                            </div>
+                            <button className="bg-red-400 p-2 text-white rounded-md">
+                                Delete
+                            </button>
+                        </div>
+                    ))}
+
+                    {routines.length == 0 ? (
+                        <div className="text-center">No routines set</div>
+                    ) : (
+                        ""
+                    )}
                 </section>
 
                 <section className="items"></section>
 
-                <section className="col-start-1 row-start-3 col-span-3 row-span-2 bg-white rounded-md shadow-lg p-2">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Temperature</h1>
+                <section className="col-start-1 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Temperature
+                    </h1>
                     <Line options={options} data={temperature_data} />
                 </section>
 
-                <section className="col-start-4 row-start-3 col-span-3 row-span-2 bg-white rounded-md shadow-lg p-2">
-                    <h1 className="text-slate-700 text-2xl text-center font-bold">Humidity</h1>
+                <section className="col-start-5 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
+                    <h1 className="text-slate-700 text-2xl text-center font-bold">
+                        Humidity
+                    </h1>
                     <Line options={options} data={humidity_data} />
                 </section>
 
-                <section className="col-start-9 row-start-3 col-span-4 row-span-1 bg-white rounded-md shadow-lg p-2">
-                    <div className="flex gap-2 h-full">
-                        <button className="bg-slate-200 rounded-md w-1/2 h-full">
+                <section className="col-start-3 row-start-2 col-span-2 row-span-1 bg-white rounded-md shadow-lg p-2">
+                    <div className="flex flex-col gap-2 h-full">
+                        <button className="bg-slate-200 rounded-md h-full">
                             <FontAwesomeIcon
                                 icon={faPerson}
                                 className="text-3xl"
                             />
                         </button>
-                        <button className="bg-slate-200 rounded-md w-1/2 h-full">
+                        <button className="bg-slate-200 rounded-md h-full">
                             <FontAwesomeIcon
                                 icon={faQuestion}
                                 className="text-3xl"
