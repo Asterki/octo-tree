@@ -7,6 +7,7 @@ https://github.com/Asterki/octo-tree
 
 
 from flask import Flask
+from flask_cors import CORS
 
 from services.socket import SocketService
 from services.board import BoardService
@@ -15,6 +16,8 @@ from routes.router import RouterService
 class App:
     def __init__(self):
         self.app = Flask(__name__, static_folder='dist')
+        CORS(self.app)
+        
         self.register_services()
         
     def register_services(self):

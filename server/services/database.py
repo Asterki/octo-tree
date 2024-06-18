@@ -31,7 +31,7 @@ class DatabaseService:
         except Exception as e:
             print(e)
 
-    def get(self, table, columns="*", where=None, doc_count=0, doc_offset=0):
+    def get(self, table: str, columns="*", where=None, doc_count=0, doc_offset=0):
         query = f"SELECT {columns} FROM {table}"
         if where:
             query += f" WHERE {where}"
