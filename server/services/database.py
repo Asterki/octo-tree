@@ -24,6 +24,7 @@ class DatabaseService:
                         CREATE TABLE IF NOT EXISTS routines (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
+                            action TEXT NOT NULL,
                             time TEXT NOT NULL,
                             repeat TEXT NOT NULL
                         )
