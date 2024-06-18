@@ -1,52 +1,28 @@
-import flask_socketio
-import time
-
-# from services.board import BoardService
+from flask_socketio import SocketIO
 
 class SocketService:
-    instance = None
+    _instance = None
+    
+    @classmethod
+    def get_instance(cls, app):
+        if cls._instance is None:
+            cls._instance = SocketService(app)
+        return cls._instance
 
-    def __init__(self, app):  # The app is passed as an argument, flask app instance
+    def __init__(self, app):
         self.app = app
-        self.socketio = flask_socketio.SocketIO(self.app, cors_allowed_origins="*")
-
-        # Register events
+        self.socketio = SocketIO(self.app, cors_allowed_origins="*", logger=False, engineio_logger=False)
         self.register_server_events()
-        self.register_client_events()
-
-        if SocketService.instance is None:
-            SocketService.instance = self
-
-    def get_instance(self, app):
-        if self.instance is None:
-            self.instance = SocketService(app)
-        return self.instance
 
     def register_server_events(self):
-        @self.socketio.on("connect")
-        def test_connect(auth):
-            print("Client connected")
+        self.socketio.on("connect")(self.test_connect)
+        self.socketio.on("disconnect")(self.test_disconnect)
 
-        @self.socketio.on("disconnect")
-        def test_disconnect():
-            print("Client disconnected")
+    def test_connect(self, auth):
+        print("Client connected")
 
-    def register_client_events(self):
-        # Related to controlling the board
-        # @self.socketio.on("relay")
-        # def relays(data):
-        #     board.write_relay(data["relay"] - 1, data["value"])
-
-        # @self.socketio.on("angle")
-        # def angle(data):
-        #     self.servo_pin.write(0)
-        #     time.sleep(0.1)
-
-        #     for i in range(0, 15, 30, 45, 60, 75, 90):
-        #         print(i)
-        #         self.servo_pin.write(i)
-        #         time.sleep(0.5)
-        pass
+    def test_disconnect(self):
+        print("Client disconnected")
 
     def start_socket_server(self):
-        self.socketio.run(self.app)
+        self.socketio.run(self.app, logger=False, engineio_logger=False)
