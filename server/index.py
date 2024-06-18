@@ -1,9 +1,15 @@
+"""
+Author: Fernando Rivera (Asterki)
+www.asterki.com
+Source code can be found at:
+https://github.com/Asterki/octo-tree
+"""
+
+
 from flask import Flask
-import os
 
 from services.socket import SocketService
 from services.board import BoardService
-
 from routes.router import RouterService
 
 class App:
