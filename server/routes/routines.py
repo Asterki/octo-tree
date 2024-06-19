@@ -21,7 +21,6 @@ class AddRoutineData(BaseModel):
     time: int
     action: str = Field(max_length=16, min_length=1)
     repeat: str = Field(max_length=16, min_length=1)
-    
 @routines_router.route('/add', methods=['POST'])
 def add():
     try: 
@@ -36,3 +35,19 @@ def add():
     except ValidationError as e:
         return {"error": e.errors()}, 400
     
+
+class RemvoeRoutineData(BaseModel):
+    id: int
+@routines_router.route('/delete', methods=['POST'])
+def delete():
+    try:
+        data = request.get_json()
+        routine = RemvoeRoutineData(**data)
+
+        # Delete the routine from the database
+        DatabaseService.get_instance().delete("routines", f"id = {routine.id}")
+
+        return {"success": True}, 200
+    except ValidationError as e:
+        return {"error": e.errors()}, 400
+        
