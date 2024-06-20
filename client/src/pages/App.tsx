@@ -112,11 +112,12 @@ function App() {
             });
 
             const response = await axios({
-                url: "http://localhost:5000/api/routines",
-                method: "get"
+                url: "http://localhost:5000/api/routines/get",
+                method: "get",
             })
 
-            setRoutines(response.data)
+            setRoutines(response.data.routines)
+            console.log(response.data)
         })();
     }, []);
 
@@ -130,10 +131,22 @@ function App() {
         socket.emit("angle", { value: 1 });
     };
 
-    const addRoutine = async () => {
-        if (socket === null) return;
-        socket.emit("routine", { value: 1 });
-    };
+    const routineFunctions = {
+        async addRoutine() {
+            const response = await axios({
+                url: "http://localhost:5000/api/routines/add",
+                method: "post",
+                data: {
+                    name: "Test",
+                    time: Date.now(),
+                    action: "Turn Relay 1 On",
+                    repeat: "Every Day",
+                },
+            });
+
+            console.log(response)
+        }
+    }
 
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -275,7 +288,7 @@ function App() {
                         </select>
                     </div>
 
-                    <button className="rounded-md shadow-md bg-green-500 p-2 text-white">
+                    <button className="rounded-md shadow-md bg-green-500 p-2 text-white" onClick={routineFunctions.addRoutine}>
                         Add Routine
                     </button>
                 </section>
