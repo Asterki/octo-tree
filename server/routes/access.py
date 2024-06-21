@@ -9,7 +9,6 @@ from services.sessions import SessionsManager
 access_router = Blueprint('access_router', __name__ , url_prefix='/api/access')
 
 class LoginData(BaseModel):
-    username: str = Field(max_length=16, min_length=1)
     password: str = Field(max_length=16, min_length=1)
 @access_router.route('/login', methods=['POST'])
 def login():
