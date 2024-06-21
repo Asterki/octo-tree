@@ -9,7 +9,12 @@ const LoginPage = () => {
                 password: "admin"
             })
 
-            console.log(response.data)
+            if (response.data.token !== false) {
+                localStorage.setItem("token", response.data.token)
+                window.location.href = "/dashboard"
+            } else {
+                alert("Incorrect credentials!")
+            }
         } catch (error) {
             console.error(error)
         }
