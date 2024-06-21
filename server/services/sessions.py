@@ -39,7 +39,7 @@ class SessionsManager:
             )
             # Return the token
             return jwt.encode(
-                {"token": token, "expires": expires}, secret, algorithm="HS256"
+                {"token": token, "expires": int(expires.timestamp() * 1000)}, secret, algorithm="HS256"
             )
         except Exception as e:
             print(e)
