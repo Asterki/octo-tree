@@ -1,32 +1,69 @@
-import * as React from 'react';
-import axios from "axios"
+import * as React from "react";
+import axios from "axios";
 
 const Register = () => {
-    const login = async () => {
-        try {
-            const response = await axios.post("http://localhost:5000/api/access/register-admin", {
-                username: "admin",
-                password: "admin"
-            })
+    const passwordRef = React.useRef<HTMLInputElement>(null);
+    const repeatPasswordRef = React.useRef<HTMLInputElement>(null);
 
-            console.log(response.data)
-        } catch (error) {
-            console.error(error)
+    const register = async () => {
+        const password = passwordRef.current?.value;
+        const repeatPassword = repeatPasswordRef.current?.value;
+
+        if (password !== repeatPassword) {
+            return alert("Passwords do not match!");
         }
-    }
+
+        try {
+            interface RegisterResponse {
+                status: boolean;
+            }
+            const response = await axios.post<RegisterResponse>(
+                "http://localhost:5000/api/access/register-admin",
+                {
+                    password: password,
+                }
+            );
+
+            if (response.data.status == true) return (window.location.href = "/login");
+            else alert("An error occurred");
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     React.useEffect(() => {
         (async () => {
+            // Check if the user is already logged in
+            const cookie = document.cookie
+                .split(";")
+                .find((cookie) => cookie.startsWith("token="));
+            if (cookie) {
+                // Verify that the token is valid
+                interface TokenResponse {
+                    status: boolean;
+                }
+                const tokenResponse = await axios<TokenResponse>({
+                    url: "http://localhost:5000/api/access/verify-session",
+                    method: "POST",
+                    data: {
+                        token: cookie.split("=")[1],
+                    },
+                });
+
+                if (tokenResponse.data.status == true)
+                    return (window.location.href = "/dashboard");
+            }
+
             const response = await axios({
                 url: "http://127.0.0.1:5000/api/access/verify-admin",
                 method: "GET",
-            })
+            });
 
-            if (response.data.status !== false) {
-                window.location.href = "/login"
-            }
+            // Check if the admin user is already registered, if so, redirect to login page
+            if (response.data.status !== true)
+                return (window.location.href = "/login");
         })();
-    }, [])
+    }, []);
 
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -37,24 +74,28 @@ const Register = () => {
 
             <main className="min-h-screen flex items-center justify-center">
                 <form action="">
-                    <h1 className="text-3xl font-bold text-center">Register</h1>
+                    <h1 className="text-3xl font-bold text-center">
+                        Register your admin account
+                    </h1>
                     <div className="flex flex-col items-center mt-4">
                         <input
                             type="text"
-                            placeholder="Username"
+                            ref={passwordRef}
+                            placeholder="Password"
                             className="p-2 border border-neutral-200 rounded-md w-80"
                         />
                         <input
                             type="password"
-                            placeholder="Password"
+                            ref={repeatPasswordRef}
+                            placeholder="Repeat Password"
                             className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
                         />
                         <button
                             type="button"
-                            onClick={login}
+                            onClick={register}
                             className="bg-emerald-700 text-white w-80 p-2 rounded-md mt-4"
                         >
-                            Login
+                            Register
                         </button>
                     </div>
                 </form>
