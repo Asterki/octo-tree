@@ -1,10 +1,10 @@
 import * as React from 'react';
 import axios from "axios"
 
-const LoginPage = () => {
+const Register = () => {
     const login = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/api/access/login", {
+            const response = await axios.post("http://localhost:5000/api/access/register-admin", {
                 username: "admin",
                 password: "admin"
             })
@@ -15,6 +15,19 @@ const LoginPage = () => {
         }
     }
 
+    React.useEffect(() => {
+        (async () => {
+            const response = await axios({
+                url: "http://127.0.0.1:5000/api/access/verify-admin",
+                method: "GET",
+            })
+
+            if (response.data.status !== false) {
+                window.location.href = "/login"
+            }
+        })();
+    }, [])
+
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
             {/* Navbar */}
@@ -24,7 +37,7 @@ const LoginPage = () => {
 
             <main className="min-h-screen flex items-center justify-center">
                 <form action="">
-                    <h1 className="text-3xl font-bold text-center">Login</h1>
+                    <h1 className="text-3xl font-bold text-center">Register</h1>
                     <div className="flex flex-col items-center mt-4">
                         <input
                             type="text"
@@ -50,4 +63,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Register;
