@@ -55,3 +55,17 @@ def register_admin():
         return {"error": "Admin already exists"}, 400
     DatabaseService.get_instance().insert("users", {"username": "admin", "password": data.get("password")})
     return {"success": True}, 200
+
+
+class VerifySessionData(BaseModel):
+    token: str = Field(max_length=64, min_length=64)
+@access_router.route('/verify-session', methods=['POST'])
+def verify_session():
+    data = request.get_json()
+    try:
+        verify = VerifySessionData(**data)
+        if SessionsManager.get_instance().verify_session(verify.token):
+            return {"status": True}, 200
+        return {"status": False}, 200
+    except ValidationError as e:
+        return {"error": e.errors()}, 400
