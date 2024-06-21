@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from pydantic import BaseModel, ValidationError, Field
 
-from server.services.database import DatabaseService
+from services.database import DatabaseService
 from services.sessions import SessionsManager
 
 
@@ -37,13 +37,13 @@ def logout():
     return {"error": "Invalid token"}, 401
 
 
-@access_router.route('/verify-admin', methods=['POST'])
+@access_router.route('/verify-admin', methods=['GET'])
 def verify_admin():
     result = DatabaseService.get_instance().get("users", "id", "username = 'admin'")
     if result:
-        return {"success": True}, 200
+        return {"status": True}, 200
     else :
-        return {"success": False}, 200
+        return {"status": False}, 200
     
 class RegisterData(BaseModel):
     password: str = Field(max_length=16, min_length=1)

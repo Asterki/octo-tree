@@ -2,6 +2,7 @@ from flask import Flask
 
 # Import the routes
 import routes.routines as routines
+import routes.access as access
 
 class RouterService:
     def __init__(self, app: Flask):
@@ -11,6 +12,7 @@ class RouterService:
     def register_routes(self):
         # Register the routes with the Flask app.
         self.app.register_blueprint(routines.routines_router)
+        self.app.register_blueprint(access.access_router)
         
     def serve_static(self):
         # Serve static files with the Flask app.
