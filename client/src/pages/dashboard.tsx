@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Socket, io } from "socket.io-client";
-import axios from "axios"
+import axios from "axios";
+
+import { useNavigate } from "react-router-dom";
 
 import {
     Chart as ChartJS,
@@ -84,6 +86,8 @@ export const humidity_data = {
 };
 
 function App() {
+    const navigate = useNavigate();
+
     const [socket, setSocket] = React.useState<Socket | null>(null);
 
     const [routines, setRoutines] = React.useState<
@@ -92,6 +96,27 @@ function App() {
 
     React.useEffect(() => {
         (async () => {
+            // Check if the user is logged in
+            const token = localStorage.getItem("token");
+            if (token) {
+                // Verify that the token is valid
+                interface TokenResponse {
+                    status: boolean;
+                }
+                const tokenResponse = await axios<TokenResponse>({
+                    url: "http://localhost:5000/api/access/verify-session",
+                    method: "POST",
+                    data: {
+                        token: token,
+                    },
+                });
+
+                if (tokenResponse.data.status == false)
+                    return navigate("/login");
+            } else {
+                navigate("/login")
+            }
+
             const newSocket = io("http://localhost:5000", {
                 autoConnect: true,
             });
@@ -114,10 +139,10 @@ function App() {
             const response = await axios({
                 url: "http://localhost:5000/api/routines/get",
                 method: "get",
-            })
+            });
 
-            setRoutines(response.data.routines)
-            console.log(response.data)
+            setRoutines(response.data.routines);
+            console.log(response.data);
         })();
     }, []);
 
@@ -144,9 +169,9 @@ function App() {
                 },
             });
 
-            console.log(response)
-        }
-    }
+            console.log(response);
+        },
+    };
 
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -288,7 +313,10 @@ function App() {
                         </select>
                     </div>
 
-                    <button className="rounded-md shadow-md bg-green-500 p-2 text-white" onClick={routineFunctions.addRoutine}>
+                    <button
+                        className="rounded-md shadow-md bg-green-500 p-2 text-white"
+                        onClick={routineFunctions.addRoutine}
+                    >
                         Add Routine
                     </button>
                 </section>

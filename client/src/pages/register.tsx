@@ -1,7 +1,11 @@
 import * as React from "react";
 import axios from "axios";
 
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
+    const navigate = useNavigate();
+
     const passwordRef = React.useRef<HTMLInputElement>(null);
     const repeatPasswordRef = React.useRef<HTMLInputElement>(null);
 
@@ -24,7 +28,7 @@ const Register = () => {
                 }
             );
 
-            if (response.data.status == true) return (window.location.href = "/login");
+            if (response.data.status == true) return navigate("/login");
             else alert("An error occurred");
         } catch (error) {
             console.error(error);
@@ -34,10 +38,8 @@ const Register = () => {
     React.useEffect(() => {
         (async () => {
             // Check if the user is already logged in
-            const cookie = document.cookie
-                .split(";")
-                .find((cookie) => cookie.startsWith("token="));
-            if (cookie) {
+            const token = localStorage.getItem("token");
+            if (token) {
                 // Verify that the token is valid
                 interface TokenResponse {
                     status: boolean;
@@ -46,12 +48,12 @@ const Register = () => {
                     url: "http://localhost:5000/api/access/verify-session",
                     method: "POST",
                     data: {
-                        token: cookie.split("=")[1],
+                        token: token
                     },
                 });
 
                 if (tokenResponse.data.status == true)
-                    return (window.location.href = "/dashboard");
+                    return navigate("/dashboard");
             }
 
             const response = await axios({
@@ -61,8 +63,9 @@ const Register = () => {
 
             // Check if the admin user is already registered, if so, redirect to login page
             if (response.data.status == true)
-                return (window.location.href = "/login");
+                return navigate("/login");
         })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

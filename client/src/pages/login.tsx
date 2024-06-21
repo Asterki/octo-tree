@@ -1,7 +1,10 @@
 import * as React from "react";
 import axios from "axios";
 
+import { useNavigate } from "react-router-dom";
+
 const LoginPage = () => {
+    const navigate = useNavigate();
     const passwordRef = React.useRef<HTMLInputElement>(null);
 
     const login = async () => {
@@ -17,9 +20,11 @@ const LoginPage = () => {
                 },
             });
 
+            console.log(response.data);
+
             if (response.data.token !== false) {
                 localStorage.setItem("token", response.data.token);
-                window.location.href = "/dashboard";
+                navigate("/dashboard");
             } else {
                 alert("Incorrect credentials!");
             }
@@ -27,6 +32,30 @@ const LoginPage = () => {
             console.error(error);
         }
     };
+
+    React.useEffect(() => {
+        (async () => {
+            // Check if the user is already logged in
+            const token = localStorage.getItem("token");
+            if (token) {
+                // Verify that the token is valid
+                interface TokenResponse {
+                    status: boolean;
+                }
+                const tokenResponse = await axios<TokenResponse>({
+                    url: "http://localhost:5000/api/access/verify-session",
+                    method: "POST",
+                    data: {
+                        token: token,
+                    },
+                });
+
+                if (tokenResponse.data.status == true)
+                    return navigate("/dashboard");
+            }
+        })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
