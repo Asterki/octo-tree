@@ -68,3 +68,4 @@ def verify_session():
         return {"status": False}, 200
     except ValidationError as e:
         return {"error": e.errors()}, 400
+        

@@ -114,7 +114,7 @@ function App() {
                 if (tokenResponse.data.status == false)
                     return navigate("/login");
             } else {
-                navigate("/login")
+                navigate("/login");
             }
 
             const newSocket = io("http://localhost:5000", {
@@ -144,6 +144,7 @@ function App() {
             setRoutines(response.data.routines);
             console.log(response.data);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const update = async (relay: number, value: number) => {
@@ -154,6 +155,11 @@ function App() {
     const searchAngle = async () => {
         if (socket === null) return;
         socket.emit("angle", { value: 1 });
+    };
+
+    const logout = async () => {
+        localStorage.removeItem("token");
+        navigate("/login");
     };
 
     const routineFunctions = {
@@ -178,6 +184,12 @@ function App() {
             {/* Navbar */}
             <div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4">
                 <h1 className="text-3xl font-bold p-4">Octo Tree</h1>
+                <p
+                    className="cursor-pointer bg-red-400 rounded-md p-2 font-bold"
+                    onClick={logout}
+                >
+                    Logout
+                </p>
             </div>
 
             <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
