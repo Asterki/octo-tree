@@ -1,23 +1,32 @@
-import axios from "axios"
+import * as React from "react";
+import axios from "axios";
 
 const LoginPage = () => {
+    const passwordRef = React.useRef<HTMLInputElement>(null);
+
     const login = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/api/access/login", {
-                username: "admin",
-                password: "admin"
-            })
+            interface LoginResponse {
+                token: string | false;
+            }
+            const response = await axios<LoginResponse>({
+                url: "http://localhost:5000/api/access/login",
+                method: "POST",
+                data: {
+                    password: passwordRef.current?.value,
+                },
+            });
 
             if (response.data.token !== false) {
-                localStorage.setItem("token", response.data.token)
-                window.location.href = "/dashboard"
+                localStorage.setItem("token", response.data.token);
+                window.location.href = "/dashboard";
             } else {
-                alert("Incorrect credentials!")
+                alert("Incorrect credentials!");
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -31,12 +40,8 @@ const LoginPage = () => {
                     <h1 className="text-3xl font-bold text-center">Login</h1>
                     <div className="flex flex-col items-center mt-4">
                         <input
-                            type="text"
-                            placeholder="Username"
-                            className="p-2 border border-neutral-200 rounded-md w-80"
-                        />
-                        <input
                             type="password"
+                            ref={passwordRef}
                             placeholder="Password"
                             className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
                         />

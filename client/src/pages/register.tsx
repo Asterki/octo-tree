@@ -60,7 +60,7 @@ const Register = () => {
             });
 
             // Check if the admin user is already registered, if so, redirect to login page
-            if (response.data.status !== true)
+            if (response.data.status == true)
                 return (window.location.href = "/login");
         })();
     }, []);
