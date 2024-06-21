@@ -57,7 +57,7 @@ def register_admin():
 
 
 class VerifySessionData(BaseModel):
-    token: str = Field(max_length=64, min_length=64)
+    token: str = Field(max_length=255, min_length=64)
 @access_router.route('/verify-session', methods=['POST'])
 def verify_session():
     data = request.get_json()
