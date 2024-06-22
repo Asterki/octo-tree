@@ -4,14 +4,19 @@ import "./styles/globals.css";
 
 import LoginPage from "./pages/login.tsx"
 import RegisterPage from "./pages/register.tsx"
-import Dashboard from "./pages/dashboard.tsx";
+import DashboardPage from "./pages/dashboard.tsx";
+import IndexPage from "./pages/index.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
     {
+        path: "/index",
+        element: <IndexPage />,
+    },
+    {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: <DashboardPage />,
     },
     {
         path: "/login",
