@@ -34,15 +34,35 @@ def add():
         return {"success": True}, 200
     except ValidationError as e:
         return {"error": e.errors()}, 400
+
+
+class UpdateRoutineData(BaseModel):
+    id: int
+    name: str = Field(max_length=16, min_length=1)
+    time: int
+    action: str = Field(max_length=16, min_length=1)
+    repeat: str = Field(max_length=16, min_length=1)
+@routines_router.route('/update', methods=['POST'])
+def update():
+    try:
+        data = request.get_json()
+        routine = UpdateRoutineData(**data)
+
+        # Update the routine in the database
+        DatabaseService.get_instance().update("routines", routine.dict(), f"id = {routine.id}")
+
+        return {"success": True}, 200
+    except ValidationError as e:
+        return {"error": e.errors()}, 400
     
 
-class RemvoeRoutineData(BaseModel):
+class RemoveRoutineData(BaseModel):
     id: int
 @routines_router.route('/delete', methods=['POST'])
 def delete():
     try:
         data = request.get_json()
-        routine = RemvoeRoutineData(**data)
+        routine = RemoveRoutineData(**data)
 
         # Delete the routine from the database
         DatabaseService.get_instance().delete("routines", f"id = {routine.id}")
