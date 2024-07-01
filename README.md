@@ -46,11 +46,17 @@ This project is a web application that interfaces with an Arduino Uno board to m
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/arduino-web-app.git
-    cd arduino-web-app
+    git clone https://github.com/asterki/octo-tree.git
+    cd octo-tree
     ```
 
-2. Set up a virtual environment and install dependencies:
+2. Navigate to the server directory:
+
+    ```bash
+    cd server
+    ```
+
+3. Set up a virtual environment and install dependencies:
 
     ```bash
     python -m venv venv
@@ -58,10 +64,10 @@ This project is a web application that interfaces with an Arduino Uno board to m
     pip install -r requirements.txt
     ```
 
-3. Run the Flask server:
+4. Run the Flask server:
 
     ```bash
-    python app.py
+    python index.py
     ```
 
 ### Frontend Setup
@@ -69,25 +75,25 @@ This project is a web application that interfaces with an Arduino Uno board to m
 1. Navigate to the frontend directory and install dependencies:
 
     ```bash
-    cd frontend
+    cd client
     npm install
     ```
 
 2. Start the development server:
 
     ```bash
-    npm start
+    npm run dev
     ```
 
 ### Arduino Setup
 
-1. Open the Arduino IDE and upload the provided sketch (`arduino/arduino_sketch.ino`) to your Arduino Uno board.
+1. Open the Arduino IDE and upload the provided sketch (`arduino/index.ino`) to your Arduino Uno board.
 2. Ensure the correct serial port is selected.
 
 ## Usage
 
 1. Ensure the Flask backend and React frontend servers are running.
-2. Open your web browser and navigate to `http://localhost:3000`.
+2. Open your web browser and navigate to `http://localhost:5173`.
 3. You should see the web app interface where you can monitor sensor data and control actuators.
 
 ## Contributing
