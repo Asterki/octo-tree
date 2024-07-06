@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from services.socket import SocketService
 from services.board import BoardService
+from services.soil import SoilService
 from routes.router import RouterService
 
 load_dotenv()
