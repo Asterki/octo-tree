@@ -20,16 +20,20 @@ const LoginPage = () => {
                 },
             });
 
-            console.log(response.data);
-
-            if (response.data.token !== false) {
+            if (response.status == 200 && response.data.token) {
                 localStorage.setItem("token", response.data.token);
                 navigate("/dashboard");
             } else {
                 alert("Incorrect credentials!");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status == 401) {
+                    alert("Incorrect credentials!");
+                } else {
+                    alert("An error occurred. Please try again later.");
+                }
+            }
         }
     };
 
@@ -54,7 +58,7 @@ const LoginPage = () => {
                     return navigate("/dashboard");
             }
         })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

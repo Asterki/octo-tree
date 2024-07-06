@@ -25,6 +25,8 @@ const IndexPage = () => {
                     return navigate("/dashboard");
                 return navigate("/login");
             }
+
+            return navigate("/login");
         })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

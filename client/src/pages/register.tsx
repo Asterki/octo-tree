@@ -19,7 +19,7 @@ const Register = () => {
 
         try {
             interface RegisterResponse {
-                status: boolean;
+                success: boolean;
             }
             const response = await axios.post<RegisterResponse>(
                 "http://localhost:5000/api/access/register-admin",
@@ -28,7 +28,7 @@ const Register = () => {
                 }
             );
 
-            if (response.data.status == true) return navigate("/login");
+            if (response.data.success == true) return navigate("/login");
             else alert("An error occurred");
         } catch (error) {
             console.error(error);
