@@ -13,8 +13,8 @@ class RouterService:
 
     def register_routes(self):
         # Register the routes with the Flask app.
-        self.app.register_blueprint(routines.routines_router)
         self.app.register_blueprint(access.access_router)
+        self.app.register_blueprint(routines.routines_router)
         self.app.register_blueprint(soil.soil_router)
 
     def serve_static(self):

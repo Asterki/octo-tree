@@ -25,6 +25,7 @@ def login():
             return {"token": SessionsManager.get_instance().create_session()}, 200
         return {"error": "Invalid credentials"}, 401
     except ValidationError as e:
+        print(e)
         return {"error": e.errors()}, 400
     
 
