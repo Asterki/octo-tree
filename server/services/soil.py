@@ -5,9 +5,9 @@ from dotenv import dotenv_values
 
 config = dotenv_values(".env")
 
-endpoint = config["SOIL_ENDPOINT"]
-key = config["SOIL_KEY"]
-region = config["SOIL_REGION"]
+endpoint = config["VISION_ENDPOINT"]
+key = config["VISION_KEY"]
+region = config["VISION_REGION"]
 
 client = ImageAnalysisClient(endpoint, AzureKeyCredential(key))
 
