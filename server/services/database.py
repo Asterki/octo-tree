@@ -1,4 +1,5 @@
-import sqlite3
+import asyncio
+from prisma import Prisma
 
 class DatabaseService:
     _instance = None
@@ -9,16 +10,13 @@ class DatabaseService:
             cls._instance = DatabaseService()
         return cls._instance
 
-    def __init__(self):
+    async def __init__(self):
         if DatabaseService._instance is not None:
             raise Exception("This class is a singleton!")
         else:
             DatabaseService._instance = self
-            self.conn = sqlite3.connect('database.db', check_same_thread=False)
-            self.cursor = self.conn.cursor()
-            self.create_tables()
-
-    def create_tables(self):
+            db = Prisma()
+            await db.connect()
         try:
             self.cursor.execute('''
                         CREATE TABLE IF NOT EXISTS routines (
@@ -47,47 +45,15 @@ class DatabaseService:
         except Exception as e:
             print(e)
 
-    def get(self, table: str, columns="*", where=None, doc_count=0, doc_offset=0):
-        query = f"SELECT {columns} FROM {table}"
-        if where:
-            query += f" WHERE {where}"
-        if doc_count:
-            query += f" LIMIT {doc_count}"
-        if doc_offset:
-            query += f" OFFSET {doc_offset}"
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+    async def connect(self):
+        await self._db.connect()
 
-    def insert(self, table, data):
-        keys = ', '.join(data.keys())
-        values = ', '.join(['"' + str(value) + '"' for value in data.values()])
-        try:
-            self.cursor.execute(f'INSERT INTO {table} ({keys}) VALUES ({values})')
-            self.conn.commit()
-        except Exception as e:
-            print(e)
+    async def disconnect(self):
+        await self._db.disconnect()
 
-    def update(self, table, data, where):
-        set_values = ', '.join([f'{key} = "{value}"' for key, value in data.items()])
-        try:
-            self.cursor.execute(f'UPDATE {table} SET {set_values} WHERE {where}')
-            self.conn.commit()
-        except Exception as e:
-            print(e)
+    def get_db(self):
+        return self._db
 
-    def delete(self, table, where):
-        try:
-            self.cursor.execute(f'DELETE FROM {table} WHERE {where}')
-            self.conn.commit()
-        except Exception as e:
-            print(e)
-
-    def flush(self, table):
-        try:
-            self.cursor.execute(f'DELETE FROM {table}')
-            self.conn.commit()
-        except Exception as e:
-            print(e)
-
-    def __del__(self):
-        self.conn.close()
+    async def __del__(self):
+        await self._db.disconnect()
+        print("Database connection closed")
