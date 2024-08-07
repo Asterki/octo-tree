@@ -9,7 +9,14 @@ generator db {
   recursive_type_depth = 5
 }
 
-model Post {
+model User {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  email      String   @unique
+  name       String?
+}
+
+model Session {
   id         String   @id @default(cuid())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
