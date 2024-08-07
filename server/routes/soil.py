@@ -10,3 +10,4 @@ soil_router = Blueprint("soil_router", __name__, url_prefix="/api/soil")
 @soil_router.route("/get", methods=["GET"])
 def get():
     return {"soil": "soil"}, 200
+    
