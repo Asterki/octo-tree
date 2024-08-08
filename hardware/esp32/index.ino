@@ -1,107 +1,66 @@
-/* Wi-Fi STA Connect and Disconnect Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-
-*/
 #include <WiFi.h>
 
-const char *ssid = "your-ssid";
-const char *password = "your-password";
+const char* ssid = "";             // Change this to your WiFi SSID
+const char* password = "";   // Change this to your WiFi password
 
-int btnGPIO = 0;
-int btnState = false;
+const char* host = "192.168.0.15";         // This should not be changed
+const int httpPort = 5000;                 // This should not be changed
 
-void setup()
-{
+void setup() {
     Serial.begin(115200);
-    delay(10);
+    while (!Serial) {
+        delay(100);
+    }
 
-    // Set GPIO0 Boot button as input
-    pinMode(btnGPIO, INPUT);
-
-    // We start by connecting to a WiFi network
-    // To debug, please enable Core Debug Level to Verbose
-
+    // Connect to WiFi network
     Serial.println();
-    Serial.print("[WiFi] Connecting to ");
+    Serial.println("******************************************************");
+    Serial.print("Connecting to ");
     Serial.println(ssid);
 
     WiFi.begin(ssid, password);
-    // Auto reconnect is set true as default
-    // To set auto connect off, use the following function
-    //    WiFi.setAutoReconnect(false);
 
-    // Will try for about 10 seconds (20x 500ms)
-    int tryDelay = 500;
-    int numberOfTries = 20;
-
-    // Wait for the WiFi event
-    while (true)
-    {
-
-        switch (WiFi.status())
-        {
-        case WL_NO_SSID_AVAIL:
-            Serial.println("[WiFi] SSID not found");
-            break;
-        case WL_CONNECT_FAILED:
-            Serial.print("[WiFi] Failed - WiFi not connected! Reason: ");
-            return;
-            break;
-        case WL_CONNECTION_LOST:
-            Serial.println("[WiFi] Connection was lost");
-            break;
-        case WL_SCAN_COMPLETED:
-            Serial.println("[WiFi] Scan is completed");
-            break;
-        case WL_DISCONNECTED:
-            Serial.println("[WiFi] WiFi is disconnected");
-            break;
-        case WL_CONNECTED:
-            Serial.println("[WiFi] WiFi is connected!");
-            Serial.print("[WiFi] IP address: ");
-            Serial.println(WiFi.localIP());
-            return;
-            break;
-        default:
-            Serial.print("[WiFi] WiFi Status: ");
-            Serial.println(WiFi.status());
-            break;
-        }
-        delay(tryDelay);
-
-        if (numberOfTries <= 0)
-        {
-            Serial.print("[WiFi] Failed to connect to WiFi!");
-            // Use disconnect function to force stop trying to connect
-            WiFi.disconnect();
-            return;
-        }
-        else
-        {
-            numberOfTries--;
-        }
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
     }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
 }
 
-void loop()
-{
-    // Read the button state
-    btnState = digitalRead(btnGPIO);
-
-    if (btnState == LOW)
-    {
-        // Disconnect from WiFi
-        Serial.println("[WiFi] Disconnecting from WiFi!");
-        // This function will disconnect and turn off the WiFi (NVS WiFi data is kept)
-        if (WiFi.disconnect(true, false))
-        {
-            Serial.println("[WiFi] Disconnected from WiFi!");
+void readResponse(WiFiClient& client) {
+    unsigned long timeout = millis();
+    while (client.available() == 0) {
+        if (millis() - timeout > 5000) {
+            Serial.println(">>> Client Timeout !");
+            client.stop();
+            return;
         }
-        delay(1000);
     }
+
+    // Read all the lines of the reply from server and print them to Serial
+    while (client.available()) {
+        String line = client.readStringUntil('\r');
+        Serial.print(line);
+    }
+
+    Serial.printf("\nClosing connection\n\n");
+}
+
+void loop() {
+    WiFiClient client;
+    String footer = String(" HTTP/1.1\r\n") + "Host: " + String(host) + "\r\n" + "Connection: close\r\n\r\n";
+
+    // WRITE --------------------------------------------------------------------------------------------
+    if (!client.connect(host, httpPort)) {
+        return;
+    }
+
+    client.print("GET /" + footer);
+    readResponse(client);
+
+    delay(10000);
 }
