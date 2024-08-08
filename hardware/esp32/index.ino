@@ -116,6 +116,8 @@ void loop()
 						client.println("Content-type:text/html");
 						client.println();
 
+						// TODO: Show a list of available WiFi networks
+
 						// 2 dialog boxes to enter the SSID and password
 						client.println("<!DOCTYPE html><html><head><title>Octo-Tree Board</title></head><body>");
 						client.println("<h1>Octo-Tree Board</h1>");
