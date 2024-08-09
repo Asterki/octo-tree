@@ -91,6 +91,8 @@ void loopWithWifiOn()
 	readResponse(client);
 
 	delay(10000);
+
+	Serial.write("ewqewq")
 }
 
 void loop()
@@ -176,7 +178,7 @@ void loop()
 		Serial.println("Client Disconnected.");
 	}
 
-	if (WiFi.status() == WL_CONNECTED)
+	if (connectedToWifi)
 	{
 		loopWithWifiOn();
 	}
