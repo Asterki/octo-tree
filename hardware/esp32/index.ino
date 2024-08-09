@@ -39,27 +39,17 @@ void setup()
 	Serial.println("Server started");
 }
 
-void readResponse(WiFiClient &client)
+String readResponse(WiFiClient client)
 {
-	unsigned long timeout = millis();
-	while (client.available() == 0)
-	{
-		if (millis() - timeout > 5000)
-		{
-			Serial.println(">>> Client Timeout !");
-			client.stop();
-			return;
-		}
-	}
-
-	// Read all the lines of the reply from server and print them to Serial
+	String response = "";
 	while (client.available())
 	{
 		String line = client.readStringUntil('\r');
+		response += line;
 		Serial.print(line);
 	}
-
-	Serial.printf("\nClosing connection\n\n");
+	client.stop();
+	return response;
 }
 
 void connectToWiFi(String ssid, String password)
@@ -75,24 +65,43 @@ void connectToWiFi(String ssid, String password)
 	connectedToWifi = true;
 }
 
-void loopWithWifiOn()
+String makeRequestAndGetResponse(String request)
 {
-	// TODO: Read and write values to the arduino, while also sending the values to the server
 	WiFiClient client;
 	String footer = String(" HTTP/1.1\r\n") + "Host: " + String(host) + "\r\n" + "Connection: close\r\n\r\n";
 
-	// WRITE --------------------------------------------------------------------------------------------
 	if (!client.connect(host, httpPort))
 	{
+		return "";
+	}
+
+	client.print("GET /" + request + footer);
+	return readResponse(client);
+}
+
+void loopWithWifiOn()
+{
+	String response = makeRequestAndGetResponse("status");
+	if (response == "")
+	{
+		Serial.println("Error: Unable to connect to the server.");
 		return;
 	}
 
-	client.print("GET /" + footer);
-	readResponse(client);
-
-	delay(10000);
-
-	Serial.write("ewqewq")
+	if (response == "on")
+	{
+		digitalWrite(LED_BUILTIN, HIGH);
+		Serial.println("LED is on");
+	}
+	else if (response == "off")
+	{
+		digitalWrite(LED_BUILTIN, LOW);
+		Serial.println("LED is off");
+	}
+	else
+	{
+		Serial.println("Unknown command");
+	}
 }
 
 void loop()
