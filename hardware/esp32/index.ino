@@ -12,7 +12,7 @@ NetworkServer server(80); // Server used to set the credentials for a WiFi netwo
 void setup()
 {
 	pinMode(LED_BUILTIN, OUTPUT);
-	Serial.begin(115200);
+	Serial.begin(9600);
 	while (!Serial)
 	{
 		delay(100);
@@ -65,8 +65,9 @@ String readResponse(NetworkClient *client) {
   // Read all the lines of the reply from server and print them to Serial
   String response = "";
   while (client->available()) {
+	response = "";
     String line = client->readStringUntil('\r');
-    response+=line;
+    response=line;
   }
 
   return response;
@@ -85,13 +86,21 @@ String makeRequestAndGetResponse(String request)
 	client.print("GET " + request + footer);
 
 	String response = readResponse(&client);
+  response.trim();
 	return response;
 }
 
 void loopWithWifiOn()
 {
-	String response = makeRequestAndGetResponse("/");
-	Serial.println(response);
+	String response = makeRequestAndGetResponse("/api/soil/getping");
+	if (response == "no-server")
+	{
+		Serial.println("No server found");
+		return;
+	}
+
+  Serial.write("on");
+
 	delay(5000);
 }
 
@@ -178,6 +187,10 @@ void loop()
 		Serial.println("Client Disconnected.");
 	}
 
+	if (!connectedToWifi)
+	{
+		connectToWiFi("Fernando", "nacimiento2007");
+	}
 
 	if (connectedToWifi)
 	{

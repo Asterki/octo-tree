@@ -7,6 +7,8 @@ import RegisterPage from "./pages/register.tsx"
 import DashboardPage from "./pages/dashboard.tsx";
 import IndexPage from "./pages/index.tsx";
 
+import TestPage from "./pages/test.tsx";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -26,6 +28,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <RegisterPage />,
     },
+    {
+        path: "/test",
+        element: <TestPage />,
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
