@@ -18,6 +18,8 @@ void setup()
 		delay(100);
 	}
 
+	Serial2.begin(9600, SERIAL_8N1, 16, 17); // We'll use Serial2 to communicate with the Arduino
+
 	if (MDNS.begin("esp32"))
 	{
 		Serial.println("MDNS responder started");
@@ -92,16 +94,15 @@ String makeRequestAndGetResponse(String request)
 
 void loopWithWifiOn()
 {
-	String response = makeRequestAndGetResponse("/api/soil/getping");
-	if (response == "no-server")
+	String pendingActionsResponse = makeRequestAndGetResponse("/api/board/getpending"); // TODO: Add some sort of auth
+	if (pendingActionsResponse == "no-server")
 	{
 		Serial.println("No server found");
 		return;
 	}
 
-  Serial.write("on");
-
-	delay(5000);
+  Serial2.println(response); // Send the raw data to the Arduino
+	delay(1000);
 }
 
 void loop()
@@ -187,10 +188,11 @@ void loop()
 		Serial.println("Client Disconnected.");
 	}
 
-	if (!connectedToWifi)
-	{
-		connectToWiFi("Fernando", "nacimiento2007");
-	}
+  // Uncomment this if you want your ESP32 to automatically connect to the network
+	// if (!connectedToWifi)
+	// {
+	// 	connectToWiFi("your SSID", "yourpassword");
+	// }
 
 	if (connectedToWifi)
 	{

@@ -19,7 +19,6 @@ def ping():
     switch = "on" if switch == "off" else "off"
     return str(switch), 200
 
-switch = 0
 @soil_router.route("/getping", methods=["GET"])
 def getping():
     return str(switch), 200
