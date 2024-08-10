@@ -39,19 +39,6 @@ void setup()
 	Serial.println("Server started");
 }
 
-String readResponse(WiFiClient client)
-{
-	String response = "";
-	while (client.available())
-	{
-		String line = client.readStringUntil('\r');
-		response += line;
-		Serial.print(line);
-	}
-	client.stop();
-	return response;
-}
-
 void connectToWiFi(String ssid, String password)
 {
 	WiFi.begin(ssid, password); // Connect to the WiFi network
@@ -65,6 +52,26 @@ void connectToWiFi(String ssid, String password)
 	connectedToWifi = true;
 }
 
+String readResponse(NetworkClient *client) {
+  unsigned long timeout = millis();
+  while (client->available() == 0) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client->stop();
+      return "no-server";
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  String response = "";
+  while (client->available()) {
+    String line = client->readStringUntil('\r');
+    response+=line;
+  }
+
+  return response;
+}
+
 String makeRequestAndGetResponse(String request)
 {
 	WiFiClient client;
@@ -72,36 +79,20 @@ String makeRequestAndGetResponse(String request)
 
 	if (!client.connect(host, httpPort))
 	{
-		return "";
+		return "no-server";
 	}
 
-	client.print("GET /" + request + footer);
-	return readResponse(client);
+	client.print("GET " + request + footer);
+
+	String response = readResponse(&client);
+	return response;
 }
 
 void loopWithWifiOn()
 {
-	String response = makeRequestAndGetResponse("status");
-	if (response == "")
-	{
-		Serial.println("Error: Unable to connect to the server.");
-		return;
-	}
-
-	if (response == "on")
-	{
-		digitalWrite(LED_BUILTIN, HIGH);
-		Serial.println("LED is on");
-	}
-	else if (response == "off")
-	{
-		digitalWrite(LED_BUILTIN, LOW);
-		Serial.println("LED is off");
-	}
-	else
-	{
-		Serial.println("Unknown command");
-	}
+	String response = makeRequestAndGetResponse("/");
+	Serial.println(response);
+	delay(5000);
 }
 
 void loop()
@@ -186,6 +177,7 @@ void loop()
 		client.stop();
 		Serial.println("Client Disconnected.");
 	}
+
 
 	if (connectedToWifi)
 	{
