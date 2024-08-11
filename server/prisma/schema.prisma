@@ -1,6 +1,6 @@
 datasource db {
-    provider = "postgresql"
-    url      = env("POSTGRESQL_URI")
+  provider = "sqlite"
+  url      = "file:dev.db"
 }
 
 generator db {
@@ -19,8 +19,23 @@ model User {
 model Session {
   id         String   @id @default(cuid())
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  title      String
-  published  Boolean
-  desc       String?
+  expires_at DateTime
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+
+
+  @@unique([user_id])
+}
+
+model PendingActions {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  expires_at DateTime
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  action     String
+  data       String
+
+  @@unique([user_id])
+
 }
