@@ -1,5 +1,6 @@
 import express, { Express } from 'express'
 import path from 'path'
+import { createServer } from 'http'
 
 // Middleware
 import cors from 'cors'
@@ -8,6 +9,7 @@ import cookie from 'cookie-parser'
 // Services
 import Router from './services/router'
 import SessionController from './services/sessions'
+import SocketServer from './services/socket'
 
 import 'dotenv/config'
 
@@ -21,7 +23,9 @@ class Server {
 
 	// Services
 	sessions: SessionController = SessionController.prototype.getInstance()
+	httpServer: ReturnType<typeof createServer> = createServer(this.app)
 	router: Router = Router.prototype.getInstance()
+	socketServer: SocketServer = SocketServer.getInstance()
 
 	constructor(dev: boolean, port: number) {
 		this.checkEnv()
@@ -39,9 +43,10 @@ class Server {
 		this.sessions.loadToServer(this.app)
 		this.router.registerRoutes(this.app)
 
-		this.app.listen(this.port, () => {
-			console.log(`Server started on port ${this.port}`)
+		this.httpServer.listen(this.port, () => {
+			console.log(`Server running on port ${this.port}`)
 		})
+		this.socketServer.loadToServer(this.httpServer)
 	}
 
 	private checkEnv() {
