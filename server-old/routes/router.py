@@ -4,6 +4,7 @@ from flask import Flask
 import routes.routines as routines
 import routes.access as access
 import routes.soil as soil
+import routes.accounts as accounts
 
 
 class RouterService:
@@ -16,6 +17,7 @@ class RouterService:
         self.app.register_blueprint(access.access_router)
         self.app.register_blueprint(routines.routines_router)
         self.app.register_blueprint(soil.soil_router)
+        self.app.register_blueprint(accounts.accounts_router)
 
     def serve_static(self):
         # Serve static files with the Flask app.

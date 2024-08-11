@@ -1,0 +1,105 @@
+import { Express } from 'express'
+import passport from 'passport'
+import passportLocal from 'passport-local'
+import session from 'express-session'
+
+import { PrismaClient } from '@prisma/client'
+import { PrismaSessionStore } from '@quixo3/prisma-session-store'
+
+import bcrypt from 'bcrypt'
+const prisma = new PrismaClient()
+
+class SessionManager {
+	authStrategies: { [key: string]: passportLocal.Strategy }
+	private instance: SessionManager | null = null
+
+	constructor() {
+		this.authStrategies = {
+			local: new passportLocal.Strategy(
+				{
+					usernameField: 'email',
+					passwordField: 'password',
+					passReqToCallback: true,
+					session: false,
+				},
+				async (req: any, _email: string, _password: string, done) => {
+					try {
+						const user = await prisma.user.findFirst({
+							where: {
+								email: req.body.email,
+							},
+						})
+
+						if (!user)
+							return done(null, false, {
+								message: 'invalid-credentials',
+							})
+
+						// Verify password
+						if (
+							!bcrypt.compareSync(
+								req.body.password,
+								user.password
+							)
+						)
+							return done(null, false, {
+								message: 'invalid-credentials',
+							})
+
+						return done(null, user)
+					} catch (err: unknown) {
+						console.log(err)
+						return done(err)
+					}
+				}
+			),
+		}
+		this.loadStrategies()
+	}
+
+	public getInstance() {
+		if (!this.instance) this.instance = new SessionManager()
+		return this.instance
+	}
+
+	public loadToServer(server: Express) {
+		server.use(
+			session({
+				secret: process.env.SESSION_SECRET as string,
+				resave: false,
+				saveUninitialized: false,
+				cookie: {
+					secure: false,
+					maxAge: 1000 * 60 * 60 * 24 * 7,
+					sameSite: 'lax',
+					httpOnly: false,
+					path: '/',
+					domain: 'localhost',
+				},
+				store: new PrismaSessionStore(new PrismaClient(), {
+					checkPeriod: 2 * 60 * 1000, // 2 minutes
+					dbRecordIdIsSessionId: true,
+				}),
+			})
+		)
+		server.use(passport.initialize())
+		server.use(passport.session())
+	}
+
+	private loadStrategies() {
+		passport.serializeUser((user: any, done) => {
+			done(null, user.id)
+		})
+
+		passport.deserializeUser(async (id, done) => {
+			const user = await prisma.user.findUnique({
+				where: { id: id as string },
+			})
+			done(null, user)
+		})
+
+		passport.use(this.authStrategies.local)
+	}
+}
+
+export default SessionManager
