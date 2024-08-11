@@ -3,29 +3,23 @@ datasource db {
   url      = "file:dev.db"
 }
 
-generator db {
-  provider             = "prisma-client-py"
-  interface            = "asyncio"
-  recursive_type_depth = 5
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
   id             String          @id @default(cuid())
   created_at     DateTime        @default(now())
-  username          String          @unique
-  Session        Session?
+  email          String          @unique
   password       String
   PendingActions PendingActions?
 }
 
 model Session {
-  id         String   @id @default(cuid())
-  created_at DateTime @default(now())
-  expires_at DateTime
-  user_id    String
-  user       User     @relation(fields: [user_id], references: [id])
-
-  @@unique([user_id])
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
 }
 
 model PendingActions {

@@ -38,10 +38,14 @@ class Server {
 		this.loadMiddlewares()
 		this.sessions.loadToServer(this.app)
 		this.router.registerRoutes(this.app)
+
+		this.app.listen(this.port, () => {
+			console.log(`Server started on port ${this.port}`)
+		})
 	}
 
 	private checkEnv() {
-		const requiredKeys = ['MONGODB_URI', 'SESSION_SECRET']
+		const requiredKeys = ['SESSION_SECRET']
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {
 				throw new Error(`Missing environment variable: ${key}`)

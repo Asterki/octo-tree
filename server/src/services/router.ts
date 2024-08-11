@@ -1,10 +1,10 @@
 import express, { Express, Router as ExpressRouter } from 'express';
 
-// // Account routes
-// import accountsRegister from '../routes/accounts/register';
-// import accountsLogin from '../routes/accounts/login';
-// import accountsMe from '../routes/accounts/me';
-// import accountsLogout from '../routes/accounts/logout';
+// Account routes
+import accountsRegister from '../routes/accounts/register';
+import accountsLogin from '../routes/accounts/login';
+import accountsMe from '../routes/accounts/me';
+import accountsLogout from '../routes/accounts/logout';
 
 // // Contact routes
 // import contactsAdd from '../routes/contacts/add';
@@ -51,28 +51,28 @@ class Router {
     this.accountRouter.get('/me', accountsMe);
     this.accountRouter.get('/logout', accountsLogout);
 
-    // Contact routes
-    this.contactsRouter.post('/add', contactsAdd);
-    this.contactsRouter.post('/remove', contactsRemove);
-    this.contactsRouter.post('/block', contactsBlock);
-    this.contactsRouter.post('/unblock', contactsUnblock);
-    this.contactsRouter.post('/pending', contactsPending);
-    this.contactsRouter.get('/get', contactsGet);
+    // // Contact routes
+    // this.contactsRouter.post('/add', contactsAdd);
+    // this.contactsRouter.post('/remove', contactsRemove);
+    // this.contactsRouter.post('/block', contactsBlock);
+    // this.contactsRouter.post('/unblock', contactsUnblock);
+    // this.contactsRouter.post('/pending', contactsPending);
+    // this.contactsRouter.get('/get', contactsGet);
 
-    // Settings routes
-    this.settingsRouter.post('/general', settingsGeneral);
-    this.settingsRouter.post('/privacy', settingsPrivacy);
-    this.settingsRouter.post('/notifications', settingsNotification);
-    this.settingsRouter.post('/security/change-password', settingsChangePassword);
-    this.settingsRouter.post('/security/tfa', settingsTfa);
+    // // Settings routes
+    // this.settingsRouter.post('/general', settingsGeneral);
+    // this.settingsRouter.post('/privacy', settingsPrivacy);
+    // this.settingsRouter.post('/notifications', settingsNotification);
+    // this.settingsRouter.post('/security/change-password', settingsChangePassword);
+    // this.settingsRouter.post('/security/tfa', settingsTfa);
 
-    // Utils routesw
-    this.utilsRouter.post('/verify-tfa', verifyTFA);
-    this.utilsRouter.get('/generate-tfa', generateTFA);
+    // // Utils routesw
+    // this.utilsRouter.post('/verify-tfa', verifyTFA);
+    // this.utilsRouter.get('/generate-tfa', generateTFA);
 
-    // Profile routes
-    this.profileRouter.post('/update', profileUpdate);
-    this.profileRouter.post('/picture', profilePicture);
+    // // Profile routes
+    // this.profileRouter.post('/update', profileUpdate);
+    // this.profileRouter.post('/picture', profilePicture);
 
     server.use('/api/accounts', this.accountRouter);
     server.use('/api/contacts', this.contactsRouter);

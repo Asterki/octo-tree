@@ -17,19 +17,16 @@ class SessionManager {
 		this.authStrategies = {
 			local: new passportLocal.Strategy(
 				{
-					usernameField: 'emailOrUsername',
+					usernameField: 'email',
 					passwordField: 'password',
 					passReqToCallback: true,
 					session: false,
 				},
 				async (req: any, _email: string, _password: string, done) => {
 					try {
-						const user = prisma.user.findFirst({
+						const user = await prisma.user.findFirst({
 							where: {
-								OR: [
-									{ email: req.body.emailOrUsername },
-									{ username: req.body.emailOrUsername },
-								],
+								email: req.body.email,
 							},
 						})
 
@@ -40,11 +37,11 @@ class SessionManager {
 								message: 'invalid-credentials',
 							})
 
-						// Verify password and TFA code
+						// Verify password
 						if (
 							!bcrypt.compareSync(
 								req.body.password,
-								user.preferences.security.password
+								user.password
 							)
 						)
 							return done(null, false, {
