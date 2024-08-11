@@ -10,10 +10,12 @@ generator db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  created_at DateTime @default(now())
-  email      String   @unique
-  name       String?
+  id             String          @id @default(cuid())
+  created_at     DateTime        @default(now())
+  email          String          @unique
+  name           String?
+  Session        Session?
+  PendingActions PendingActions?
 }
 
 model Session {
@@ -22,7 +24,6 @@ model Session {
   expires_at DateTime
   user_id    String
   user       User     @relation(fields: [user_id], references: [id])
-
 
   @@unique([user_id])
 }
@@ -37,5 +38,4 @@ model PendingActions {
   data       String
 
   @@unique([user_id])
-
 }
