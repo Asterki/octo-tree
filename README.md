@@ -1,6 +1,6 @@
 # Octo-Tree
 
-This project is a web application that interfaces with an Arduino Uno board to monitor and control various sensors and actuators. The backend is built with Python, using Flask for the web framework, Socket.io for real-time communication, and SQLite for data storage. The frontend is developed with TypeScript, React, Socket.io, and TailwindCSS.
+This project is a web application that interfaces with an Arduino Uno board to monitor and control various sensors and actuators. The backend is built with Typescript, using Express for the web framework, Socket.io for real-time communication, and SQLite for data storage. The frontend is developed with TypeScript, React, Socket.io, and TailwindCSS.
 
 ## Table of Contents
 
@@ -56,18 +56,16 @@ This project is a web application that interfaces with an Arduino Uno board to m
     cd server
     ```
 
-3. Set up a virtual environment and install dependencies:
+3. Set up the server and install dependencies:
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    pip install -r requirements.txt
+    npm i
     ```
 
 4. Run the Flask server:
 
     ```bash
-    python index.py
+    npm run dev
     ```
 
 ### Frontend Setup
@@ -92,7 +90,7 @@ This project is a web application that interfaces with an Arduino Uno board to m
 
 ## Usage
 
-1. Ensure the Flask backend and React frontend servers are running.
+1. Ensure the Node backend and React frontend servers are running.
 2. Open your web browser and navigate to `http://localhost:5173`.
 3. You should see the web app interface where you can monitor sensor data and control actuators.
 
