@@ -1,5 +1,6 @@
-from services.database import DatabaseService
+import bcrypt
 
+from services.database import DatabaseService
 
 class AccountManager:
     _instance = None
@@ -18,17 +19,20 @@ class AccountManager:
 
     def create_account(self, username, password):
         try:
+            # Hash the password
+            hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+            
             DatabaseService.get_instance().insert(
                 "users",
                 {
                     "username": username,
-                    "password": password,
+                    "password": hashed_password,
                 },
             )
             return True
         except Exception as e:
             print(e)
-        return False
+        return
 
     def verify_account(self, username, password):
         try:
