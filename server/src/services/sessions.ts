@@ -30,8 +30,6 @@ class SessionManager {
 							},
 						})
 
-						console.log(user)
-
 						if (!user)
 							return done(null, false, {
 								message: 'invalid-credentials',
@@ -90,7 +88,7 @@ class SessionManager {
 
 	private loadStrategies() {
 		passport.serializeUser((user: any, done) => {
-			done(null, user._id)
+			done(null, user.id)
 		})
 
 		passport.deserializeUser(async (id, done) => {

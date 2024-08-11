@@ -6,7 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 const handler = (req: Request, res: Response, next: NextFunction) => {
   const parsedBody = z
     .object({
-      emailOrUsername: z.string(),
+      email: z.string(),
       password: z.string(),
     })
     .safeParse(req.body);

@@ -49,7 +49,7 @@ class Router {
     this.accountRouter.post('/register', accountsRegister);
     this.accountRouter.post('/login', accountsLogin);
     this.accountRouter.get('/me', accountsMe);
-    this.accountRouter.get('/logout', accountsLogout);
+    this.accountRouter.post('/logout', accountsLogout);
 
     // // Contact routes
     // this.contactsRouter.post('/add', contactsAdd);
