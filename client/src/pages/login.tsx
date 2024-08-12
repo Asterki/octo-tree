@@ -17,7 +17,7 @@ const LoginPage = () => {
 	const login = async () => {
 		try {
 			const response = await axios({
-				url: 'http://localhost:3000/api/accounts/login',
+				url: `${import.meta.env.VITE_API_URL}/api/accounts/login`,
 				method: 'POST',
 				data: {
 					email: emailRef.current?.value,
@@ -29,13 +29,12 @@ const LoginPage = () => {
 			if (response.status == 200) {
 				// Get the user's data
 				const userResponse = await axios({
-					url: 'http://localhost:3000/api/accounts/me',
+					url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
 					method: 'GET',
 					withCredentials: true,
 				})
 
 				dispatch(setUser(userResponse.data))
-
 				navigate('/dashboard')
 			} else {
 				alert('Incorrect credentials!')
@@ -53,10 +52,25 @@ const LoginPage = () => {
 
 	// Check if the user is already logged in
 	React.useEffect(() => {
-		if (user) {
-			navigate('/dashboard')
-			return
-		}
+		;(async () => {
+			if (user) {
+				navigate('/dashboard')
+			} else {
+				// Get the user's data
+				try {
+					const response = await axios({
+						url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						method: 'get',
+						withCredentials: true,
+					})
+
+					dispatch(setUser(response.data))
+					navigate('/dashboard')
+				} catch (error) {
+					navigate('/login')
+				}
+			}
+		})()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

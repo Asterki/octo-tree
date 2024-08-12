@@ -12,7 +12,7 @@ const IndexPage = () => {
 	const dispatch = useAppDispatch()
 
 	React.useEffect(() => {
-		(async () => {
+		;(async () => {
 			// Check if the user is already logged in
 			if (user) {
 				navigate('/dashboard')
@@ -21,7 +21,10 @@ const IndexPage = () => {
 				// Get /me to check if the user is logged in
 				try {
 					const response = await axios.get(
-						'http://localhost:3000/api/accounts/me'
+						`${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						{
+							withCredentials: true,
+						},
 					)
 
 					dispatch(setUser(response.data))
