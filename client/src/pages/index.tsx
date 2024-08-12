@@ -14,7 +14,7 @@ const IndexPage = () => {
                 interface TokenResponse {
                     status: boolean;
                 }
-                const tokenResponse = await axios.post<TokenResponse>(
+                const tokenResponse = await axios.get<TokenResponse>(
                     "http://localhost:5000/api/access/verify-session",
                     {
                         token: token,
