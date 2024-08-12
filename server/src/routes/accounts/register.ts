@@ -18,6 +18,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				.refine((pass) => {
 					return validator.isStrongPassword(pass)
 				}),
+			productID: z.string().min(16).max(16),
 		})
 		.safeParse(req.body)
 
@@ -42,11 +43,21 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		let userID = uuidv4()
 		const hashedPassword = await bcrypt.hash(parsedBody.data.password, 10)
 
+		// Create the user
 		const user = await prisma.user.create({
 			data: {
 				id: userID,
 				email: parsedBody.data.email,
 				password: hashedPassword,
+			},
+		})
+
+		// Register the user to the product
+		await prisma.boards.create({
+			data: {
+				id: parsedBody.data.productID,
+				name: 'My Board',
+				user_id: userID,
 			},
 		})
 

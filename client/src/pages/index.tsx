@@ -1,37 +1,43 @@
-import * as React from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import * as React from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
+import { useAppSelector, useAppDispatch } from '../store/hooks'
+import { setUser } from '../store/slices/pages'
 
 const IndexPage = () => {
-    const navigate = useNavigate();
+	const navigate = useNavigate()
 
-    React.useEffect(() => {
-        (async () => {
-            // Check if the user is already logged in
-            const token = localStorage.getItem("token");
-            if (token) {
-                // Verify that the token is valid
-                interface TokenResponse {
-                    status: boolean;
-                }
-                const tokenResponse = await axios.post<TokenResponse>(
-                    "http://localhost:5000/api/access/verify-session",
-                    {
-                        token: token,
-                    }
-                );
+	const user = useAppSelector((state) => state.page.user)
+	const dispatch = useAppDispatch()
 
-                if (tokenResponse.data.status == true)
-                    return navigate("/dashboard");
-                return navigate("/login");
-            }
+	React.useEffect(() => {
+		;(async () => {
+			// Check if the user is already logged in
+			if (user) {
+				navigate('/dashboard')
+				return
+			} else {
+				// Get /me to check if the user is logged in
+				try {
+					const response = await axios.get(
+						`${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						{
+							withCredentials: true,
+						},
+					)
 
-            return navigate("/login");
-        })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+					dispatch(setUser(response.data))
+					navigate('/dashboard')
+				} catch (error) {
+					navigate('/login')
+				}
+			}
+		})()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
-    return <p>Loading...</p>;
-};
+	return <p>Loading...</p>
+}
 
-export default IndexPage;
+export default IndexPage
