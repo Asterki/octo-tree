@@ -18,6 +18,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				.refine((pass) => {
 					return validator.isStrongPassword(pass)
 				}),
+			productID: z.string().min(16).max(16),
 		})
 		.safeParse(req.body)
 

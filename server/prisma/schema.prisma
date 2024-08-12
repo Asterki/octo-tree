@@ -8,18 +8,28 @@ generator client {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  created_at     DateTime        @default(now())
-  email          String          @unique
-  password       String
-  PendingActions PendingActions?
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  email      String   @unique
+  password   String
+  boards     Boards[]
 }
 
 model Session {
   id        String   @id
   sid       String   @unique
   data      String
-  expiresAt   DateTime
+  expiresAt DateTime
+}
+
+model Boards {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  name       String
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+
+  pendingActions PendingActions[]
 }
 
 model PendingActions {
@@ -27,9 +37,9 @@ model PendingActions {
   created_at DateTime @default(now())
   expires_at DateTime
   user_id    String
-  user       User     @relation(fields: [user_id], references: [id])
-  action     String
   data       String
+  Boards     Boards?  @relation(fields: [boardsId], references: [id])
+  boardsId   String?
 
   @@unique([user_id])
 }
