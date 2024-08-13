@@ -11,26 +11,23 @@ class AzureService {
 		this.key = key
 
 		const cognitiveServiceCredentials = new CognitiveServicesCredentials(
-			this.key
+			this.key,
 		)
 		this.computerVisionClient = new ComputerVisionClient(
 			cognitiveServiceCredentials,
-			this.endpoint
+			this.endpoint,
 		)
 	}
 
-    public async analyzeImage(imageUrl: string) {
-        if (!this.computerVisionClient) {
-            throw new Error('Computer Vision client not initialized')
-        }
+	public async analyzeImage(imageUrl: string) {
+		if (!this.computerVisionClient) {
+			throw new Error('Computer Vision client not initialized')
+		}
 
-        const result = await this.computerVisionClient.describeImage(
-            imageUrl,
-            {
-                maxCandidates: 1
-            }
-        )
+		const result = await this.computerVisionClient.describeImage(imageUrl, {
+			maxCandidates: 1,
+		})
 
-        return result
-    }
+		return result
+	}
 }

@@ -39,7 +39,7 @@ class SessionManager {
 						if (
 							!bcrypt.compareSync(
 								req.body.password,
-								user.password
+								user.password,
 							)
 						)
 							return done(null, false, {
@@ -51,7 +51,7 @@ class SessionManager {
 						console.log(err)
 						return done(err)
 					}
-				}
+				},
 			),
 		}
 		this.loadStrategies()
@@ -80,7 +80,7 @@ class SessionManager {
 					checkPeriod: 2 * 60 * 1000, // 2 minutes
 					dbRecordIdIsSessionId: true,
 				}),
-			})
+			}),
 		)
 		server.use(passport.initialize())
 		server.use(passport.session())
