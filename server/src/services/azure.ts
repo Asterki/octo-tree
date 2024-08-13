@@ -6,17 +6,24 @@ class AzureService {
 	private endpoint: string
 	private key: string
 
-	constructor(endpoint: string, key: string) {
-		this.endpoint = endpoint
-		this.key = key
+	private static instance: AzureService | null = null
+
+	private constructor() {
+		this.endpoint = process.env.AZURE_ENDPOINT || ''
+		this.key = process.env.AZURE_KEY || ''
 
 		const cognitiveServiceCredentials = new CognitiveServicesCredentials(
-			this.key,
+			this.key
 		)
 		this.computerVisionClient = new ComputerVisionClient(
 			cognitiveServiceCredentials,
-			this.endpoint,
+			this.endpoint
 		)
+	}
+
+	public static getInstance() {
+		if (!AzureService.instance) AzureService.instance = new AzureService()
+		return AzureService.instance
 	}
 
 	public async analyzeImage(imageUrl: string) {
@@ -31,3 +38,5 @@ class AzureService {
 		return result
 	}
 }
+
+export default AzureService
