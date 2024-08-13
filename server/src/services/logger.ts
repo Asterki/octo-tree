@@ -22,7 +22,7 @@ class Logger {
 		) {
 			fsExtra.writeFileSync(
 				path.join(__dirname, '../../logs', 'info.txt'),
-				''
+				'',
 			)
 		}
 
@@ -31,7 +31,7 @@ class Logger {
 		) {
 			fsExtra.writeFileSync(
 				path.join(__dirname, '../../logs', 'warn.txt'),
-				''
+				'',
 			)
 		}
 
@@ -40,7 +40,7 @@ class Logger {
 		) {
 			fsExtra.writeFileSync(
 				path.join(__dirname, '../../logs', 'error.txt'),
-				''
+				'',
 			)
 		}
 	}
@@ -49,10 +49,10 @@ class Logger {
 		console.log(`${chalk.blue('[INFO]')} ${message}`)
 
 		if (logToFile) {
-      this.createFilesOrFolders()
+			this.createFilesOrFolders()
 			fsExtra.appendFileSync(
 				path.join(__dirname, '../../logs', 'info.txt'),
-				`[INFO] ${message}\n`
+				`[INFO] ${message}\n`,
 			)
 		}
 	}
@@ -61,10 +61,10 @@ class Logger {
 		console.log(`${chalk.yellow('[WARN]')} ${message}`)
 
 		if (logToFile) {
-      this.createFilesOrFolders()
+			this.createFilesOrFolders()
 			fsExtra.appendFileSync(
 				path.join(__dirname, '../../logs', 'warn.txt'),
-				`[WARN] ${message}\n`
+				`[WARN] ${message}\n`,
 			)
 		}
 	}
@@ -73,10 +73,10 @@ class Logger {
 		console.log(`${chalk.red('[ERROR]')} ${message}`)
 
 		if (logToFile) {
-      this.createFilesOrFolders()
+			this.createFilesOrFolders()
 			fsExtra.appendFileSync(
 				path.join(__dirname, '../../logs', 'error.txt'),
-				`[ERROR] ${message}\n`
+				`[ERROR] ${message}\n`,
 			)
 		}
 	}
