@@ -1,16 +1,17 @@
 import { ComputerVisionClient } from '@azure/cognitiveservices-computervision'
 import { CognitiveServicesCredentials } from '@azure/ms-rest-azure-js'
 
-class AzureService {
+// This file should not be used, as it is not yet implemented in the project
+class VoiceRecogService {
 	private computerVisionClient: ComputerVisionClient | null = null
 	private endpoint: string
 	private key: string
 
-	private static instance: AzureService | null = null
+	private static instance: VoiceRecogService | null = null
 
 	private constructor() {
-		this.endpoint = process.env.AZURE_ENDPOINT || ''
-		this.key = process.env.AZURE_KEY || ''
+		this.endpoint = process.env.AZURE_VR_ENDPOINT || ''
+		this.key = process.env.AZURE_VR_KEY || ''
 
 		const cognitiveServiceCredentials = new CognitiveServicesCredentials(
 			this.key
@@ -22,8 +23,8 @@ class AzureService {
 	}
 
 	public static getInstance() {
-		if (!AzureService.instance) AzureService.instance = new AzureService()
-		return AzureService.instance
+		if (!VoiceRecogService.instance) VoiceRecogService.instance = new VoiceRecogService()
+		return VoiceRecogService.instance
 	}
 
 	public async analyzeImage(imageUrl: string) {
@@ -39,4 +40,4 @@ class AzureService {
 	}
 }
 
-export default AzureService
+export default VoiceRecogService

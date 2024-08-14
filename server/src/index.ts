@@ -11,7 +11,7 @@ import Router from './services/router'
 import SessionController from './services/sessions'
 import SocketServer from './services/socket'
 import Logger from './services/logger'
-import AzureService from './services/azure'
+import SoilAnalysisService from './services/azure/soil_analysis'
 
 import 'dotenv/config'
 class Server {
@@ -67,7 +67,15 @@ class Server {
 	}
 
 	private checkEnv() {
-		const requiredKeys = ['SESSION_SECRET', 'AZURE_ENDPOINT', 'AZURE_KEY']
+		const requiredKeys = [
+			'SESSION_SECRET',
+			'AZURE_SA_ENDPOINT',
+			'AZURE_SA_KEY',
+			'AZURE_VR_ENDPOINT',
+			'AZURE_VR_KEY',
+			'AZURE_OAI_ENDPOINT',
+			'AZURE_OAI_KEY',
+		]
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {
 				const errorMessage = `Missing environment variable: ${key}`
