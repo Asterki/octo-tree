@@ -14,6 +14,7 @@ import Logger from './services/logger'
 import SoilAnalysisService from './services/azure/soil_analysis'
 
 import 'dotenv/config'
+
 class Server {
 	private static instance: Server | null = null
 
@@ -57,6 +58,13 @@ class Server {
 
 			this.socketServer.loadToServer(this.httpServer)
 			Logger.getInstance().info('Server started', true)
+
+			// Test the Azure service
+			const service = SoilAnalysisService.getInstance()
+			const result = await service.analizeLocalImage(
+				path.join(__dirname, 'uploads/soil/77810b2b-810a-4dd9-b646-162a9c81040c/c3eb5035-a2a1-49a4-8fa2-4e283a46a643')
+			)
+			console.log(result)
 		} catch (error) {
 			Logger.getInstance().error(
 				`Failed to start server: ${(error as any).message}`,

@@ -22,7 +22,8 @@ class SoilAnalysisService {
 	}
 
 	public static getInstance() {
-		if (!SoilAnalysisService.instance) SoilAnalysisService.instance = new SoilAnalysisService()
+		if (!SoilAnalysisService.instance)
+			SoilAnalysisService.instance = new SoilAnalysisService()
 		return SoilAnalysisService.instance
 	}
 
@@ -34,6 +35,23 @@ class SoilAnalysisService {
 		const result = await this.computerVisionClient.describeImage(imageUrl, {
 			maxCandidates: 1,
 		})
+
+		return result
+	}
+
+	public async analizeLocalImage(imagePath: string) {
+		if (!this.computerVisionClient) {
+			throw new Error('Computer Vision client not initialized')
+		}
+
+		const imageBuffer = Buffer.from(imagePath, 'base64')
+
+		const result = await this.computerVisionClient.describeImageInStream(
+			imageBuffer,
+			{
+				maxCandidates: 1,
+			}
+		)
 
 		return result
 	}
