@@ -339,11 +339,12 @@ function App() {
 						e.preventDefault()
 						const file = (document.querySelector('input[type="file"]') as HTMLInputElement).files?.[0]
 						const formData = new FormData()
-						formData.append('profile', file as Blob)
+						formData.append('soilimage', file as Blob)
 						axios.post(`${import.meta.env.VITE_API_URL}/api/soil/upload`, formData, {
 							headers: {
 								'Content-Type': 'multipart/form-data'
-							}
+							},
+							withCredentials: true
 						}).then((response) => {
 							console.log(response)
 						})

@@ -28,21 +28,23 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				})
 			})
 
-		if (!data.files.profile)
+		if (!data.files.soilimage)
 			return res.status(400).json({ message: 'bad-request' })
-		let file = data.files.profile[0]
+		let file = data.files.soilimage[0]
+
+		console.log(file, currentUser)
 
 		// Create the user directory if it doesn't exist
 		await UploadService.getInstance().createDirectory(
-			path.join(__dirname, '/uploads/soil/', currentUser.userID)
+			path.join(__dirname, '../../../uploads/soil/', currentUser.id)
 		)
 
 		// Save the image
 		const imageID = uuidv4()
 		let newPath = path.join(
 			__dirname,
-			'/uploads/soil/',
-			currentUser.userID,
+			'../../../uploads/soil/',
+			currentUser.id,
 			imageID
 		)
 		let rawData = fs.readFileSync(file.filepath)
@@ -66,6 +68,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
             imageID: imageID,
         })
 	} catch (err) {
+		console.log(err)
 		return res.status(500).send({
 			status: 'error',
 		})
