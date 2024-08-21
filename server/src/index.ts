@@ -14,6 +14,7 @@ import Logger from './services/logger'
 import SoilAnalysisService from './services/azure/soil_analysis'
 
 import 'dotenv/config'
+
 class Server {
 	private static instance: Server | null = null
 
@@ -75,6 +76,7 @@ class Server {
 			'AZURE_VR_KEY',
 			'AZURE_OAI_ENDPOINT',
 			'AZURE_OAI_KEY',
+			'AZURE_STORAGE_CONNECTION_STRING',
 		]
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {
