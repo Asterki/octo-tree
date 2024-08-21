@@ -58,7 +58,6 @@ web_modules/
 .stylelintcache
 
 *.db
-uploads
 
 # Microbundle cache
 .rpt2_cache/
