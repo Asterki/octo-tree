@@ -349,6 +349,7 @@ function App() {
 						})
 					}}>Upload Image</button>
 				</form>
+        
 				<section className="flex flex-col col-start-5 row-span-2 col-span-4 bg-white shadow-lg rounded-md p-2 ">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Routines
