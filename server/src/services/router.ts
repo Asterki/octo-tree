@@ -11,7 +11,7 @@ import soilUpload from '../routes/soil/upload'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
-	public soilRouter = express.Router()
+  public soilRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}

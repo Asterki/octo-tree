@@ -1,30 +1,67 @@
-# React + TypeScript + Vite
+# Vite React App with Redux Toolkit, Axios, and Socket.IO
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a Vite-based React application that utilizes Redux Toolkit for state management, Axios for API requests, and Socket.IO for real-time communication.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite**: Fast and efficient development server and build tool.
+- **React**: Modern JavaScript library for building user interfaces.
+- **Redux Toolkit**: Simplified Redux development with integrated tools.
+- **Axios**: Promise-based HTTP client for the browser and Node.js.
+- **Socket.IO**: Real-time bidirectional event-based communication.
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Before you begin, ensure you have met the following requirements:
 
-- Configure the top-level `parserOptions` property like this:
+- Node.js (v14.x or higher) and npm installed on your machine.
+- The server code (located in a separate folder outside this project) must be running.
+- Environment variables must be set.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Installation
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/vite-react-app.git
+   cd vite-react-app
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   
+   Create a `.env` file in the root of the project and add the necessary environment variables.
+
+   Example:
+   ```bash
+   REACT_APP_API_URL=http://localhost:5000/api
+   REACT_APP_SOCKET_URL=http://localhost:5000
+   ```
+
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Run the server (outside of this folder):**
+
+   Make sure your server is running, as the app depends on it for API requests and Socket.IO communication.
+
+6. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+7. **Preview the production build:**
+   ```bash
+   npm run preview
+   ```
+
+## Usage
+
+- The application will be running on `http://localhost:3000` by default.
+- Ensure the server is running on the specified URL in the environment variables for successful API requests and real-time communication.
+

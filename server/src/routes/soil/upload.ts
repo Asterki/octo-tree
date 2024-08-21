@@ -1,10 +1,8 @@
 import formidable, { IncomingForm } from 'formidable'
-import path from 'path'
-import fs from 'fs'
-import sharp from 'sharp'
+
+import AzureStorageService from '../../services/azure/storage'
 import { v4 as uuidv4 } from 'uuid'
 
-import UploadService from '../../services/upload'
 import { NextFunction, Request, Response } from 'express'
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
@@ -34,39 +32,23 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 		console.log(file, currentUser)
 
-		// Create the user directory if it doesn't exist
-		await UploadService.getInstance().createDirectory(
-			path.join(__dirname, '../../../uploads/soil/', currentUser.id)
-		)
-
 		// Save the image
 		const imageID = uuidv4()
-		let newPath = path.join(
-			__dirname,
-			'../../../uploads/soil/',
-			currentUser.id,
-			imageID
+
+		const buffer = Buffer.from(file.toString(), 'base64')
+		const storage = AzureStorageService.getInstance()
+		await storage.createContainer('soil-images')
+		await storage.uploadFile(
+			'soil-images',
+			`${imageID}.jpg`,
+			buffer
 		)
-		let rawData = fs.readFileSync(file.filepath)
 
-		// Compress the file
-		await sharp(rawData)
-			.resize(256, 256)
-			.png()
-			.toBuffer()
-			.then((data) => {
-				rawData = data
-			})
-
-		fs.writeFile(newPath, rawData, function (err) {
-			if (err) console.log(err)
+		return res.status(200).json({
+			status: 'success',
+			message: 'image-uploaded',
+			imageID: imageID,
 		})
-
-        return res.status(200).json({
-            status: 'success',
-            message: 'image-uploaded',
-            imageID: imageID,
-        })
 	} catch (err) {
 		console.log(err)
 		return res.status(500).send({
