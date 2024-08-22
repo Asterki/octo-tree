@@ -1,4 +1,6 @@
 import formidable, { IncomingForm } from 'formidable'
+import fs from 'fs'
+import sharp from 'sharp'
 
 import AzureStorageService from '../../services/azure/storage'
 import { v4 as uuidv4 } from 'uuid'
@@ -30,19 +32,23 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			return res.status(400).json({ message: 'bad-request' })
 		let file = data.files.soilimage[0]
 
-		console.log(file)
-
-		// Save the image
+		// File buffer
+		let rawData = fs.readFileSync(file.filepath)
 		const imageID = uuidv4()
 
-		const buffer = Buffer.from(file.toString(), 'base64')
+		// Resize the image
+		await sharp(rawData)
+			.resize(256, 256)
+			.png()
+			.toBuffer()
+			.then((data) => {
+				rawData = data
+			})
+
+		// Save the image
 		const storage = AzureStorageService.getInstance()
 		await storage.createContainer('soil-images')
-		await storage.uploadFile(
-			'soil-images',
-			`${imageID}.jpg`,
-			buffer
-		)
+		await storage.uploadFile('soil-images', `${imageID}.png`, rawData)
 
 		return res.status(200).json({
 			status: 'success',
