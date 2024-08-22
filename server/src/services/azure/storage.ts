@@ -2,19 +2,17 @@ import { BlobServiceClient, AnonymousCredential } from '@azure/storage-blob'
 
 class AzureStorageService {
 	private blobServiceClient: BlobServiceClient
-	private connectionStr: string
+	private connectionString: string
 
 	private static instance: AzureStorageService | null = null
 
 	constructor() {
-		this.connectionStr = process.env
-			.AZURE_STORAGE_CONNECTION_STRING as string
-		console.log(this.connectionStr)
-		this.blobServiceClient = new BlobServiceClient(
-			this.connectionStr,
-			new AnonymousCredential()
-		)
+		this.connectionString =
+			process.env.AZURE_STORAGE_CONNECTION_STRING || ''
 
+		this.blobServiceClient = BlobServiceClient.fromConnectionString(
+			this.connectionString
+		)
 		this.printContainers()
 	}
 

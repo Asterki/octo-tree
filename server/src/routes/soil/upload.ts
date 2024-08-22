@@ -29,7 +29,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			return res.status(400).json({ message: 'bad-request' })
 		let file = data.files.soilimage[0]
 
-		console.log(file, currentUser)
+		console.log(file)
 
 		// Save the image
 		const imageID = uuidv4()
