@@ -45,11 +45,14 @@ class AzureStorageService {
 		containerName: string,
 		fileName: string,
 		fileContent: Buffer
-	): Promise<void> {
+	): Promise<string> {
 		const containerClient =
 			this.blobServiceClient.getContainerClient(containerName)
 		const blockBlobClient = containerClient.getBlockBlobClient(fileName)
 		await blockBlobClient.uploadData(fileContent)
+
+		// Get the URL of the uploaded file
+		return blockBlobClient.url
 	}
 
 	async deleteContainer(containerName: string): Promise<void> {

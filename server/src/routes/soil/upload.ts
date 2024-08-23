@@ -48,12 +48,13 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		// Save the image
 		const storage = AzureStorageService.getInstance()
 		await storage.createContainer('soil-images')
-		await storage.uploadFile('soil-images', `${imageID}.png`, rawData)
+		const url = await storage.uploadFile('soil-images', `${imageID}.png`, rawData)
 
 		return res.status(200).json({
 			status: 'success',
 			message: 'image-uploaded',
 			imageID: imageID,
+			url: url,
 		})
 	} catch (err) {
 		console.log(err)
