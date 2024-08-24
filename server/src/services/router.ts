@@ -7,11 +7,11 @@ import accountsMe from '../routes/accounts/me'
 import accountsLogout from '../routes/accounts/logout'
 
 // Soil routes
-import soilUpload from '../routes/soil/upload'
+import soilUpload, { limiter as soilUploadLimit } from '../routes/soil/upload'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
-  public soilRouter = express.Router()
+	public soilRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}
@@ -29,7 +29,7 @@ class Router {
 		this.accountRouter.post('/logout', accountsLogout)
 
 		// Soil routes
-		this.soilRouter.post('/upload', soilUpload)
+		this.soilRouter.post('/upload', soilUploadLimit, soilUpload)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/soil', this.soilRouter)

@@ -1,12 +1,18 @@
 import formidable, { IncomingForm } from 'formidable'
 import fs from 'fs'
 import sharp from 'sharp'
+import { rateLimit } from 'express-rate-limit'
 
 import AzureStorageService from '../../services/azure/storage'
 import SoilAnalysisService from '../../services/azure/soil_analysis'
 import { v4 as uuidv4 } from 'uuid'
 
 import { NextFunction, Request, Response } from 'express'
+
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 1, // limit each IP to 1 requests per windowMs
+})
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
 	const user = req.user
@@ -74,4 +80,5 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	}
 }
 
+export { limiter };
 export default handler
