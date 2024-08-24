@@ -1,13 +1,13 @@
 import express, { Express, Router as ExpressRouter } from 'express'
 
 // Account routes
-import accountsRegister from '../routes/accounts/register'
-import accountsLogin from '../routes/accounts/login'
-import accountsMe from '../routes/accounts/me'
-import accountsLogout from '../routes/accounts/logout'
+import accountsRegister, { limiter as accountsRegisterLimiter } from '../routes/accounts/register'
+import accountsLogin, { limiter as accountsLoginLimiter } from '../routes/accounts/login'
+import accountsMe, { limiter as accountsMeLimiter } from '../routes/accounts/me'
+import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/accounts/logout'
 
 // Soil routes
-import soilUpload, { limiter as soilUploadLimit } from '../routes/soil/upload'
+import soilUpload, { limiter as soilUploadLimiter } from '../routes/soil/upload'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
@@ -23,13 +23,13 @@ class Router {
 
 	public registerRoutes = (server: Express) => {
 		// Account routes
-		this.accountRouter.post('/register', accountsRegister)
-		this.accountRouter.post('/login', accountsLogin)
-		this.accountRouter.get('/me', accountsMe)
-		this.accountRouter.post('/logout', accountsLogout)
+		this.accountRouter.post('/register', accountsRegisterLimiter, accountsRegister)
+		this.accountRouter.post('/login', accountsLoginLimiter, accountsLogin)
+		this.accountRouter.get('/me', accountsMeLimiter, accountsMe)
+		this.accountRouter.post('/logout', accountsLogoutLimiter, accountsLogout)
 
 		// Soil routes
-		this.soilRouter.post('/upload', soilUploadLimit, soilUpload)
+		this.soilRouter.post('/upload', soilUploadLimiter, soilUpload)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/soil', this.soilRouter)

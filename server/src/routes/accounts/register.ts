@@ -1,12 +1,18 @@
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
+import { rateLimit } from 'express-rate-limit'
 
 import validator from 'validator'
 import { z } from 'zod'
 
 import { NextFunction, Request, Response } from 'express'
 const prisma = new PrismaClient()
+
+const limiter = rateLimit({
+	windowMs: 60 * 60 * 1000, // 1 hour 
+	max: 1, // limit each IP to 1 requests per windowMs
+})
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
 	const parsedBody = z
@@ -73,4 +79,5 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	}
 }
 
+export { limiter}
 export default handler

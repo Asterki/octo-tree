@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
+import { rateLimit } from 'express-rate-limit'
 
-const handler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 1, // limit each IP to 1 requests per windowMs
+})
+
+const handler = async (req: Request, res: Response, next: NextFunction) => {
 	const user = req.user
 	if (!user)
 		return res.status(401).send({
@@ -19,4 +21,5 @@ const handler = async (
 	})
 }
 
+export { limiter }
 export default handler
