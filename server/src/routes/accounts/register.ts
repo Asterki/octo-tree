@@ -1,7 +1,10 @@
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
+
 import { rateLimit } from 'express-rate-limit'
+import { RedisStore } from 'rate-limit-redis'
+import RedisClient from '../../services/redis'
 
 import validator from 'validator'
 import { z } from 'zod'
@@ -10,8 +13,12 @@ import { NextFunction, Request, Response } from 'express'
 const prisma = new PrismaClient()
 
 const limiter = rateLimit({
-	windowMs: 60 * 60 * 1000, // 1 hour 
+	windowMs: 60 * 60 * 1000, // 1 hour
 	max: 1, // limit each IP to 1 requests per windowMs
+	store: new RedisStore({
+		sendCommand: (...args: string[]) =>
+			RedisClient.getInstance().getClient().sendCommand(args),
+	}),
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
@@ -79,5 +86,5 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	}
 }
 
-export { limiter}
+export { limiter }
 export default handler

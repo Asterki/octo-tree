@@ -1,9 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
+
 import { rateLimit } from 'express-rate-limit'
+import { RedisStore } from 'rate-limit-redis'
+import RedisClient from '../../services/redis'
 
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 1, // limit each IP to 1 requests per windowMs
+	store: new RedisStore({
+		sendCommand: (...args: string[]) =>
+			RedisClient.getInstance().getClient().sendCommand(args),
+	}),
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
