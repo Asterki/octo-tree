@@ -11,7 +11,7 @@ import Router from './services/router'
 import SessionController from './services/sessions'
 import SocketServer from './services/socket'
 import Logger from './services/logger'
-import SoilAnalysisService from './services/azure/soil_analysis'
+import RedisService from './services/redis'
 
 import 'dotenv/config'
 
@@ -28,6 +28,7 @@ class Server {
 	httpServer: ReturnType<typeof createServer> = createServer(this.app)
 	router: Router = Router.prototype.getInstance()
 	socketServer: SocketServer = SocketServer.getInstance()
+	redisService: RedisService = RedisService.getInstance()
 
 	constructor(dev: boolean, port: number) {
 		this.checkEnv()
@@ -70,6 +71,7 @@ class Server {
 	private checkEnv() {
 		const requiredKeys = [
 			'SESSION_SECRET',
+			'REDIS_URL',
 			'AZURE_SA_ENDPOINT',
 			'AZURE_SA_KEY',
 			'AZURE_VR_ENDPOINT',
