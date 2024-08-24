@@ -1,4 +1,8 @@
-import { BlobServiceClient, AnonymousCredential } from '@azure/storage-blob'
+import {
+	BlobServiceClient,
+	AnonymousCredential,
+	BlobSASPermissions,
+} from '@azure/storage-blob'
 
 class AzureStorageService {
 	private blobServiceClient: BlobServiceClient
@@ -52,7 +56,11 @@ class AzureStorageService {
 		await blockBlobClient.uploadData(fileContent)
 
 		// Get the URL of the uploaded file
-		return blockBlobClient.url
+		return blockBlobClient.generateSasUrl({
+			startsOn: new Date(),
+			expiresOn: new Date(new Date().valueOf() + 86400),
+			permissions: BlobSASPermissions.parse('r'),
+		})
 	}
 
 	async deleteContainer(containerName: string): Promise<void> {

@@ -3,6 +3,7 @@ import fs from 'fs'
 import sharp from 'sharp'
 
 import AzureStorageService from '../../services/azure/storage'
+import SoilAnalysisService from '../../services/azure/soil_analysis'
 import { v4 as uuidv4 } from 'uuid'
 
 import { NextFunction, Request, Response } from 'express'
@@ -48,12 +49,21 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		// Save the image
 		const storage = AzureStorageService.getInstance()
 		await storage.createContainer('soil-images')
-		const url = await storage.uploadFile('soil-images', `${imageID}.png`, rawData)
+		const url = await storage.uploadFile(
+			'soil-images',
+			`${imageID}.png`,
+			rawData
+		)
+
+		// Analyze the image
+		const analysis = SoilAnalysisService.getInstance()
+		const result = await analysis.analyzeImage(url)
 
 		return res.status(200).json({
 			status: 'success',
 			message: 'image-uploaded',
 			imageID: imageID,
+			analysis: result,
 			url: url,
 		})
 	} catch (err) {
