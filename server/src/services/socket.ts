@@ -3,7 +3,6 @@ import { createServer } from 'http'
 
 class SocketServer {
 	private static instance: SocketServer | null = null
-
 	io: Server = new Server()
 
 	public static getInstance() {
