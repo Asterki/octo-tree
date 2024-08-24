@@ -1,4 +1,5 @@
 import { createClient, RedisClientType } from 'redis'
+import Logger from './logger'
 
 class RedisClient {
 	private static instance: RedisClient
@@ -10,6 +11,14 @@ class RedisClient {
 				url: process.env.REDIS_URL,
 			}))
 		)
+
+		this.client.on('error', (error) => {
+			Logger.getInstance().error(
+				`Redis error: ${(error as any).message}`,
+				true
+			)
+		})
+		Logger.getInstance().info('Redis connected', true)
 	}
 
 	public static getInstance() {
