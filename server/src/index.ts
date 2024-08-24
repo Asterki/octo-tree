@@ -11,7 +11,6 @@ import Router from './services/router'
 import SessionController from './services/sessions'
 import SocketServer from './services/socket'
 import Logger from './services/logger'
-import SoilAnalysisService from './services/azure/soil_analysis'
 
 import 'dotenv/config'
 
@@ -70,6 +69,7 @@ class Server {
 	private checkEnv() {
 		const requiredKeys = [
 			'SESSION_SECRET',
+			'REDIS_URL',
 			'AZURE_SA_ENDPOINT',
 			'AZURE_SA_KEY',
 			'AZURE_VR_ENDPOINT',
