@@ -17,7 +17,7 @@ class AzureStorageService {
 		this.blobServiceClient = BlobServiceClient.fromConnectionString(
 			this.connectionString
 		)
-		this.getContainers()
+		this.printContainers()
 	}
 
 	public static getInstance() {
@@ -26,20 +26,15 @@ class AzureStorageService {
 		return AzureStorageService.instance
 	}
 
-	private async getContainers() {
-		let containerList = []
+	private async printContainers() {
 		let i = 1
 		let iter = this.blobServiceClient.listContainers()
 		for await (const container of iter) {
-			containerList.push(container.name)
+			console.log(`Container ${i++}: ${container.name}`)
 		}
-		return containerList
 	}
 
 	async createContainer(containerName: string): Promise<void> {
-		let containers = await this.getContainers()
-		if (containers.includes(containerName)) return
-
 		const containerClient =
 			this.blobServiceClient.getContainerClient(containerName)
 		await containerClient.create()
