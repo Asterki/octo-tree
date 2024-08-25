@@ -6,7 +6,6 @@ import { setUser } from '../store/slices/pages'
 
 import NavbarComponent from '../components/navbar'
 import AlertComponent from '../components/alert'
-import FooterComponent from '../components/footer'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -83,7 +82,7 @@ const LoginPage = () => {
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
 			<NavbarComponent />
 
-			<main className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+			<main className="min-h-screen flex items-center justify-center">
 				<form className="md:w-3/12 w-11/12">
 					<h1 className="text-3xl font-bold text-center">Login</h1>
 					<p className="text-center">
@@ -123,9 +122,7 @@ const LoginPage = () => {
 				</form>
 			</main>
 
-			<FooterComponent />
-
-			<AlertComponent />
+			<AlertComponent content='jewioqejwqio' />
 		</div>
 	)
 }
