@@ -4,10 +4,13 @@ import axios from 'axios'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
+import NavbarComponent from '../components/navbar'
+
 import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
 	const navigate = useNavigate()
+
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
 
@@ -76,11 +79,8 @@ const LoginPage = () => {
 
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
-			{/* Navbar */}
-			<div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4 absolute top-0">
-				<h1 className="text-3xl font-bold p-4">Octo Tree</h1>
-			</div>
-
+			<NavbarComponent />
+			
 			<main className="min-h-screen flex items-center justify-center">
 				<form action="">
 					<h1 className="text-3xl font-bold text-center">Login</h1>
