@@ -65,6 +65,12 @@ const NavbarComponent = () => {
 						>
 							Register
 						</Link>
+						<Link
+							className="hover:bg-gray-200 p-2 cursor-pointer w-full"
+							to="/dashboard"
+						>
+							Dashboard
+						</Link>
 					</div>
 				</div>
 			</div>
