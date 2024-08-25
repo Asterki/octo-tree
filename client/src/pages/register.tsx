@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
 import { useNavigate } from 'react-router-dom'
+import NavbarComponent from '../components/navbar'
 
 const Register = () => {
 	const navigate = useNavigate()
@@ -66,9 +67,7 @@ const Register = () => {
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
 			{/* Navbar */}
-			<div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4 absolute top-0">
-				<h1 className="text-3xl font-bold p-4">Octo Tree</h1>
-			</div>
+			<NavbarComponent />
 
 			<main className="min-h-screen flex items-center justify-center">
 				<form action="">
