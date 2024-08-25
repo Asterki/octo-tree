@@ -77,6 +77,8 @@ class Server {
 			'AZURE_OAI_KEY',
 			'AZURE_SA_ENDPOINT',
 			'AZURE_SA_KEY',
+			'AZURE_PA_ENDPOINT',
+			'AZURE_PA_KEY',
 		]
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {

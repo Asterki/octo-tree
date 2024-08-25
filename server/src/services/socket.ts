@@ -26,8 +26,6 @@ class SocketServer {
 		})
 
 		this.io.on('connection', (socket) => {
-			console.log('Socket connected')
-
 			socket.on('getsensordata', (data) => {
 				const { userID, boardID } = data
 				if (!userID || !boardID) return
