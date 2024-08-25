@@ -5,7 +5,7 @@ import './styles/globals.css'
 import LoginPage from './pages/login.tsx'
 import RegisterPage from './pages/register.tsx'
 import DashboardPage from './pages/dashboard.tsx'
-import IndexPage from './pages/index.tsx'
+import IndexPage from './pages/home.tsx'
 import PrivacyPolicy from './pages/privacy.tsx'
 
 import store from './store'
