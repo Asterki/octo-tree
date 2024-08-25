@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const NavbarComponent = () => {
 	return (
 		<div className="absolute top-0 w-full bg-gray-700 text-white flex items-center justify-between md:px-16 px-4 py-4 md:h-16 h-20">
@@ -11,17 +13,26 @@ const NavbarComponent = () => {
 						About the App
 					</h1>
 					<div className="flex-col gap-2 top-16 shadow-md bg-white text-gray-800 max-h-0 group-hover:max-h-72 overflow-y-hidden transition-all ease-in-out duration-500 flex absolute w-full">
-						<nav
+						<Link
+							to={'https://asterki.tech'}
+							target="_blank"
 							className="hover:bg-gray-200 p-2 cursor-pointer min-w-auto max-w-screen-sm"
 						>
 							About the developer
-						</nav>
-						<nav className="hover:bg-gray-200 p-2 cursor-pointer w-full">
+						</Link>
+						<Link
+							className="hover:bg-gray-200 p-2 cursor-pointer w-full"
+							to={'https://github.com/Asterki/octo-tree'}
+							target="_blank"
+						>
 							Open source
-						</nav>
-						<nav className="hover:bg-gray-200 p-2 cursor-pointer w-full">
+						</Link>
+						<Link
+							className="hover:bg-gray-200 p-2 cursor-pointer w-full"
+							to="/privacy-policy"
+						>
 							Privacy policy
-						</nav>
+						</Link>
 					</div>
 				</div>
 				<div className="group relative">
@@ -35,7 +46,6 @@ const NavbarComponent = () => {
 						<nav className="hover:bg-gray-200 p-2 cursor-pointer w-full">
 							¯\_(ツ)_/¯
 						</nav>
-	
 					</div>
 				</div>
 				<div className="group relative">
@@ -43,12 +53,18 @@ const NavbarComponent = () => {
 						Account Access
 					</h1>
 					<div className="flex-col gap-2 top-16 shadow-md bg-white text-gray-800 max-h-0 group-hover:max-h-72 overflow-y-hidden transition-all ease-in-out duration-500 flex absolute  w-full">
-						<nav className="hover:bg-gray-200 p-2 cursor-pointer w-full">
+						<Link
+							className="hover:bg-gray-200 p-2 cursor-pointer w-full"
+							to="/login"
+						>
 							Login
-						</nav>
-						<nav className="hover:bg-gray-200 p-2 cursor-pointer w-full">
+						</Link>
+						<Link
+							className="hover:bg-gray-200 p-2 cursor-pointer w-full"
+							to={'/register'}
+						>
 							Register
-						</nav>
+						</Link>
 					</div>
 				</div>
 			</div>
