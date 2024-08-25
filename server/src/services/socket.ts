@@ -1,6 +1,8 @@
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 
+import { PrismaClient } from '@prisma/client'
+
 class SocketServer {
 	private static instance: SocketServer | null = null
 	io: Server = new Server()
@@ -26,9 +28,27 @@ class SocketServer {
 		this.io.on('connection', (socket) => {
 			console.log('Socket connected')
 
-			socket.on('messageewq', (data) => {
-				console.log('Message received')
-				this.io.send('Message received')
+			socket.on('getsensordata', (data) => {
+				const { userID, boardID } = data
+				if (!userID || !boardID) return
+
+				// Get the sensor data
+				const prisma = new PrismaClient()
+				prisma.boards
+					.findFirst({
+						where: {
+							id: boardID,
+							user_id: userID,
+						},
+					})
+					.then((board) => {
+						if (!board) return
+
+						socket.emit('sensordata', {
+							boardID,
+							data: board.sensorData,
+						})
+					})
 			})
 		})
 
