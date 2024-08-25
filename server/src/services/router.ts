@@ -6,8 +6,9 @@ import accountsLogin, { limiter as accountsLoginLimiter } from '../routes/accoun
 import accountsMe, { limiter as accountsMeLimiter } from '../routes/accounts/me'
 import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/accounts/logout'
 
-// Soil routes
-import soilUpload, { limiter as soilUploadLimiter } from '../routes/soil/upload'
+// Analysis routes
+import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soil'
+import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
 
 // Sensor routes
 import sensorUpdate from '../routes/sensors/update'
@@ -32,8 +33,9 @@ class Router {
 		this.accountRouter.get('/me', accountsMeLimiter, accountsMe)
 		this.accountRouter.post('/logout', accountsLogoutLimiter, accountsLogout)
 
-		// Soil routes
-		this.soilRouter.post('/upload', soilUploadLimiter, soilUpload)
+		// Analysis routes
+		this.soilRouter.post('/panel', panelUploadLimiter, panelUpload)
+		this.soilRouter.post('/soil', soilUploadLimiter, soilUpload)
 
 		// Sensor routes
 		this.sensorRouter.post('/update', sensorUpdate)
