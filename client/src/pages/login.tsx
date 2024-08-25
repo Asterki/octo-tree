@@ -18,6 +18,25 @@ const LoginPage = () => {
 	const passwordRef = React.useRef<HTMLInputElement>(null)
 	const emailRef = React.useRef<HTMLInputElement>(null)
 
+	const [alertState, setAlertState] = React.useState({
+		show: false,
+		content: '',
+	})
+
+	const showAlert = (content: string) => {
+		setAlertState({
+			show: true,
+			content,
+		})
+
+		setTimeout(() => {
+			setAlertState({
+				show: false,
+				content: '',
+			})
+		}, 3000)
+	}
+
 	const login = async () => {
 		try {
 			const response = await axios({
@@ -40,16 +59,17 @@ const LoginPage = () => {
 
 				dispatch(setUser(userResponse.data))
 				navigate('/dashboard')
-			} else {
-				alert('Incorrect credentials!')
 			}
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
-				if (error.response?.status == 401) {
-					alert('Incorrect credentials!')
-				} else {
-					alert('An error occurred. Please try again later.')
-				}
+				if (error.response?.status == 401)
+					showAlert('Invalid email or password!')
+				if (error.response?.status == 400)
+					showAlert('Please fill in all the fields!')
+				if (error.response?.status == 500)
+					showAlert(
+						'An error occurred while processing your request!'
+					)
 			}
 		}
 	}
@@ -122,7 +142,10 @@ const LoginPage = () => {
 				</form>
 			</main>
 
-			<AlertComponent content='jewioqejwqio' />
+			<AlertComponent
+				content={alertState.content}
+				showing={alertState.show}
+			/>
 		</div>
 	)
 }

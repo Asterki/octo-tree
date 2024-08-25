@@ -5,7 +5,7 @@ import { setUser } from '../store/slices/pages'
 
 import { useNavigate } from 'react-router-dom'
 import NavbarComponent from '../components/navbar'
-import FooterComponent from '../components/footer'
+import AlertComponent from '../components/alert'
 
 const Register = () => {
 	const navigate = useNavigate()
@@ -18,12 +18,32 @@ const Register = () => {
 	const passwordRef = React.useRef<HTMLInputElement>(null)
 	const repeatPasswordRef = React.useRef<HTMLInputElement>(null)
 
+	const [alertState, setAlertState] = React.useState({
+		show: false,
+		content: '',
+	})
+
+	const showAlert = (content: string) => {
+		setAlertState({
+			show: true,
+			content,
+		})
+
+		setTimeout(() => {
+			setAlertState({
+				show: false,
+				content: '',
+			})
+		}, 3000)
+	}
+
 	const register = async () => {
 		const password = passwordRef.current?.value
 		const repeatPassword = repeatPasswordRef.current?.value
 
 		if (password !== repeatPassword) {
-			return alert('Passwords do not match!')
+			showAlert('Passwords do not match')
+			return
 		}
 
 		try {
@@ -40,9 +60,17 @@ const Register = () => {
 			)
 
 			if (response.data.success == true) return navigate('/login')
-			else alert('An error occurred')
 		} catch (error) {
-			console.error(error)
+			console.log(error)
+			if (axios.isAxiosError(error)) {
+				if (error.response?.status == 400) {
+					if (error.response.data.status == 'user-exists') {
+						showAlert('User already exists')
+					} else {
+						showAlert('Please fill in all the fields')
+					}
+				}
+			}
 		}
 	}
 
@@ -123,7 +151,10 @@ const Register = () => {
 				</form>
 			</main>
 
-			<FooterComponent />
+			<AlertComponent
+				content={alertState.content}
+				showing={alertState.show}
+			/>
 		</div>
 	)
 }
