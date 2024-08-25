@@ -5,8 +5,8 @@ import './styles/globals.css'
 import LoginPage from './pages/login.tsx'
 import RegisterPage from './pages/register.tsx'
 import DashboardPage from './pages/dashboard.tsx'
-import IndexPage from './pages/index.tsx'
-import TestPage from './pages/test.tsx'
+import IndexPage from './pages/home.tsx'
+import PrivacyPolicy from './pages/privacy.tsx'
 
 import store from './store'
 import { Provider } from 'react-redux'
@@ -31,9 +31,9 @@ const router = createBrowserRouter([
 		element: <RegisterPage />,
 	},
 	{
-		path: '/test',
-		element: <TestPage />,
-	},
+		path: '/privacy-policy',
+		element: <PrivacyPolicy />,
+	}
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

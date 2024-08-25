@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
 import { useNavigate } from 'react-router-dom'
+import NavbarComponent from '../components/navbar'
 
 const Register = () => {
 	const navigate = useNavigate()
@@ -27,14 +28,14 @@ const Register = () => {
 		try {
 			const response = await axios.post(
 				`${import.meta.env.VITE_API_URL}/api/accounts/register`,
-                {
-                    productID: productIDRef.current?.value,
-                    email: emailRef.current?.value,
-                    password,
-                },
-                {
-                    withCredentials: true,
-                }
+				{
+					productID: productIDRef.current?.value,
+					email: emailRef.current?.value,
+					password,
+				},
+				{
+					withCredentials: true,
+				}
 			)
 
 			if (response.data.success == true) return navigate('/login')
@@ -66,48 +67,58 @@ const Register = () => {
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
 			{/* Navbar */}
-			<div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4 absolute top-0">
-				<h1 className="text-3xl font-bold p-4">Octo Tree</h1>
-			</div>
+			<NavbarComponent />
 
 			<main className="min-h-screen flex items-center justify-center">
-				<form action="">
+				<form className="md:w-3/12 w-11/12">
 					<h1 className="text-3xl font-bold text-center">
 						Register your account
 					</h1>
+					<p className="text-center">
+						Please enter your product ID, email, and password to
+						register your account.
+					</p>
+
 					<div className="flex flex-col items-center mt-4">
 						<input
 							type="text"
 							ref={productIDRef}
 							placeholder="Product ID"
-							className="p-2 border border-neutral-200 rounded-md w-80"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<input
 							type="email"
 							ref={emailRef}
 							placeholder="Email"
-							className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<input
 							type="password"
 							ref={passwordRef}
-							placeholder="Repeat Password"
-							className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
+							placeholder="Password"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<input
 							type="password"
 							ref={repeatPasswordRef}
-							placeholder="Password"
-							className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
+							placeholder="Repeat Password"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<button
 							type="button"
 							onClick={register}
-							className="bg-emerald-700 text-white w-80 p-2 rounded-md mt-4"
+							className="bg-emerald-700 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
 						>
 							Register
 						</button>
 					</div>
+
+					<p className="mt-2 text-center">
+						Already have an account?{' '}
+						<a href="/login" className="text-emerald-700">
+							Login
+						</a>
+					</p>
 				</form>
 			</main>
 		</div>

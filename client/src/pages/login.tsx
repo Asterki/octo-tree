@@ -4,10 +4,13 @@ import axios from 'axios'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
+import NavbarComponent from '../components/navbar'
+
 import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
 	const navigate = useNavigate()
+
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
 
@@ -76,36 +79,45 @@ const LoginPage = () => {
 
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
-			{/* Navbar */}
-			<div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4 absolute top-0">
-				<h1 className="text-3xl font-bold p-4">Octo Tree</h1>
-			</div>
+			<NavbarComponent />
 
 			<main className="min-h-screen flex items-center justify-center">
-				<form action="">
+				<form className="md:w-3/12 w-11/12">
 					<h1 className="text-3xl font-bold text-center">Login</h1>
+					<p className="text-center">
+						Welcome back! Please login to your account to continue
+						using our services.
+					</p>
+
 					<div className="flex flex-col items-center mt-4">
 						<input
 							type="email"
 							ref={emailRef}
 							placeholder="Email"
-							className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 
 						<input
 							type="password"
 							ref={passwordRef}
 							placeholder="Password"
-							className="p-2 border border-neutral-200 rounded-md w-80 mt-2"
+							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<button
 							type="button"
 							onClick={login}
-							className="bg-emerald-700 text-white w-80 p-2 rounded-md mt-4"
+							className="bg-emerald-700 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
 						>
 							Login
 						</button>
 					</div>
+
+					<p className="mt-2 text-center">
+						Don't have an account?{' '}
+						<a href="/register" className="text-emerald-700">
+							Register
+						</a>
+					</p>
 				</form>
 			</main>
 		</div>
