@@ -151,10 +151,6 @@ function App() {
 		}
 	}, [socket])
 
-	React.useEffect(() => {
-		console.log(humidityData, temperatureData, currentTimeLabels)
-	}, [humidityData, temperatureData, currentTimeLabels])
-
 	//#region Remove this afterwards
 	const logout = async () => {
 		localStorage.removeItem('token')
@@ -205,6 +201,7 @@ function App() {
 					<button
 						onClick={(e) => {
 							e.preventDefault()
+							console.log('clicked')
 							const file = (
 								document.querySelector(
 									'input[type="file"]'
@@ -212,11 +209,12 @@ function App() {
 							).files?.[0]
 							const formData = new FormData()
 							formData.append('soilimage', file as Blob)
+							formData.append('userID', 'c128e86e-356d-42ef-b735-8ab3edc2b7f0')
 							axios
 								.post(
 									`${
 										import.meta.env.VITE_API_URL
-									}/api/soil/upload`,
+									}/api/analysis/soil`,
 									formData,
 									{
 										headers: {

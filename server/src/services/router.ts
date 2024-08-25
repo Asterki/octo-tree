@@ -41,7 +41,7 @@ class Router {
 		this.sensorRouter.post('/update', sensorUpdate)
 
 		server.use('/api/accounts', this.accountRouter)
-		server.use('/api/soil', this.soilRouter)
+		server.use('/api/analysis', this.soilRouter)
 		server.use('/api/sensors', this.sensorRouter)
 	}
 }
