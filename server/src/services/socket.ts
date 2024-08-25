@@ -19,7 +19,7 @@ class SocketServer {
 	loadToServer(server: ReturnType<typeof createServer>) {
 		this.io.attach(server, {
 			cors: {
-				origin: 'http://localhost:5173',
+				origin: process.env.CLIENT_URL,
 				credentials: true,
 				exposedHeaders: ['set-cookie'],
 			},
@@ -42,21 +42,25 @@ class SocketServer {
 					.then((board) => {
 						if (!board) return
 
-						// socket.emit('sensordata', {
-						// 	boardID,
-						// 	data: board.sensorData,
-						// })
-
-						// DEV: Send random data
-						const data = {
-							temperature: Math.random() * 100,
-							humidity: Math.random() * 100,
+						if (process.env.NODE_ENV === 'production') {
+							socket.emit('sensordata', {
+								boardID,
+								data: board.sensorData,
+							})
 						}
 
-						socket.emit('sensordata', {
-							boardID,
-							data: JSON.stringify(data),
-						})
+						// DEV: Send random data
+						if (process.env.NODE_ENV !== 'production') {
+							const data = {
+								temperature: Math.random() * 100,
+								humidity: Math.random() * 100,
+							}
+	
+							socket.emit('sensordata', {
+								boardID,
+								data: JSON.stringify(data),
+							})	
+						}
 					})
 			})
 		})

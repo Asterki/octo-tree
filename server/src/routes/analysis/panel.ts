@@ -1,4 +1,4 @@
-import formidable, { IncomingForm } from 'formidable'
+import formidable, { File, IncomingForm } from 'formidable'
 import fs from 'fs'
 import sharp from 'sharp'
 
@@ -17,9 +17,11 @@ const limiter = rateLimit({
 	max: 100, // limit each IP to 5 requests per windowMs
 	store: new RedisStore({
 		sendCommand: async (...args: string[]) =>
-			(await RedisClient.getInstance()).getClient().sendCommand([...args]),
+			(await RedisClient.getInstance())
+				.getClient()
+				.sendCommand([...args]),
 	}),
-	skipFailedRequests: true
+	skipFailedRequests: true,
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,13 +45,33 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				})
 			})
 
+		// return console.log(data.fields)
+
 		if (!data.files.soilimage)
 			return res.status(400).json({ message: 'bad-request' })
 		let file = data.files.soilimage[0]
 
+		// Check if the filename is on the cache
+		const cache = (await RedisClient.getInstance()).getClient()
+		const cached = await cache.get(
+			(file.originalFilename as string) + currentUser.id
+		)
+
+		if (cached) {
+			const data = JSON.parse(cached)
+
+			return res.status(200).json({
+				status: 'success',
+				message: 'image-uploaded',
+				analysis: data.analysis,
+				url: data.url,
+				imageID: data.imageID,
+			})
+		}
+
 		// File buffer
 		let rawData = fs.readFileSync(file.filepath)
-		const imageID = uuidv4()
+		const imageID = uuidv4() + currentUser.id
 
 		// Resize the image
 		await sharp(rawData)
@@ -73,6 +95,16 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		const analysis = PanelAnalysisService.getInstance()
 		const result = await analysis.analyzeImage(url)
 
+		// Save the analysis to the cache
+		await cache.set(
+			(file.originalFilename as string) + currentUser.id + "panel",
+			JSON.stringify({
+				analysis: result,
+				url: url,
+				imageID: imageID,
+			})
+		)
+
 		return res.status(200).json({
 			status: 'success',
 			message: 'image-uploaded',
@@ -88,5 +120,5 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	}
 }
 
-export { limiter };
+export { limiter }
 export default handler

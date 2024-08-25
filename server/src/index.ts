@@ -77,8 +77,9 @@ class Server {
 			'AZURE_OAI_KEY',
 			'AZURE_PA_ENDPOINT',
 			'AZURE_PA_KEY',
+			'CLIENT_URL',
 		]
-		
+
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {
 				const errorMessage = `Missing environment variable: ${key}`
@@ -104,7 +105,7 @@ class Server {
 		} else {
 			this.app.use(
 				cors({
-					origin: 'http://localhost:5173',
+					origin: process.env.CLIENT_URL,
 					credentials: true,
 					exposedHeaders: ['set-cookie'],
 					allowedHeaders: ['Content-Type'],
