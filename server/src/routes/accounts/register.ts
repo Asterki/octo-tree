@@ -68,6 +68,17 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			},
 		})
 
+		// Check if the product exists
+		const productExists = await prisma.boards.findFirst({
+			where: {
+				id: parsedBody.data.productID,
+			},
+		})
+		if (!productExists)
+			return res.status(400).send({
+				status: 'product-not-found',
+			})
+
 		// Register the user to the product
 		await prisma.boards.update({
 			where: {
@@ -88,6 +99,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 		})
 	} catch (error: unknown) {
+		console.log(error)
 		res.status(500).send({
 			status: 'internal-error',
 		})

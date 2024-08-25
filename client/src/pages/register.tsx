@@ -66,6 +66,10 @@ const Register = () => {
 				if (error.response?.status == 400) {
 					if (error.response.data.status == 'user-exists') {
 						showAlert('User already exists')
+					} else if (
+						error.response.data.status == 'product-not-found'
+					) {
+						showAlert('Invalid product ID')
 					} else {
 						showAlert('Please fill in all the fields')
 					}
