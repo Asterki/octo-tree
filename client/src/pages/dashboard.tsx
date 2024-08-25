@@ -151,12 +151,18 @@ function App() {
 		}
 	}, [socket])
 
-	//#region Remove this afterwards
 	const logout = async () => {
-		localStorage.removeItem('token')
-		navigate('/login')
+		const response = await axios({
+			url: `${import.meta.env.VITE_API_URL}/api/accounts/logout`,
+			method: 'post',
+			withCredentials: true,
+		})
+
+		if (response.status === 200) {
+			dispatch(setUser(null))
+			navigate('/login')
+		}
 	}
-	//#endregion
 
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -209,7 +215,10 @@ function App() {
 							).files?.[0]
 							const formData = new FormData()
 							formData.append('soilimage', file as Blob)
-							formData.append('userID', 'c128e86e-356d-42ef-b735-8ab3edc2b7f0')
+							formData.append(
+								'userID',
+								'c128e86e-356d-42ef-b735-8ab3edc2b7f0'
+							)
 							axios
 								.post(
 									`${
