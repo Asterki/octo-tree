@@ -5,6 +5,7 @@ import { setUser } from '../store/slices/pages'
 
 import { useNavigate } from 'react-router-dom'
 import NavbarComponent from '../components/navbar'
+import FooterComponent from '../components/footer'
 
 const Register = () => {
 	const navigate = useNavigate()
@@ -121,6 +122,8 @@ const Register = () => {
 					</p>
 				</form>
 			</main>
+
+			<FooterComponent />
 		</div>
 	)
 }
