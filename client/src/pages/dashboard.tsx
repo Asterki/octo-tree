@@ -97,6 +97,7 @@ function App() {
 					newSocket.emit('getsensordata', {
 						userID: 'c128e86e-356d-42ef-b735-8ab3edc2b7f0',
 						boardID: 'cm08xii1z00008sqfb8j8ih1x',
+						sensorShareToken: '123123123',
 					})
 				}, 500)
 			})

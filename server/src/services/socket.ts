@@ -1,6 +1,8 @@
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 
+
+import bcrypt from 'bcrypt'
 import { PrismaClient } from '@prisma/client'
 
 class SocketServer {
@@ -41,6 +43,7 @@ class SocketServer {
 					})
 					.then((board) => {
 						if (!board) return
+						// if (!bcrypt.compareSync(data.sensorShareToken, board.sensorShareToken)) return
 
 						if (process.env.NODE_ENV === 'production') {
 							socket.emit('sensordata', {
