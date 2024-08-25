@@ -40,6 +40,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				form.parse(req, (err, fields, files) => {
 					// TODO: Add filter to only allow images
 					if (err) return reject(err)
+
 					resolve({ fields, files })
 				})
 			})

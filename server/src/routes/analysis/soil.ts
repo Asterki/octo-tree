@@ -80,7 +80,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				rawData = data
 			})
 
-		// Save the image
+		const buffer = Buffer.from(file.toString(), 'base64')
 		const storage = AzureStorageService.getInstance()
 		await storage.createContainer('soil-images')
 		const url = await storage.uploadFile(
