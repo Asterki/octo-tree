@@ -5,12 +5,11 @@ class RedisClient {
 	private static instance: RedisClient
 	private client: RedisClientType
 
-	constructor() {
-		Promise.resolve(
-			(this.client = createClient({
-				url: process.env.REDIS_URL,
-			}))
-		)
+	private constructor() {
+		// The constructor is now private to prevent direct instantiation
+		this.client = createClient({
+			url: process.env.REDIS_URL,
+		})
 
 		this.client.on('error', (error) => {
 			Logger.getInstance().error(
@@ -18,15 +17,27 @@ class RedisClient {
 				true
 			)
 		})
-		Logger.getInstance().info('Redis connected', true)
 	}
 
-	public static getInstance() {
-		if (!RedisClient.instance) RedisClient.instance = new RedisClient()
+	// Public method to get the singleton instance
+	public static async getInstance(): Promise<RedisClient> {
+		if (!RedisClient.instance) {
+			RedisClient.instance = new RedisClient()
+			await RedisClient.instance.connect() // Ensure the client is connected
+		}
 		return RedisClient.instance
 	}
 
-	public getClient() {
+	// Private method to connect the client
+	private async connect(): Promise<void> {
+		if (!this.client.isOpen) {
+			await this.client.connect()
+			Logger.getInstance().info('Redis connected', true)
+		}
+	}
+
+	// Method to get the Redis client
+	public getClient(): RedisClientType {
 		return this.client
 	}
 }

@@ -11,9 +11,10 @@ const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000, // 1 hour
 	max: 5, // limit each IP to 5 requests per windowMs
 	store: new RedisStore({
-		sendCommand: (...args: string[]) =>
-			RedisClient.getInstance().getClient().sendCommand(args),
+		sendCommand: async (...args: string[]) =>
+			(await RedisClient.getInstance()).getClient().sendCommand([...args]),
 	}),
+	skipFailedRequests: true
 })
 
 const handler = (req: Request, res: Response, next: NextFunction) => {
