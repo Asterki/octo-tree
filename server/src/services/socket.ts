@@ -10,6 +10,10 @@ class SocketServer {
 		return SocketServer.instance
 	}
 
+	public getClient() {
+		return this.io
+	}
+
 	loadToServer(server: ReturnType<typeof createServer>) {
 		this.io.attach(server, {
 			cors: {

@@ -29,3 +29,5 @@ class SensorService {
 		return sensor
 	}
 }
+
+export default SensorService

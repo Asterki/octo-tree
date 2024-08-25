@@ -69,11 +69,16 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		})
 
 		// Register the user to the product
-		await prisma.boards.create({
-			data: {
+		await prisma.boards.update({
+			where: {
 				id: parsedBody.data.productID,
-				name: 'My Board',
-				user_id: userID,
+			},
+			data: {
+				user: {
+					connect: {
+						id: userID,
+					},
+				},
 			},
 		})
 

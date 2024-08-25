@@ -11,7 +11,6 @@ import Router from './services/router'
 import SessionController from './services/sessions'
 import SocketServer from './services/socket'
 import Logger from './services/logger'
-import RedisService from './services/redis'
 
 import 'dotenv/config'
 
