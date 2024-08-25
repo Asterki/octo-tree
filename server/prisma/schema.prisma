@@ -26,10 +26,13 @@ model Boards {
   id         String   @id @default(cuid())
   created_at DateTime @default(now())
   name       String
-  user_id    String
-  user       User     @relation(fields: [user_id], references: [id])
 
+  sensorData       String
+  sensorShareToken String
+
+  user_id        String?
   pendingActions PendingActions[]
+  user           User?            @relation(fields: [user_id], references: [id])
 }
 
 model PendingActions {

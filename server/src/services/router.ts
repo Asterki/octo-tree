@@ -9,9 +9,13 @@ import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/acco
 // Soil routes
 import soilUpload, { limiter as soilUploadLimiter } from '../routes/soil/upload'
 
+// Sensor routes
+import sensorUpdate from '../routes/sensors/update'
+
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
 	public soilRouter = express.Router()
+	public sensorRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}
@@ -31,8 +35,12 @@ class Router {
 		// Soil routes
 		this.soilRouter.post('/upload', soilUploadLimiter, soilUpload)
 
+		// Sensor routes
+		this.sensorRouter.post('/update', sensorUpdate)
+
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/soil', this.soilRouter)
+		server.use('/api/sensors', this.sensorRouter)
 	}
 }
 

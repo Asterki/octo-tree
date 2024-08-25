@@ -18,7 +18,6 @@ import {
 	Legend,
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import { faker } from '@faker-js/faker'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -35,7 +34,7 @@ ChartJS.register(
 	LineElement,
 	Title,
 	Tooltip,
-	Legend,
+	Legend
 )
 
 export const options = {
@@ -54,40 +53,6 @@ export const options = {
 	},
 }
 
-const labels = [
-	'Jun 10th',
-	'Jun 11th',
-	'Jun 12th',
-	'Jun 13th',
-	'Jun 14th',
-	'Jun 15th',
-	'Jun 16th',
-]
-
-export const temperature_data = {
-	labels,
-	datasets: [
-		{
-			label: 'Historical Data',
-			data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
-			backgroundColor: 'rgb(255, 99, 132)',
-			stack: 'Stack 0',
-		},
-	],
-}
-
-export const humidity_data = {
-	labels,
-	datasets: [
-		{
-			label: 'Historical Data',
-			data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-			backgroundColor: 'rgb(255, 99, 132)',
-			stack: 'Stack 0',
-		},
-	],
-}
-
 function App() {
 	const navigate = useNavigate()
 	const user = useAppSelector((state) => state.page.user)
@@ -95,9 +60,12 @@ function App() {
 
 	const [socket, setSocket] = React.useState<Socket | null>(null)
 
-	const [routines, setRoutines] = React.useState<
-		{ name: string; time: string; action: string }[]
-	>([])
+	const [currentTimeLabels, setCurrentTimeLabels] = React.useState(
+		[] as string[]
+	)
+
+	const [temperatureData, setTemperatureData] = React.useState<number[]>([])
+	const [humidityData, setHumidityData] = React.useState<number[]>([])
 
 	React.useEffect(() => {
 		;(async () => {
@@ -125,59 +93,74 @@ function App() {
 				console.log('Connected to server')
 				setSocket(newSocket)
 
-				newSocket.on('routines', (data) => {
-					console.log(data)
-					setRoutines(data)
-				})
+				setInterval(() => {
+					newSocket.emit('getsensordata', {
+						userID: 'c128e86e-356d-42ef-b735-8ab3edc2b7f0',
+						boardID: 'cm08xii1z00008sqfb8j8ih1x',
+					})
+				}, 500)
 			})
 
 			newSocket.on('disconnect', () => {
 				console.log('Disconnected from server')
 				setSocket(null)
 			})
-
-			const response = await axios({
-				url: 'http://localhost:5000/api/routines/get',
-				method: 'get',
-			})
-
-			setRoutines(response.data.routines)
-			console.log(response.data)
 		})()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const update = async (relay: number, value: number) => {
-		if (socket === null) return
-		socket.emit('relay', { relay: relay, value: value })
-	}
+	React.useEffect(() => {
+		if (!socket) return
 
-	const searchAngle = async () => {
-		if (socket === null) return
-		socket.emit('angle', { value: 1 })
-	}
+		socket.on('sensordata', (data) => {
+			const parsedData = JSON.parse(data.data)
 
+			const temperature = parsedData.temperature
+			const humidity = parsedData.humidity
+
+			setTemperatureData((prevTemperatureData) => {
+				if (prevTemperatureData.length >= 10) {
+					return [...prevTemperatureData.slice(1), temperature]
+				} else {
+					return [...prevTemperatureData, temperature]
+				}
+			})
+
+			setHumidityData((prevHumidityData) => {
+				if (prevHumidityData.length >= 10) {
+					return [...prevHumidityData.slice(1), humidity]
+				} else {
+					return [...prevHumidityData, humidity]
+				}
+			})
+
+			setCurrentTimeLabels((prevTimeLabels) => {
+				if (prevTimeLabels.length >= 10) {
+					return [
+						...prevTimeLabels.slice(1),
+						new Date().toLocaleTimeString(),
+					]
+				} else {
+					return [...prevTimeLabels, new Date().toLocaleTimeString()]
+				}
+			})
+		})
+
+		return () => {
+			socket.off('sensordata')
+		}
+	}, [socket])
+
+	React.useEffect(() => {
+		console.log(humidityData, temperatureData, currentTimeLabels)
+	}, [humidityData, temperatureData, currentTimeLabels])
+
+	//#region Remove this afterwards
 	const logout = async () => {
 		localStorage.removeItem('token')
 		navigate('/login')
 	}
-
-	const routineFunctions = {
-		async addRoutine() {
-			const response = await axios({
-				url: 'http://localhost:5000/api/routines/add',
-				method: 'post',
-				data: {
-					name: 'Test',
-					time: Date.now(),
-					action: 'Turn Relay 1 On',
-					repeat: 'Every Day',
-				},
-			})
-
-			console.log(response)
-		},
-	}
+	//#endregion
 
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
@@ -217,177 +200,77 @@ function App() {
 						Disconnect
 					</button>
 				</section>
-
-				<section className="flex flex-col items-center justify-start bg-white shadow-lg rounded-md p-2 row-start-2 col-span-2">
-					<h1 className="text-2xl font-bold text-center">
-						IoT Relay Control
-					</h1>
-					<div className="flex gap-2">
-						<label htmlFor="Turn on light">Relay 1</label>
-						<input
-							type="checkbox"
-							defaultChecked={true}
-							onClick={(event) => {
-								update(1, !event.currentTarget.checked ? 1 : 0)
-							}}
-						/>
-					</div>
-
-					<div className="flex gap-2">
-						<label htmlFor="Turn on light">Relay 2</label>
-						<input
-							type="checkbox"
-							defaultChecked={true}
-							onClick={(event) => {
-								update(2, !event.currentTarget.checked ? 1 : 0)
-							}}
-						/>
-					</div>
-
-					<div className="flex gap-2">
-						<label htmlFor="Turn on light">Relay 3</label>
-						<input
-							type="checkbox"
-							defaultChecked={true}
-							onClick={(event) => {
-								update(3, !event.currentTarget.checked ? 1 : 0)
-							}}
-						/>
-					</div>
-
-					<div className="flex gap-2">
-						<label htmlFor="Turn on light">Relay 4</label>
-						<input
-							type="checkbox"
-							defaultChecked={true}
-							onClick={(event) => {
-								update(4, !event.currentTarget.checked ? 1 : 0)
-							}}
-						/>
-					</div>
-				</section>
-
-				<section className="flex flex-col items-center justify-start gap-2 col-span-2 bg-white shadow-lg rounded-md p-4">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Panel Angle Control
-					</h1>
-
-					<button
-						onClick={() => {
-							searchAngle()
-						}}
-						className="px-4 py-2 rounded-md bg-slate-100 shadow-md"
-					>
-						Search Angle
-					</button>
-					<button
-						onClick={() => {
-							searchAngle()
-						}}
-						className="px-4 py-2 rounded-md bg-slate-100 shadow-md"
-					>
-						Search Angle
-					</button>
-				</section>
-
-				<section className="flex flex-col justify-between col-start-9 row-start-1 row-span-2 col-span-2 bg-white shadow-lg rounded-md p-4">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Add Routine
-					</h1>
-
-					<div>
-						<label htmlFor="Routine Name">Routine Name</label>
-						<input
-							type="text"
-							className="bg-slate-100 rounded-md w-full p-2 transition-all mb-2"
-						/>
-					</div>
-
-					<div>
-						<label htmlFor="Routine Name">Routine Time</label>
-						<input
-							type="time"
-							className="bg-slate-100 rounded-md w-full p-2 transition-all mb-2"
-						/>
-					</div>
-
-					<div>
-						<label htmlFor="Routine Name">Action type</label>
-						<select
-							name=""
-							id=""
-							className="bg-slate-100 p-2 rounded-md mb-2 w-full"
-						>
-							<option value="">Turn Relay 1 On</option>
-							<option value="">Turn Relay 2 On</option>
-							<option value="">Turn Relay 3 On</option>
-							<option value="">Turn Relay 4 On</option>
-						</select>
-					</div>
-
-					<button
-						className="rounded-md shadow-md bg-green-500 p-2 text-white"
-						onClick={routineFunctions.addRoutine}
-					>
-						Add Routine
-					</button>
-				</section>
 				<form>
 					<input type="file" name="" id="" />
-					<button onClick={(e) => {
-						e.preventDefault()
-						const file = (document.querySelector('input[type="file"]') as HTMLInputElement).files?.[0]
-						const formData = new FormData()
-						formData.append('soilimage', file as Blob)
-						axios.post(`${import.meta.env.VITE_API_URL}/api/soil/upload`, formData, {
-							headers: {
-								'Content-Type': 'multipart/form-data'
-							},
-							withCredentials: true
-						}).then((response) => {
-							console.log(response)
-						})
-					}}>Upload Image</button>
+					<button
+						onClick={(e) => {
+							e.preventDefault()
+							const file = (
+								document.querySelector(
+									'input[type="file"]'
+								) as HTMLInputElement
+							).files?.[0]
+							const formData = new FormData()
+							formData.append('soilimage', file as Blob)
+							axios
+								.post(
+									`${
+										import.meta.env.VITE_API_URL
+									}/api/soil/upload`,
+									formData,
+									{
+										headers: {
+											'Content-Type':
+												'multipart/form-data',
+										},
+										withCredentials: true,
+									}
+								)
+								.then((response) => {
+									console.log(response)
+								})
+						}}
+					>
+						Upload Image
+					</button>
 				</form>
-        
-				<section className="flex flex-col col-start-5 row-span-2 col-span-4 bg-white shadow-lg rounded-md p-2 ">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Routines
-					</h1>
-
-					{routines.map((routine) => (
-						<div className="flex justify-between items-center p-4 bg-slate-100 rounded-md my-2">
-							<div>
-								<p className="text-lg">{routine.name}</p>
-								<p className="">20:30 Every Day</p>
-							</div>
-							<button className="bg-red-400 p-2 text-white rounded-md">
-								Delete
-							</button>
-						</div>
-					))}
-
-					{routines.length == 0 ? (
-						<div className="text-center">No routines set</div>
-					) : (
-						''
-					)}
-				</section>
-
-				<section className="items"></section>
 
 				<section className="col-start-1 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Temperature
 					</h1>
-					<Line options={options} data={temperature_data} />
+					<Line
+						options={options}
+						data={{
+							labels: currentTimeLabels,
+							datasets: [
+								{
+									label: 'Temperature',
+									data: temperatureData,
+									backgroundColor: 'rgb(255, 99, 132)',
+								},
+							],
+						}}
+					/>
 				</section>
 
 				<section className="col-start-5 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Humidity
 					</h1>
-					<Line options={options} data={humidity_data} />
+					<Line
+						options={options}
+						data={{
+							labels: currentTimeLabels,
+							datasets: [
+								{
+									label: 'Humidity',
+									data: humidityData,
+									backgroundColor: 'rgb(255, 99, 132)',
+								},
+							],
+						}}
+					/>
 				</section>
 
 				<section className="col-start-3 row-start-2 col-span-2 row-span-1 bg-white rounded-md shadow-lg p-2">

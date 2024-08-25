@@ -14,11 +14,14 @@ const prisma = new PrismaClient()
 
 const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000, // 1 hour
-	max: 1, // limit each IP to 1 requests per windowMs
+	max: process.env.NODE_ENV === 'production' ? 10 : 100, // limit each IP to 100 requests per windowMs
 	store: new RedisStore({
-		sendCommand: (...args: string[]) =>
-			RedisClient.getInstance().getClient().sendCommand(args),
+		sendCommand: async (...args: string[]) =>
+			(await RedisClient.getInstance())
+				.getClient()
+				.sendCommand([...args]),
 	}),
+	skipFailedRequests: true,
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +34,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				.refine((pass) => {
 					return validator.isStrongPassword(pass)
 				}),
-			productID: z.string().min(16).max(16),
+			productID: z.string(),
 		})
 		.safeParse(req.body)
 
@@ -66,11 +69,16 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		})
 
 		// Register the user to the product
-		await prisma.boards.create({
-			data: {
+		await prisma.boards.update({
+			where: {
 				id: parsedBody.data.productID,
-				name: 'My Board',
-				user_id: userID,
+			},
+			data: {
+				user: {
+					connect: {
+						id: userID,
+					},
+				},
 			},
 		})
 
