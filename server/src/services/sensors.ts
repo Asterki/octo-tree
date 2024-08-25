@@ -12,17 +12,17 @@ class SensorService {
 
 	async getSensorData(boardID: string) {
 		const prisma = new PrismaClient()
-		const sensors = await prisma.sensor.findMany()
+		const sensors = await prisma.sensorData.findMany()
 		prisma.$disconnect()
 		return sensors
 	}
 
 	async setSensorData(boardID: string, sensorData: any) {
 		const prisma = new PrismaClient()
-		const sensor = await prisma.sensor.create({
+		const sensor = await prisma.sensorData.create({
 			data: {
-				boardID: boardID,
-				data: sensorData,
+                board_id: boardID,
+                values: JSON.stringify(sensorData),
 			},
 		})
 		prisma.$disconnect()

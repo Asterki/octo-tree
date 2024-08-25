@@ -30,6 +30,16 @@ model Boards {
   user       User     @relation(fields: [user_id], references: [id])
 
   pendingActions PendingActions[]
+
+  SensorData SensorData[]
+}
+
+model SensorData {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  values     String // JSON string
+  board_id   String
+  board      Boards   @relation(fields: [board_id], references: [id])
 }
 
 model PendingActions {
