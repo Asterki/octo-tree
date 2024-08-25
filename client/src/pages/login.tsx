@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
 import NavbarComponent from '../components/navbar'
+import AlertComponent from '../components/alert'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -120,6 +121,8 @@ const LoginPage = () => {
 					</p>
 				</form>
 			</main>
+
+			<AlertComponent content='jewioqejwqio' />
 		</div>
 	)
 }
