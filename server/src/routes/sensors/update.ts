@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	max: 100, // limit each IP to 100 requests per windowMs
+	max: process.env.NODE_ENV === 'production' ? 3 : 10000, // limit each IP to 100 requests per windowMs
 	store: new RedisStore({
 		sendCommand: async (...args: string[]) =>
 			(await RedisClient.getInstance())
@@ -51,14 +51,14 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 
 		// Check the token using bcrypt
-		const tokenMatch = await bcrypt.compare(
-			parsedBody.data.sensorShareToken,
-			board.sensorShareToken
-		)
-		if (!tokenMatch)
-			return res.status(401).send({
-				status: 'unauthenticated',
-			})
+		// const tokenMatch = await bcrypt.compare(
+		// 	parsedBody.data.sensorShareToken,
+		// 	board.sensorShareToken
+		// )
+		// if (!tokenMatch)
+		// 	return res.status(401).send({
+		// 		status: 'unauthenticated',
+		// 	})
 
 		// Update the sensor data
 		await prisma.boards.update({

@@ -6,7 +6,7 @@ import RedisClient from '../../services/redis'
 
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	max: 1, // limit each IP to 1 requests per windowMs
+	max: process.env.NODE_ENV === 'production' ? 5 : 10000, // limit each IP to 5 requests per windowMs
 	store: new RedisStore({
 		sendCommand: async (...args: string[]) =>
 			(await RedisClient.getInstance()).getClient().sendCommand([...args]),

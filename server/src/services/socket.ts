@@ -44,9 +44,20 @@ class SocketServer {
 					.then((board) => {
 						if (!board) return
 
+						// socket.emit('sensordata', {
+						// 	boardID,
+						// 	data: board.sensorData,
+						// })
+
+						// DEV: Send random data
+						const data = {
+							temperature: Math.random() * 100,
+							humidity: Math.random() * 100,
+						}
+
 						socket.emit('sensordata', {
 							boardID,
-							data: board.sensorData,
+							data: JSON.stringify(data),
 						})
 					})
 			})

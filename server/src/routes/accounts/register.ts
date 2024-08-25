@@ -14,7 +14,7 @@ const prisma = new PrismaClient()
 
 const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000, // 1 hour
-	max: 5, // limit each IP to 1 requests per windowMs
+	max: process.env.NODE_ENV === 'production' ? 10 : 100, // limit each IP to 100 requests per windowMs
 	store: new RedisStore({
 		sendCommand: async (...args: string[]) =>
 			(await RedisClient.getInstance())
