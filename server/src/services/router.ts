@@ -11,12 +11,12 @@ import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soi
 import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
 
 // Sensor routes
-import sensorUpdate from '../routes/sensors/update'
+import hardwareSensors from '../routes/hardware/sensors'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
 	public soilRouter = express.Router()
-	public sensorRouter = express.Router()
+	public hardwareRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}
@@ -37,12 +37,12 @@ class Router {
 		this.soilRouter.post('/panel', panelUploadLimiter, panelUpload)
 		this.soilRouter.post('/soil', soilUploadLimiter, soilUpload)
 
-		// Sensor routes
-		this.sensorRouter.post('/update', sensorUpdate)
+		// Hardware routes
+		this.hardwareRouter.post('/update', hardwareSensors)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)
-		server.use('/api/sensors', this.sensorRouter)
+		server.use('/api/hardware', this.hardwareRouter)
 	}
 }
 
