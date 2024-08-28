@@ -10,8 +10,9 @@ import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/acco
 import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soil'
 import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
 
-// Sensor routes
+// Hardware routes
 import hardwareSensors from '../routes/hardware/sensors'
+import hardwareGet from '../routes/hardware/get'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
@@ -39,6 +40,7 @@ class Router {
 
 		// Hardware routes
 		this.hardwareRouter.post('/update', hardwareSensors)
+		this.hardwareRouter.post('/get', hardwareGet)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)

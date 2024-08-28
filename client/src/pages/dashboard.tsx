@@ -96,7 +96,7 @@ function App() {
 				setInterval(() => {
 					newSocket.emit('getsensordata', {
 						userID: 'c128e86e-356d-42ef-b735-8ab3edc2b7f0',
-						boardID: 'cm08xii1z00008sqfb8j8ih1x',
+						boardID: '123123123',
 						sensorShareToken: '123123123',
 					})
 				}, 500)

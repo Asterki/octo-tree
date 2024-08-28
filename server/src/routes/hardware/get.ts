@@ -22,15 +22,14 @@ const limiter = rateLimit({
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
-	console.log('Received sensor data update request')
+	console.log('Received request from hardware to update their settings')
 	console.log(req.body)
 
 	const parsedBody = z
 		.object({
 			boardID: z.string(),
-			boardKey: z.string(),
-			temperature: z.number(),
-			humidity: z.number(),
+			sensorShareToken: z.string(),
+			data: z.string(), // JSON string
 		})
 		.safeParse(req.body)
 
@@ -70,10 +69,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				id: parsedBody.data.boardID,
 			},
 			data: {
-				sensorData: JSON.stringify({
-					temperature: parsedBody.data.temperature,
-					humidity: parsedBody.data.humidity,
-				}),
+				sensorData: parsedBody.data.data,
 			},
 		})
 

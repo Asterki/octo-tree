@@ -1,9 +1,13 @@
 #include <WiFiManager.h> // Include the WiFiManager library
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
-const int sensorPin = 34;
+const int temperaturePin = 34;
+const int humidityPin = 35;
 
-const char *serverURL = "http://192.168.0.15/api/sensors/update";
+const String serverURL = "http://192.168.0.15:3000";
+const String boardID = "123123123";
+const String boardKey = "123123123";
 
 void setup()
 {
@@ -77,8 +81,51 @@ String makeHttpRequest(const char *url, const char *method, const String &jsonBo
 
 void loop()
 {
-  String thing = makeHttpRequest("http://192.168.0.15:3000/api/hardware/update", "POST", "{\"status\":\"online\"}");
-  Serial.println(thing);
+  // #region Fetch and perform actions
+  // Get the information from the server, to check if there are any pending actions
+  String actionsEndpoint = serverURL + "/api/hardware/get";
+  String actionsResponse = makeHttpRequest(actionsEndpoint.c_str(), "POST", "{\"boardID\":\"" + boardID + "\",\"boardKey\":\"" + boardKey + "\"}");
+  StaticJsonDocument<200> actions;
+  deserializeJson(actions, actionsResponse);
+
+  Serial.println(actionsResponse);
+
+  // Check if there are any actions to perform
+  if (actions.containsKey("actions"))
+  {
+    JsonArray actionsArray = actions["actions"].as<JsonArray>();
+    for (JsonObject action : actionsArray)
+    {
+      String actionType = action["actionType"];
+      String actionData = action["actionData"];
+
+      // Perform the action based on the action type
+      if (actionType == "reboot")
+      {
+        ESP.restart();
+      }
+      else if (actionType == "update") // TODO: Servomotor, LED, etc.
+      {
+        // Perform the update action
+      }
+    }
+  }
+  // #endregion
+
+
+  // #region Send sensor data
+  // Read the sensor values
+  int temperatureValue = analogRead(temperaturePin);
+  int humidityValue = analogRead(humidityPin);
+
+  // Create a JSON object with the sensor data, the board ID and key
+  String sensorData = "{\"temperature\":" + String(temperatureValue) + ",\"humidity\":" + String(humidityValue) + ",\"boardID\":\"" + boardID + "\",\"boardKey\":\"" + boardKey + "\"}";
+  String sensorEndpoint = serverURL + "/api/hardware/update";
+  String sensorResponse = makeHttpRequest(sensorEndpoint.c_str(), "POST", sensorData);
+
+  // Print the response from the server
+  Serial.println(sensorResponse);
+  // #endregion
 
   // Delay between data sends to reduce power/network load
   delay(5000); // Send data every 10 seconds (adjust as needed)
