@@ -77,17 +77,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				status: 'not-found',
 			})
 
-		let actionsToPerform = actions.pendingActions.filter(action => {
-			if (action.timeToRun < new Date()) {
-				return true
-			} 
-		})
-
-		console.log(actionsToPerform)
-
 		res.status(200).send({
 			status: 'success',
-			actions: actionsToPerform
+			actions: actions
 		})
 	} catch (error) {
 		return res.status(500).send({
