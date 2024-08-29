@@ -22,9 +22,6 @@ const limiter = rateLimit({
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
-	console.log('Received sensor data update request')
-	console.log(req.body)
-
 	const parsedBody = z
 		.object({
 			boardID: z.string(),

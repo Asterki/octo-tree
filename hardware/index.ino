@@ -25,6 +25,14 @@ void setup()
 
   // If you reach here, you are connected to WiFi
   Serial.println("Connected to WiFi!");
+
+  // Pins
+
+  // Relay pins
+  pinMode(32, OUTPUT);
+  pinMode(33, OUTPUT);
+  pinMode(34, OUTPUT);
+  pinMode(35, OUTPUT);
 }
 
 String makeHttpRequest(const char *url, const char *method, const String &jsonBody)
@@ -79,6 +87,8 @@ String makeHttpRequest(const char *url, const char *method, const String &jsonBo
   return response; // Return the response as a JSON encoded string
 }
 
+int test = 0;
+
 void loop()
 {
   // #region Fetch and perform actions
@@ -99,6 +109,9 @@ void loop()
       String actionType = action["actionType"];
       String actionData = action["actionData"];
 
+      Serial.println(actionType);
+      Serial.println(actionData);
+
       // Perform the action based on the action type
       if (actionType == "reboot")
       {
@@ -107,6 +120,14 @@ void loop()
       else if (actionType == "update") // TODO: Servomotor, LED, etc.
       {
         // Perform the update action
+      }
+      else if (actionType == "relay1") 
+      {
+        if (actionData == 0) {
+          digitalWrite(32, LOW);
+        } else {
+          digitalWrite(32, HIGH);
+        }
       }
     }
   }
@@ -122,11 +143,8 @@ void loop()
   String sensorData = "{\"temperature\":" + String(temperatureValue) + ",\"humidity\":" + String(humidityValue) + ",\"boardID\":\"" + boardID + "\",\"boardKey\":\"" + boardKey + "\"}";
   String sensorEndpoint = serverURL + "/api/hardware/update";
   String sensorResponse = makeHttpRequest(sensorEndpoint.c_str(), "POST", sensorData);
-
-  // Print the response from the server
-  Serial.println(sensorResponse);
   // #endregion
 
   // Delay between data sends to reduce power/network load
-  delay(5000); // Send data every 10 seconds (adjust as needed)
+  delay(500); // Send data every 10 seconds (adjust as needed)
 }

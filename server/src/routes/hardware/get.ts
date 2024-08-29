@@ -28,8 +28,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	const parsedBody = z
 		.object({
 			boardID: z.string(),
-			sensorShareToken: z.string(),
-			data: z.string(), // JSON string
+			boardKey: z.string(),
 		})
 		.safeParse(req.body)
 
@@ -63,18 +62,32 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		// 		status: 'unauthenticated',
 		// 	})
 
-		// Update the sensor data
-		await prisma.boards.update({
+		// Get the actions given the board ID
+		const actions = await prisma.boards.findFirst({
 			where: {
 				id: parsedBody.data.boardID,
 			},
-			data: {
-				sensorData: parsedBody.data.data,
-			},
+			include: {
+				pendingActions: true
+			}	
 		})
+
+		if (!actions)
+			return res.status(404).send({
+				status: 'not-found',
+			})
+
+		let actionsToPerform = actions.pendingActions.filter(action => {
+			if (action.timeToRun < new Date()) {
+				return true
+			} 
+		})
+
+		console.log(actionsToPerform)
 
 		res.status(200).send({
 			status: 'success',
+			actions: actionsToPerform
 		})
 	} catch (error) {
 		return res.status(500).send({
