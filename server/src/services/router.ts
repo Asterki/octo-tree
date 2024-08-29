@@ -10,13 +10,14 @@ import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/acco
 import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soil'
 import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
 
-// Sensor routes
-import sensorUpdate from '../routes/sensors/update'
+// Hardware routes
+import hardwareSensors from '../routes/hardware/sensors'
+import hardwareGet from '../routes/hardware/get'
 
 class Router {
 	public accountRouter: ExpressRouter = express.Router()
 	public soilRouter = express.Router()
-	public sensorRouter = express.Router()
+	public hardwareRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}
@@ -37,12 +38,13 @@ class Router {
 		this.soilRouter.post('/panel', panelUploadLimiter, panelUpload)
 		this.soilRouter.post('/soil', soilUploadLimiter, soilUpload)
 
-		// Sensor routes
-		this.sensorRouter.post('/update', sensorUpdate)
+		// Hardware routes
+		this.hardwareRouter.post('/update', hardwareSensors)
+		this.hardwareRouter.post('/get', hardwareGet)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)
-		server.use('/api/sensors', this.sensorRouter)
+		server.use('/api/hardware', this.hardwareRouter)
 	}
 }
 

@@ -41,11 +41,11 @@ export const options = {
 	responsive: true,
 	interaction: {
 		mode: 'index' as const,
-		intersect: false,
+		intersect: true,
 	},
 	scales: {
 		x: {
-			stacked: true,
+			stacked: false,
 		},
 		y: {
 			stacked: true,
@@ -96,7 +96,7 @@ function App() {
 				setInterval(() => {
 					newSocket.emit('getsensordata', {
 						userID: 'c128e86e-356d-42ef-b735-8ab3edc2b7f0',
-						boardID: 'cm08xii1z00008sqfb8j8ih1x',
+						boardID: '123123123',
 						sensorShareToken: '123123123',
 					})
 				}, 500)
@@ -178,7 +178,7 @@ function App() {
 				</p>
 			</div>
 
-			<main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
+			<main className="flex items-center justify-center gap-4 p-4">
 				<section className="flex flex-col items-center justify-start gap-2 col-span-2 row-span-1 rounded-md shadow-lg bg-white p-4">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Connection Status
@@ -203,45 +203,48 @@ function App() {
 						Disconnect
 					</button>
 				</section>
-				<form>
-					<input type="file" name="" id="" />
-					<button
-						onClick={(e) => {
-							e.preventDefault()
-							console.log('clicked')
-							const file = (
-								document.querySelector(
-									'input[type="file"]'
-								) as HTMLInputElement
-							).files?.[0]
-							const formData = new FormData()
-							formData.append('soilimage', file as Blob)
-							formData.append(
-								'userID',
-								'c128e86e-356d-42ef-b735-8ab3edc2b7f0'
-							)
-							axios
-								.post(
-									`${
-										import.meta.env.VITE_API_URL
-									}/api/analysis/soil`,
-									formData,
-									{
-										headers: {
-											'Content-Type':
-												'multipart/form-data',
-										},
-										withCredentials: true,
-									}
+
+				<section className="col-start-1 row-start-1 col-span-8 row-span-1 bg-white rounded-md shadow-lg p-2">
+					<form>
+						<input type="file" name="" id="" />
+						<button
+							onClick={(e) => {
+								e.preventDefault()
+								console.log('clicked')
+								const file = (
+									document.querySelector(
+										'input[type="file"]'
+									) as HTMLInputElement
+								).files?.[0]
+								const formData = new FormData()
+								formData.append('soilimage', file as Blob)
+								formData.append(
+									'userID',
+									'c128e86e-356d-42ef-b735-8ab3edc2b7f0'
 								)
-								.then((response) => {
-									console.log(response)
-								})
-						}}
-					>
-						Upload Image
-					</button>
-				</form>
+								axios
+									.post(
+										`${
+											import.meta.env.VITE_API_URL
+										}/api/analysis/soil`,
+										formData,
+										{
+											headers: {
+												'Content-Type':
+													'multipart/form-data',
+											},
+											withCredentials: true,
+										}
+									)
+									.then((response) => {
+										console.log(response)
+									})
+							}}
+						>
+							Upload Image
+						</button>
+					</form>
+				</section>
 
 				<section className="col-start-1 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
