@@ -13,7 +13,7 @@ model User {
   email          String           @unique
   password       String
   boards         Boards[]
-  PendingActions PendingActions[]
+  PendingActions Actions[]
 }
 
 model Session {
@@ -32,11 +32,11 @@ model Boards {
   sensorShareToken String
 
   user_id        String?
-  pendingActions PendingActions[]
+  pendingActions Actions[]
   user           User?            @relation(fields: [user_id], references: [id])
 }
 
-model PendingActions {
+model Actions {
   id String @id @default(cuid())
 
   timeToRun DateTime
