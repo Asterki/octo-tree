@@ -5,9 +5,9 @@ const PrivacyPolicy = () => {
 		<div>
 			<NavbarComponent />
 
-			<main className="mt-16 p-8 bg-gray-100 text-gray-800">
+			<main className="md:mt-16 mt-32 p-8 bg-gray-100 text-gray-800">
 				<h1 className="text-3xl font-bold mb-6">
-					Privacy Policy for Our Domotic IoT Product
+					Privacy Policy for Octo-Tree
 				</h1>
 
 				<p className="text-sm text-gray-500 mb-2">
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
 					<p>
 						This Privacy Policy outlines how we collect, use, and
 						safeguard the personal data of users who interact with
-						our domotic IoT product. By using our services, you
+						our octo-tree product. By using our services, you
 						agree to the terms described in this policy.
 					</p>
 				</section>
@@ -50,7 +50,7 @@ const PrivacyPolicy = () => {
 						</h3>
 						<p className="mb-4">
 							We collect and store data provided by the sensors
-							integrated with our IoT devices, including but not
+							integrated with octo-tree, including but not
 							limited to humidity and temperature readings. This
 							data is essential for the features of our soil
 							analysis and panel analysis information systems,

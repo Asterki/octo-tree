@@ -1,0 +1,40 @@
+# robots.txt
+
+# Block all web crawlers from all content
+User-agent: *
+Disallow: /
+
+# Or, if you want to allow all web crawlers to access everything:
+# User-agent: *
+# Disallow:
+
+# Allow all web crawlers to access everything except the /admin directory
+User-agent: *
+Disallow: /admin/
+
+# Block a specific web crawler from the entire site
+User-agent: BadBot
+Disallow: /
+
+# Allow a specific web crawler to access everything
+User-agent: GoodBot
+Disallow:
+
+# Block all web crawlers from specific directories or files
+User-agent: *
+Disallow: /private/
+Disallow: /temp/
+Disallow: /hidden-page.html
+
+# Allow all web crawlers to access a specific directory but block them from a specific file
+User-agent: *
+Allow: /public/
+Disallow: /public/no-crawl-this-file.html
+
+# Allow a specific web crawler full access to a directory
+User-agent: Googlebot
+Allow: /special-content/
+
+# Block all web crawlers from crawling query strings
+User-agent: *
+Disallow: /*?*

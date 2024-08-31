@@ -59,7 +59,7 @@ const Register = () => {
 				}
 			)
 
-			if (response.data.success == true) return navigate('/login')
+			if (response.data.status == "success") return navigate('/dashboard')
 		} catch (error) {
 			console.log(error)
 			if (axios.isAxiosError(error)) {
@@ -158,6 +158,7 @@ const Register = () => {
 			<AlertComponent
 				content={alertState.content}
 				showing={alertState.show}
+				setShowing={setAlertState}
 			/>
 		</div>
 	)

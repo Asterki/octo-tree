@@ -37,8 +37,15 @@ const LoginPage = () => {
 		}, 3000)
 	}
 
-	const login = async () => {
+	const login = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+
 		try {
+			if (!emailRef.current?.value || !passwordRef.current?.value) {
+				showAlert('Please fill in all the fields!')
+				return
+			}
+
 			const response = await axios({
 				url: `${import.meta.env.VITE_API_URL}/api/accounts/login`,
 				method: 'POST',
@@ -64,12 +71,15 @@ const LoginPage = () => {
 			if (axios.isAxiosError(error)) {
 				if (error.response?.status == 401)
 					showAlert('Invalid email or password!')
-				if (error.response?.status == 400)
+				else if (error.response?.status == 400)
 					showAlert('Please fill in all the fields!')
-				if (error.response?.status == 500)
+				else if (error.response?.status == 500)
 					showAlert(
 						'An error occurred while processing your request!'
 					)
+				else showAlert('Something went wrong. Please try again later.')
+			} else {
+				showAlert('Something went wrong. Please try again later.')
 			}
 		}
 	}
@@ -84,7 +94,7 @@ const LoginPage = () => {
 				try {
 					const response = await axios({
 						url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
-						method: 'get',
+						method: 'GET',
 						withCredentials: true,
 					})
 
@@ -103,7 +113,7 @@ const LoginPage = () => {
 			<NavbarComponent />
 
 			<main className="min-h-screen flex items-center justify-center">
-				<form className="md:w-3/12 w-11/12">
+				<form className="md:w-3/12 w-11/12" onSubmit={(e) => login(e)}>
 					<h1 className="text-3xl font-bold text-center">Login</h1>
 					<p className="text-center">
 						Welcome back! Please login to your account to continue
@@ -125,8 +135,7 @@ const LoginPage = () => {
 							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<button
-							type="button"
-							onClick={login}
+							type="submit"
 							className="bg-emerald-700 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
 						>
 							Login
@@ -145,6 +154,7 @@ const LoginPage = () => {
 			<AlertComponent
 				content={alertState.content}
 				showing={alertState.show}
+				setShowing={setAlertState}
 			/>
 		</div>
 	)
