@@ -3,8 +3,8 @@ import fs from 'fs'
 import sharp from 'sharp'
 
 import { rateLimit } from 'express-rate-limit'
-import { RedisStore } from 'rate-limit-redis'
-import RedisClient from '../../services/redis'
+// import { RedisStore } from 'rate-limit-redis'
+// import RedisClient from '../../services/redis'
 
 import AzureStorageService from '../../services/azure/storage'
 import SoilAnalysisService from '../../services/azure/soil_analysis'
@@ -15,12 +15,12 @@ import { NextFunction, Request, Response } from 'express'
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 100, // limit each IP to 5 requests per windowMs
-	store: new RedisStore({
-		sendCommand: async (...args: string[]) =>
-			(await RedisClient.getInstance())
-				.getClient()
-				.sendCommand([...args]),
-	}),
+	// store: new RedisStore({
+	// 	sendCommand: async (...args: string[]) =>
+	// 		(await RedisClient.getInstance())
+	// 			.getClient()
+	// 			.sendCommand([...args]),
+	// }),
 	skipFailedRequests: true,
 })
 
@@ -50,22 +50,22 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		let file = data.files.soilimage[0]
 
 		// Check if the filename is on the cache
-		const cache = (await RedisClient.getInstance()).getClient()
-		const cached = await cache.get(
-			(file.originalFilename as string) + currentUser.id
-		)
+		// const cache = (await RedisClient.getInstance()).getClient()
+		// const cached = await cache.get(
+		// 	(file.originalFilename as string) + currentUser.id
+		// )
 
-		if (cached) {
-			const data = JSON.parse(cached)
+		// if (cached) {
+		// 	const data = JSON.parse(cached)
 
-			return res.status(200).json({
-				status: 'success',
-				message: 'image-uploaded',
-				analysis: data.analysis,
-				url: data.url,
-				imageID: data.imageID,
-			})
-		}
+		// 	return res.status(200).json({
+		// 		status: 'success',
+		// 		message: 'image-uploaded',
+		// 		analysis: data.analysis,
+		// 		url: data.url,
+		// 		imageID: data.imageID,
+		// 	})
+		// }
 
 		// File buffer
 		let rawData = fs.readFileSync(file.filepath)
@@ -94,14 +94,14 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		const result = await analysis.analyzeImage(url)
 
 		// Save the analysis to the cache
-		await cache.set(
-			(file.originalFilename as string) + currentUser.id + 'soil',
-			JSON.stringify({
-				analysis: result,
-				url: url,
-				imageID: imageID,
-			})
-		)
+		// await cache.set(
+		// 	(file.originalFilename as string) + currentUser.id + 'soil',
+		// 	JSON.stringify({
+		// 		analysis: result,
+		// 		url: url,
+		// 		imageID: imageID,
+		// 	})
+		// )
 
 		return res.status(200).json({
 			status: 'success',

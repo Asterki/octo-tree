@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 
 import { rateLimit } from 'express-rate-limit'
-import { RedisStore } from 'rate-limit-redis'
+// import { RedisStore } from 'rate-limit-redis'
 
-import RedisClient from '../../services/redis'
+// import RedisClient from '../../services/redis'
 import { PrismaClient } from '@prisma/client'
 
 import { z } from 'zod'
@@ -12,12 +12,12 @@ import { z } from 'zod'
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: process.env.NODE_ENV === 'production' ? 3 : 10000, // limit each IP to 100 requests per windowMs
-	store: new RedisStore({
-		sendCommand: async (...args: string[]) =>
-			(await RedisClient.getInstance())
-				.getClient()
-				.sendCommand([...args]),
-	}),
+	// store: new RedisStore({
+	// 	sendCommand: async (...args: string[]) =>
+	// 		(await RedisClient.getInstance())
+	// 			.getClient()
+	// 			.sendCommand([...args]),
+	// }),
 	skipFailedRequests: true,
 })
 

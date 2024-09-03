@@ -2,18 +2,18 @@ import passport from 'passport'
 import { z } from 'zod'
 
 import { rateLimit } from 'express-rate-limit'
-import { RedisStore } from 'rate-limit-redis'
-import RedisClient from '../../services/redis'
+// import { RedisStore } from 'rate-limit-redis'
+// import RedisClient from '../../services/redis'
 
 import { NextFunction, Request, Response } from 'express'
 
 const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000, // 1 hour
 	max: process.env.NODE_ENV === 'production' ? 5 : 10000, // limit each IP to 5 requests per windowMs
-	store: new RedisStore({
-		sendCommand: async (...args: string[]) =>
-			(await RedisClient.getInstance()).getClient().sendCommand([...args]),
-	}),
+	// store: new RedisStore({
+	// 	sendCommand: async (...args: string[]) =>
+	// 		(await RedisClient.getInstance()).getClient().sendCommand([...args]),
+	// }),
 	skipFailedRequests: true
 })
 
