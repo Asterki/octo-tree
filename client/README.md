@@ -22,7 +22,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/vite-react-app.git
+   git clone https://github.com/Asterki/octo-tree.git
    cd vite-react-app
    ```
 
