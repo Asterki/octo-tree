@@ -103,7 +103,7 @@ void setup()
   WiFiManager wifiManager;
 
   // Automatically connect using saved credentials, or begin config portal if none exist
-  if (!wifiManager.autoConnect("Octo Tree"))
+  if (!wifiManager.autoConnect("Octo-Tree"))
   {
     Serial.println("Failed to connect, resetting...");
     ESP.restart();
@@ -116,7 +116,7 @@ void setup()
   int status = WL_IDLE_STATUS;
 
   socketIO.setReconnectInterval(10000);
-  socketIO.setExtraHeaders("Authorization: 1234567890");
+  // socketIO.setExtraHeaders("Authorization: 1234567890");
   socketIO.begin(serverIP, serverPort);
   socketIO.onEvent(socketIOEvent);
 
