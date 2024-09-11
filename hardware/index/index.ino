@@ -102,6 +102,8 @@ void setup()
   // Create a WiFiManager object
   WiFiManager wifiManager;
 
+  Serial.println("Starting this thing...");
+
   // Automatically connect using saved credentials, or begin config portal if none exist
   if (!wifiManager.autoConnect("Octo-Tree"))
   {
@@ -116,15 +118,12 @@ void setup()
   int status = WL_IDLE_STATUS;
 
   socketIO.setReconnectInterval(10000);
-  // socketIO.setExtraHeaders("Authorization: 1234567890");
+  socketIO.setExtraHeaders("Authorization: 1234567890");
   socketIO.begin(serverIP, serverPort);
   socketIO.onEvent(socketIOEvent);
 
   // Relay pins
-  pinMode(32, OUTPUT);
-  pinMode(33, OUTPUT);
-  pinMode(34, OUTPUT);
-  pinMode(35, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 unsigned long messageTimestamp = 0;
