@@ -1,5 +1,6 @@
 import * as React from 'react'
 import axios from 'axios'
+import validator from "validator"
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
@@ -43,6 +44,11 @@ const Register = () => {
 
 		if (password !== repeatPassword) {
 			showAlert('Passwords do not match')
+			return
+		}
+
+		if (!validator.isStrongPassword(password!)) {
+			showAlert('Password is not strong enough')
 			return
 		}
 
