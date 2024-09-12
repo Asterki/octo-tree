@@ -37,6 +37,17 @@ class SocketServer {
 				const { userID, boardID } = data
 				if (!userID || !boardID) return
 
+				// Return random data if on dev mode
+				socket.emit('sensordata', {
+					boardID,
+					data: JSON.stringify({
+						temperature: Math.floor(Math.random() * 100),
+						humidity: Math.floor(Math.random() * 100),
+					}),
+				})
+
+				return
+
 				// Get the sensor data
 				const prisma = new PrismaClient()
 				prisma.boards

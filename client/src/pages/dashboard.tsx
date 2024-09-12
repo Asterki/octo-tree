@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client'
 import axios from 'axios'
 
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/navbar'
 
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
@@ -22,8 +23,8 @@ import { Line } from 'react-chartjs-2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faCheck,
-	faPerson,
-	faQuestion,
+	faPlantWilt,
+	faSolarPanel,
 	faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -67,6 +68,37 @@ function App() {
 	const [temperatureData, setTemperatureData] = React.useState<number[]>([])
 	const [humidityData, setHumidityData] = React.useState<number[]>([])
 
+	const [currentConfiguration, setCurrentConfiguration] = React.useState({
+		panelAutoMode: false,
+		routines: [],
+	})
+
+	const panelImageInputRef = React.useRef<HTMLInputElement>(null)
+	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
+
+	const uploadImage = (type: 'soil' | 'panel') => {
+		const input = type == 'soil' ? soilImageInputRef : panelImageInputRef
+		const file = (input.current as HTMLInputElement).files?.[0]
+
+		const formData = new FormData()
+		formData.append(`${type}image`, file as Blob)
+
+		axios
+			.post(
+				`${import.meta.env.VITE_API_URL}/api/analysis/${type}`,
+				formData,
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+					withCredentials: true,
+				}
+			)
+			.then((response) => {
+				console.log(response)
+			})
+	}
+
 	React.useEffect(() => {
 		;(async () => {
 			// Check if the user is logged in
@@ -95,7 +127,7 @@ function App() {
 
 				setInterval(() => {
 					newSocket.emit('getsensordata', {
-						userID: 'c128e86e-356d-42ef-b735-8ab3edc2b7f0',
+						userID: '6c8378d7-cbc7-4ef2-aa92-76d155544d5e',
 						boardID: '123123123',
 						sensorShareToken: '123123123',
 					})
@@ -152,34 +184,13 @@ function App() {
 		}
 	}, [socket])
 
-	const logout = async () => {
-		const response = await axios({
-			url: `${import.meta.env.VITE_API_URL}/api/accounts/logout`,
-			method: 'post',
-			withCredentials: true,
-		})
-
-		if (response.status === 200) {
-			dispatch(setUser(null))
-			navigate('/login')
-		}
-	}
-
 	return (
 		<div className="bg-neutral-100 min-h-screen text-neutral-600">
 			{/* Navbar */}
-			<div className="bg-emerald-700 shadow-md text-white w-full flex items-center justify-between px-4">
-				<h1 className="text-3xl font-bold p-4">Octo Tree</h1>
-				<p
-					className="cursor-pointer bg-red-400 rounded-md p-2 font-bold"
-					onClick={logout}
-				>
-					Logout
-				</p>
-			</div>
+			<Navbar />
 
-			<main className="flex items-center justify-center gap-4 p-4">
-				<section className="flex flex-col items-center justify-start gap-2 col-span-2 row-span-1 rounded-md shadow-lg bg-white p-4">
+			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-24 mt-32">
+				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white p-4 md:w-1/3">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Connection Status
 					</h1>
@@ -198,55 +209,112 @@ function App() {
 							? 'Connected to the server'
 							: 'Disconnected from the host'}
 					</p>
-
-					<button className="rounded-md shadow-md bg-red-400 p-2 text-white">
-						Disconnect
-					</button>
 				</section>
 
-				<section className="col-start-1 row-start-1 col-span-8 row-span-1 bg-white rounded-md shadow-lg p-2">
-					<form>
-						<input type="file" name="" id="" />
+				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-7/12">
+					<h1 className="text-slate-700 text-2xl text-center font-bold">
+						Soil & Solar Panel Analysis
+					</h1>
+
+					<input
+						type="file"
+						accept="image/*"
+						ref={soilImageInputRef}
+						className="hidden"
+						onChange={() => uploadImage('soil')}
+					/>
+					<input
+						type="file"
+						accept="image/*"
+						ref={panelImageInputRef}
+						className="hidden"
+						onChange={() => uploadImage('panel')}
+					/>
+
+					<div className="flex gap-2">
 						<button
-							onClick={(e) => {
-								e.preventDefault()
-								console.log('clicked')
-								const file = (
-									document.querySelector(
-										'input[type="file"]'
-									) as HTMLInputElement
-								).files?.[0]
-								const formData = new FormData()
-								formData.append('soilimage', file as Blob)
-								formData.append(
-									'userID',
-									'c128e86e-356d-42ef-b735-8ab3edc2b7f0'
-								)
-								axios
-									.post(
-										`${
-											import.meta.env.VITE_API_URL
-										}/api/analysis/soil`,
-										formData,
-										{
-											headers: {
-												'Content-Type':
-													'multipart/form-data',
-											},
-											withCredentials: true,
-										}
-									)
-									.then((response) => {
-										console.log(response)
-									})
-							}}
+							className="h-32 w-1/2 rounded-md bg-neutral-200"
+							onClick={() => soilImageInputRef.current?.click()}
 						>
-							Upload Image
+							<FontAwesomeIcon
+								icon={faPlantWilt}
+								className="text-3xl"
+							/>
 						</button>
-					</form>
+						<button
+							className="h-32 w-1/2 rounded-md bg-neutral-200"
+							onClick={() => panelImageInputRef.current?.click()}
+						>
+							<FontAwesomeIcon
+								icon={faSolarPanel}
+								className="text-3xl"
+							/>
+						</button>
+					</div>
 				</section>
 
-				<section className="col-start-1 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
+				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-3/12">
+					<h1 className="text-slate-700 text-2xl text-center font-bold">
+						Panel Position & Orientation
+					</h1>
+
+					{/* Switch to auto mode */}
+					<div className="flex flex-col items-center justify-center gap-2">
+						<p>Auto Mode</p>
+						<label className="switch">
+							<input
+								type="checkbox"
+								onChange={(e) => {
+									setCurrentConfiguration({
+										...currentConfiguration,
+										panelAutoMode: e.target.checked,
+									})
+								}}
+								defaultChecked={
+									currentConfiguration.panelAutoMode
+								}
+							/>
+							<span className="slider round"></span>
+						</label>
+
+						<br />
+
+						{!currentConfiguration.panelAutoMode && (
+							<div>
+								<p>Manual Mode</p>
+								<input
+									type="number"
+									name=""
+									id=""
+									className="w-1/2 rounded-md border transition-all hover:border-emerald-600 outline-none"
+									placeholder="0-90"
+								/>
+								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+									Set Position
+								</button>
+							</div>
+						)}
+
+						{currentConfiguration.panelAutoMode && (
+							<div>
+								<p>Update Every</p>
+								<input
+									type="number"
+									name=""
+									id=""
+									className="w-1/2 rounded-md border transition-all hover:border-emerald-600 outline-none"
+									placeholder="0-90m"
+								/>
+								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+									Set Interval
+								</button>
+
+							</div>
+						)}
+					</div>
+				</section>
+
+				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-4/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Temperature
 					</h1>
@@ -265,7 +333,7 @@ function App() {
 					/>
 				</section>
 
-				<section className="col-start-5 row-start-3 col-span-4 row-span-2 bg-white rounded-md shadow-lg p-2">
+				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 md:w-4/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Humidity
 					</h1>
@@ -284,22 +352,34 @@ function App() {
 					/>
 				</section>
 
-				<section className="col-start-3 row-start-2 col-span-2 row-span-1 bg-white rounded-md shadow-lg p-2">
-					<div className="flex flex-col gap-2 h-full">
-						<button className="bg-slate-200 rounded-md h-full">
-							<FontAwesomeIcon
-								icon={faPerson}
-								className="text-3xl"
-							/>
-						</button>
-						<button className="bg-slate-200 rounded-md h-full">
-							<FontAwesomeIcon
-								icon={faQuestion}
-								className="text-3xl"
-							/>
-						</button>
+				{/* <section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2">
+					<h1 className="text-slate-700 text-2xl text-center font-bold">
+						Current Routines
+					</h1>
+
+					<div className="flex flex-col gap-2">
+						{currentConfiguration.routines.map((routine, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-200"
+							>
+								<p>{routine.name}</p>
+								<div className="flex gap-2">
+									<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+										Edit
+									</button>
+									<button className="bg-red-600 text-white px-4 py-2 rounded-md shadow-md">
+										Delete
+									</button>
+								</div>
+							</div>
+						))}
 					</div>
-				</section>
+
+					<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2">
+						Add Routine
+					</button>
+				</section> */}
 			</main>
 		</div>
 	)
