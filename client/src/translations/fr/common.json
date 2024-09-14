@@ -1,0 +1,92 @@
+{
+	"home": {
+		"title": "L'avenir de l'IoT modulaire commence ici.",
+		"description": "Octo-Tree est une plateforme IoT modulaire qui vous permet de configurer et de déployer des solutions IoT rapidement et facilement, directement depuis un navigateur web.",
+		"buttons": {
+			"getStarted": "Commencer",
+			"dashboard": "Tableau de Bord"
+		}
+	},
+	"login": {
+		"fillAllFields": "Veuillez remplir tous les champs.",
+		"invalidCredentials": "Email ou mot de passe incorrect.",
+		"somethingWentWrong": "Quelque chose s'est mal passé. Veuillez réessayer plus tard.",
+		"title": "Bienvenue de retour ! Veuillez vous connecter à votre compte pour continuer à utiliser nos services.",
+		"email": "Email",
+		"password": "Mot de passe",
+		"login": "Connexion",
+		"noAccountPreLink": "Pas de compte ? ",
+		"noAccountLink": "Inscrivez-vous"
+	},
+	"register": {
+		"fillAllFields": "Veuillez remplir tous les champs.",
+		"passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+		"emailAlreadyExists": "L'email existe déjà.",
+		"somethingWentWrong": "Quelque chose s'est mal passé. Veuillez réessayer plus tard.",
+		"title": "Bienvenue ! Inscrivez-vous pour continuer à utiliser nos services.",
+		"email": "Email",
+		"password": "Mot de passe",
+		"confirmPassword": "Confirmer le mot de passe",
+		"register": "S'inscrire",
+		"alreadyHaveAccountPreLink": "Vous avez déjà un compte ? ",
+		"alreadyHaveAccountLink": "Connectez-vous",
+		"productID": "ID du produit",
+		"registerAccountTitle": "Enregistrez votre compte",
+		"registerAccountDescription": "Veuillez entrer votre ID produit, email et mot de passe pour enregistrer votre compte.",
+		"passwordNotStrongEnough": "Le mot de passe n'est pas assez sécurisé",
+		"userAlreadyExists": "L'utilisateur existe déjà",
+		"invalidProductID": "ID du produit invalide"
+	},
+	"privacy": {
+		"title": "Politique de Confidentialité pour Octo-Tree",
+		"effectiveDate": "Date d'effet : 25 août 2024",
+		"sections": {
+			"introduction": {
+				"title": "1. Introduction",
+				"content": "Cette Politique de Confidentialité décrit comment nous collectons, utilisons et protégeons les données personnelles des utilisateurs qui interagissent avec notre produit Octo-Tree. En utilisant nos services, vous acceptez les termes décrits dans cette politique."
+			},
+			"dataCollectionUsage": {
+				"title": "2. Collecte et Utilisation des Données",
+				"imageData": {
+					"title": "2.1 Données d'Images",
+					"content": "Nous collectons et traitons les images soumises pour analyse, telles que celles des panneaux solaires ou des conditions du sol. Ces images sont conservées pendant une période de 30 jours pour permettre l'analyse et le traitement nécessaires. Après cette période, les images et les données associées seront définitivement supprimées de nos systèmes."
+				},
+				"sensorData": {
+					"title": "2.2 Données des Capteurs",
+					"content": "Nous collectons et stockons les données fournies par les capteurs intégrés à Octo-Tree, y compris, mais sans s'y limiter, les relevés d'humidité et de température. Ces données sont essentielles aux fonctionnalités de nos systèmes d'information d'analyse du sol et des panneaux, permettant des évaluations et recommandations précises."
+				},
+				"userData": {
+					"title": "2.3 Données des Utilisateurs",
+					"content": "Lorsque vous vous inscrivez à nos services, nous collectons des informations personnelles, y compris l'ID produit, l'adresse email et le mot de passe. Ces données sont utilisées pour la gestion des comptes et pour vous fournir un accès à nos services."
+				}
+			},
+			"dataSecurity": {
+				"title": "3. Sécurité des Données",
+				"passwordProtection": {
+					"title": "3.1 Protection des Mots de Passe",
+					"content": "Les mots de passe fournis lors de l'inscription sont chiffrés en utilisant des méthodes de cryptage conformes aux normes de l'industrie. Ces mots de passe chiffrés sont stockés dans des environnements sécurisés pour empêcher tout accès non autorisé."
+				},
+				"communicationSecurity": {
+					"title": "3.2 Sécurité des Communications",
+					"content": "Toutes les communications entre le client, le serveur et les dispositifs IoT sont cryptées à l'aide de protocoles de cryptage robustes. Cela garantit que les données transmises entre vos dispositifs et nos serveurs sont sécurisées et protégées contre tout accès non autorisé."
+				}
+			},
+			"dataRetentionDeletion": {
+				"title": "4. Conservation et Suppression des Données",
+				"content": "Nous conservons vos données aussi longtemps que nécessaire pour vous fournir nos services. Cependant, vous avez le droit de demander la suppression de votre compte et de toutes les données associées à tout moment.",
+				"requestingAccountDeletion": {
+					"title": "4.1 Demande de Suppression de Compte",
+					"content": "Si vous souhaitez supprimer votre compte et toutes les données associées, veuillez nous contacter à [Insérer les Informations de Contact]. Nous traiterons votre demande rapidement et toutes vos données seront définitivement supprimées de nos systèmes."
+				}
+			},
+			"changesToPolicy": {
+				"title": "5. Modifications de cette Politique de Confidentialité",
+				"content": "Nous pouvons mettre à jour cette Politique de Confidentialité de temps à autre pour refléter les changements dans nos pratiques ou exigences légales. Nous vous encourageons à consulter cette politique périodiquement."
+			},
+			"contactUs": {
+				"title": "6. Contactez-nous",
+				"content": "Si vous avez des questions ou des préoccupations concernant cette Politique de Confidentialité, veuillez nous contacter à asterki.tech/contact"
+			}
+		}
+	}
+}

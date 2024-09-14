@@ -1,0 +1,92 @@
+{
+	"home": {
+		"title": "The future of modular IoT starts here.",
+		"description": "Octo-Tree is a modular IoT platform that allows you to quickly and easily configure and deploy IoT solutions, all from within a web browser.",
+		"buttons": {
+			"getStarted": "Get Started",
+			"dashboard": "Dashboard"
+		}
+	},
+	"login": {
+		"fillAllFields": "Please fill in all fields.",
+		"invalidCredentials": "Invalid email or password.",
+		"somethingWentWrong": "Something went wrong. Please try again later.",
+		"title": "Welcome back! Please login to your account to continue using our services.",
+		"email": "Email",
+		"password": "Password",
+		"login": "Login",
+		"noAccountPreLink": "Don't have an account? ",
+		"noAccountLink": "Sign up"
+	},
+	"register": {
+		"fillAllFields": "Please fill in all fields.",
+		"passwordsDoNotMatch": "Passwords do not match.",
+		"emailAlreadyExists": "Email already exists.",
+		"somethingWentWrong": "Something went wrong. Please try again later.",
+		"title": "Welcome! Please register for an account to continue using our services.",
+		"email": "Email",
+		"password": "Password",
+		"confirmPassword": "Confirm Password",
+		"register": "Register",
+		"alreadyHaveAccountPreLink": "Already have an account? ",
+		"alreadyHaveAccountLink": "Login",
+		"productID": "Product ID",
+		"registerAccountTitle": "Register your account",
+		"registerAccountDescription": "Please enter your product ID, email, and password to register your account.",
+		"passwordNotStrongEnough": "Password is not strong enough",
+		"userAlreadyExists": "User already exists",
+		"invalidProductID": "Invalid product ID"
+	},
+	"privacy": {
+		"title": "Privacy Policy for Octo-Tree",
+		"effectiveDate": "Effective Date: Aug 25th 2024",
+		"sections": {
+			"introduction": {
+				"title": "1. Introduction",
+				"content": "This Privacy Policy outlines how we collect, use, and safeguard the personal data of users who interact with our octo-tree product. By using our services, you agree to the terms described in this policy."
+			},
+			"dataCollectionUsage": {
+				"title": "2. Data Collection and Usage",
+				"imageData": {
+					"title": "2.1 Image Data",
+					"content": "We collect and process images submitted for analysis, such as those of solar panels or soil conditions. These images are retained for a period of 30 days to allow for necessary analysis and processing. After this period, the images and related data will be permanently deleted from our systems."
+				},
+				"sensorData": {
+					"title": "2.2 Sensor Data",
+					"content": "We collect and store data provided by the sensors integrated with octo-tree, including but not limited to humidity and temperature readings. This data is essential for the features of our soil analysis and panel analysis information systems, enabling accurate assessments and recommendations."
+				},
+				"userData": {
+					"title": "2.3 User Data",
+					"content": "When you register for our services, we collect personal information, including the product ID, email address, and password. This data is used for account management and to provide you with access to our services."
+				}
+			},
+			"dataSecurity": {
+				"title": "3. Data Security",
+				"passwordProtection": {
+					"title": "3.1 Password Protection",
+					"content": "Passwords provided during registration are hashed using industry-standard encryption methods. These hashed passwords are stored in secure environments to prevent unauthorized access."
+				},
+				"communicationSecurity": {
+					"title": "3.2 Communication Security",
+					"content": "All communications between the client, server, and IoT devices are encrypted using strong encryption protocols. This ensures that data transmitted between your devices and our servers is secure and protected from unauthorized access."
+				}
+			},
+			"dataRetentionDeletion": {
+				"title": "4. Data Retention and Deletion",
+				"content": "We retain your data for as long as necessary to provide you with our services. However, you have the right to request the deletion of your account and all associated data at any time.",
+				"requestingAccountDeletion": {
+					"title": "4.1 Requesting Account Deletion",
+					"content": "If you wish to delete your account and all related data, please contact us at [Insert Contact Information]. We will process your request promptly, and all your data will be permanently deleted from our systems."
+				}
+			},
+			"changesToPolicy": {
+				"title": "5. Changes to this Privacy Policy",
+				"content": "We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We encourage you to review this policy periodically."
+			},
+			"contactUs": {
+				"title": "6. Contact Us",
+				"content": "If you have any questions or concerns about this Privacy Policy, please contact us at asterki.tech/contact"
+			}
+		}
+	}
+}

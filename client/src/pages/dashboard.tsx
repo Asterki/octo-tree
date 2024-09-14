@@ -85,7 +85,7 @@ function App() {
 
 		axios
 			.post(
-				`${import.meta.env.VITE_API_URL}/api/analysis/${type}`,
+				`${import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : ""}/api/analysis/${type}`,
 				formData,
 				{
 					headers: {
@@ -106,7 +106,7 @@ function App() {
 				// Get the user's data
 				try {
 					const response = await axios({
-						url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						url: `${import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : ""}/api/accounts/me`,
 						method: 'get',
 						withCredentials: true,
 					})
@@ -117,7 +117,7 @@ function App() {
 				}
 			}
 
-			const newSocket = io(import.meta.env.VITE_API_URL, {
+			const newSocket = io(import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : "", {
 				autoConnect: true,
 			})
 

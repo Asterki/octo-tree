@@ -1,149 +1,126 @@
+import * as React from 'react'
 import NavbarComponent from '../components/navbar'
+import { useTranslation } from 'react-i18next'
 
 const PrivacyPolicy = () => {
+	const { t } = useTranslation('common')
+
 	return (
 		<div>
 			<NavbarComponent />
 
 			<main className="md:mt-16 mt-32 p-8 bg-gray-100 text-gray-800">
-				<h1 className="text-3xl font-bold mb-6">
-					Privacy Policy for Octo-Tree
-				</h1>
+				<h1 className="text-3xl font-bold mb-6">{t('privacy.title')}</h1>
 
 				<p className="text-sm text-gray-500 mb-2">
-					Effective Date: Aug 25th 2024
+					{t('privacy.effectiveDate')}
 				</p>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						1. Introduction
+						{t('privacy.sections.introduction.title')}
 					</h2>
-					<p>
-						This Privacy Policy outlines how we collect, use, and
-						safeguard the personal data of users who interact with
-						our octo-tree product. By using our services, you
-						agree to the terms described in this policy.
-					</p>
+					<p>{t('privacy.sections.introduction.content')}</p>
 				</section>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						2. Data Collection and Usage
+						{t('privacy.sections.dataCollectionUsage.title')}
 					</h2>
 
 					<div className="ml-4">
 						<h3 className="text-lg font-semibold mb-1">
-							2.1 Image Data
+							{t('privacy.sections.dataCollectionUsage.imageData.title')}
 						</h3>
 						<p className="mb-4">
-							We collect and process images submitted for
-							analysis, such as those of solar panels or soil
-							conditions. These images are retained for a period
-							of 30 days to allow for necessary analysis and
-							processing. After this period, the images and
-							related data will be permanently deleted from our
-							systems.
+							{t(
+								'sections.dataCollectionUsage.imageData.content'
+							)}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
-							2.2 Sensor Data
+							{t('privacy.sections.dataCollectionUsage.sensorData.title')}
 						</h3>
 						<p className="mb-4">
-							We collect and store data provided by the sensors
-							integrated with octo-tree, including but not
-							limited to humidity and temperature readings. This
-							data is essential for the features of our soil
-							analysis and panel analysis information systems,
-							enabling accurate assessments and recommendations.
+							{t(
+								'sections.dataCollectionUsage.sensorData.content'
+							)}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
-							2.3 User Data
+							{t('privacy.sections.dataCollectionUsage.userData.title')}
 						</h3>
 						<p className="mb-4">
-							When you register for our services, we collect
-							personal information, including the product ID,
-							email address, and password. This data is used for
-							account management and to provide you with access to
-							our services.
+							{t('privacy.sections.dataCollectionUsage.userData.content')}
 						</p>
 					</div>
 				</section>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						3. Data Security
+						{t('privacy.sections.dataSecurity.title')}
 					</h2>
 
 					<div className="ml-4">
 						<h3 className="text-lg font-semibold mb-1">
-							3.1 Password Protection
+							{t(
+								'sections.dataSecurity.passwordProtection.title'
+							)}
 						</h3>
 						<p className="mb-4">
-							Passwords provided during registration are hashed
-							using industry-standard encryption methods. These
-							hashed passwords are stored in secure environments
-							to prevent unauthorized access.
+							{t(
+								'sections.dataSecurity.passwordProtection.content'
+							)}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
-							3.2 Communication Security
+							{t(
+								'sections.dataSecurity.communicationSecurity.title'
+							)}
 						</h3>
 						<p className="mb-4">
-							All communications between the client, server, and
-							IoT devices are encrypted using strong encryption
-							protocols. This ensures that data transmitted
-							between your devices and our servers is secure and
-							protected from unauthorized access.
+							{t(
+								'sections.dataSecurity.communicationSecurity.content'
+							)}
 						</p>
 					</div>
 				</section>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						4. Data Retention and Deletion
+						{t('privacy.sections.dataRetentionDeletion.title')}
 					</h2>
 
 					<div className="ml-4">
 						<p className="mb-4">
-							We retain your data for as long as necessary to
-							provide you with our services. However, you have the
-							right to request the deletion of your account and
-							all associated data at any time.
+							{t('privacy.sections.dataRetentionDeletion.content')}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
-							4.1 Requesting Account Deletion
+							{t(
+								'sections.dataRetentionDeletion.requestingAccountDeletion.title'
+							)}
 						</h3>
 						<p className="mb-4">
-							If you wish to delete your account and all related
-							data, please contact us at [Insert Contact
-							Information]. We will process your request promptly,
-							and all your data will be permanently deleted from
-							our systems.
+							{t(
+								'sections.dataRetentionDeletion.requestingAccountDeletion.content'
+							)}
 						</p>
 					</div>
 				</section>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						5. Changes to this Privacy Policy
+						{t('privacy.sections.changesToPolicy.title')}
 					</h2>
-					<p>
-						We may update this Privacy Policy from time to time to
-						reflect changes in our practices or legal requirements.
-						We encourage you to review this policy periodically.
-					</p>
+					<p>{t('privacy.sections.changesToPolicy.content')}</p>
 				</section>
 
 				<section className="mb-6">
 					<h2 className="text-xl font-semibold mb-2">
-						6. Contact Us
+						{t('privacy.sections.contactUs.title')}
 					</h2>
-					<p>
-						If you have any questions or concerns about this Privacy
-						Policy, please contact us at asterki.tech/contact
-					</p>
+					<p>{t('privacy.sections.contactUs.content')}</p>
 				</section>
 			</main>
 		</div>

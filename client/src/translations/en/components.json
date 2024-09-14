@@ -1,0 +1,16 @@
+{
+    "navbar": {
+        "brand": "Octo-Tree",
+        "aboutApp": "About the App",
+        "aboutDeveloper": "About the developer",
+        "openSource": "Open source",
+        "privacyPolicy": "Privacy policy",
+        "getOctoTree": "Get an Octo-Tree",
+        "notPublic": "Still not public",
+        "shrug": "¯\\_(ツ)_/¯",
+        "accountAccess": "Account Access",
+        "login": "Login",
+        "register": "Register",
+        "dashboard": "Dashboard"
+    }
+}

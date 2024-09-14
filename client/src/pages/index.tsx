@@ -21,7 +21,7 @@ const IndexPage = () => {
 				// Get /me to check if the user is logged in
 				try {
 					const response = await axios.get(
-						`${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						`${import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : ""}/api/accounts/me`,
 						{
 							withCredentials: true,
 						},

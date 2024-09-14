@@ -2,6 +2,7 @@ import * as React from 'react'
 import axios from 'axios'
 
 import { useNavigate } from 'react-router-dom'
+import {useTranslation} from "react-i18next";
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 
@@ -9,6 +10,7 @@ import NavbarComponent from '../components/navbar'
 
 const HomePage = () => {
 	const navigate = useNavigate()
+	const {t} = useTranslation("common");
 
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
@@ -19,10 +21,10 @@ const HomePage = () => {
 			if (user) {
 				navigate('/dashboard')
 			} else {
-				// Get the user's data
+				// Get the user's dataqwe
 				try {
 					const response = await axios({
-						url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						url: `${import.meta.env.MODE === 'development' ? import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : "" : ""}/api/accounts/me`,
 						method: 'get',
 						withCredentials: true,
 					})
@@ -53,13 +55,11 @@ const HomePage = () => {
 
 						<div className="text-center md:text-left absolute text-white px-10 md:w-full">
 							<h1 className="text-5xl font-bold">
-								The future of modular IoT starts here.
+								{t("home.title")}
 							</h1>
 
 							<p className="md:w-5/12">
-								Octo-Tree is a modular IoT platform that allows
-								you to quickly and easily configure and deploy
-								IoT solutions, all from within a web browser.
+								{t("home.description")} 
 							</p>
 
 							<p>
@@ -67,7 +67,7 @@ const HomePage = () => {
 									onClick={() => navigate('/dashboard')}
 									className="bg-emerald-600 text-white px-4 py-2 rounded-md mt-4 shadow-md"
 								>
-									{user ? 'Dashboard' : 'Get Started'}
+									{user ? t("home.buttons.dashboardd") :t("home.buttons.getStarted")}
 								</button>
 							</p>
 						</div>

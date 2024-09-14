@@ -7,10 +7,12 @@ import { setUser } from '../store/slices/pages'
 import NavbarComponent from '../components/navbar'
 import AlertComponent from '../components/alert'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const LoginPage = () => {
 	const navigate = useNavigate()
+	const { t } = useTranslation('common')
 
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
@@ -42,12 +44,16 @@ const LoginPage = () => {
 
 		try {
 			if (!emailRef.current?.value || !passwordRef.current?.value) {
-				showAlert('Please fill in all the fields!')
+				showAlert(t('login.fillAllFields'))
 				return
 			}
 
 			const response = await axios({
-				url: `${import.meta.env.VITE_API_URL}/api/accounts/login`,
+				url: `${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/accounts/login`,
 				method: 'POST',
 				data: {
 					email: emailRef.current?.value,
@@ -59,7 +65,11 @@ const LoginPage = () => {
 			if (response.status == 200) {
 				// Get the user's data
 				const userResponse = await axios({
-					url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
+					url: `${
+						import.meta.env.MODE === 'development'
+							? import.meta.env.VITE_API_URL
+							: ''
+					}/api/accounts/me`,
 					method: 'GET',
 					withCredentials: true,
 				})
@@ -70,16 +80,12 @@ const LoginPage = () => {
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
 				if (error.response?.status == 401)
-					showAlert('Invalid email or password!')
+					showAlert(t('login.invalidCredentials'))
 				else if (error.response?.status == 400)
-					showAlert('Please fill in all the fields!')
-				else if (error.response?.status == 500)
-					showAlert(
-						'An error occurred while processing your request!'
-					)
-				else showAlert('Something went wrong. Please try again later.')
+					showAlert(t('login.fillAllFields'))
+				else showAlert(t('login.somethingWentWrong'))
 			} else {
-				showAlert('Something went wrong. Please try again later.')
+				showAlert(t('login.somethingWentWrong'))
 			}
 		}
 	}
@@ -93,7 +99,11 @@ const LoginPage = () => {
 				// Get the user's data
 				try {
 					const response = await axios({
-						url: `${import.meta.env.VITE_API_URL}/api/accounts/me`,
+						url: `${
+							import.meta.env.MODE === 'development'
+								? import.meta.env.VITE_API_URL
+								: ''
+						}/api/accounts/me`,
 						method: 'GET',
 						withCredentials: true,
 					})
@@ -114,39 +124,38 @@ const LoginPage = () => {
 
 			<main className="min-h-screen flex items-center justify-center">
 				<form className="md:w-3/12 w-11/12" onSubmit={(e) => login(e)}>
-					<h1 className="text-3xl font-bold text-center">Login</h1>
-					<p className="text-center">
-						Welcome back! Please login to your account to continue
-						using our services.
-					</p>
+					<h1 className="text-3xl font-bold text-center">
+						{t('login.login')}
+					</h1>
+					<p className="text-center">{t('login.title')}</p>
 
 					<div className="flex flex-col items-center mt-4">
 						<input
 							type="email"
 							ref={emailRef}
-							placeholder="Email"
+							placeholder={t('login.email')}
 							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 
 						<input
 							type="password"
 							ref={passwordRef}
-							placeholder="Password"
+							placeholder={t('login.password')}
 							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
 						/>
 						<button
 							type="submit"
 							className="bg-emerald-700 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
 						>
-							Login
+							{t('login.login')}
 						</button>
 					</div>
 
 					<p className="mt-2 text-center">
-						Don't have an account?{' '}
-						<a href="/register" className="text-emerald-700">
-							Register
-						</a>
+						{t("login.noAccountPreLink")}{' '}
+						<Link to="/register" className="text-emerald-700">
+							{t('login.noAccountLink')}
+						</Link>
 					</p>
 				</form>
 			</main>
