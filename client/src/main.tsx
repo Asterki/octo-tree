@@ -5,6 +5,7 @@ import './styles/globals.css'
 import LoginPage from './pages/login.tsx'
 import RegisterPage from './pages/register.tsx'
 import DashboardPage from './pages/dashboard.tsx'
+import RoutinesPage from './pages/routines.tsx'
 import IndexPage from './pages/home.tsx'
 import PrivacyPolicy from './pages/privacy.tsx'
 
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
 	{
 		path: '/dashboard',
 		element: <DashboardPage />,
+	},
+	{
+		path: '/routines',
+		element: <RoutinesPage />,
 	},
 	{
 		path: '/login',

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Socket, io } from 'socket.io-client'
 import axios from 'axios'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/navbar'
 
 import { useAppSelector, useAppDispatch } from '../store/hooks'
@@ -54,6 +54,25 @@ export const options = {
 	},
 }
 
+interface Routine {
+	name: string
+	execution: 'manual' | 'automated'
+	automatedExecution?: {
+		condition:
+			| 'temperatureexceeds'
+			| 'temperaturebelow'
+			| 'humidityexceeds'
+			| 'humiditybelow'
+			| 'interval'
+		conditionValue: number | string
+		checkInterval?: number
+	}
+	actions: {
+		type: 'water' | 'rotatepanel' | 'notify'
+		amount?: number
+	}[]
+}
+
 function App() {
 	const navigate = useNavigate()
 	const user = useAppSelector((state) => state.page.user)
@@ -68,7 +87,10 @@ function App() {
 	const [temperatureData, setTemperatureData] = React.useState<number[]>([])
 	const [humidityData, setHumidityData] = React.useState<number[]>([])
 
-	const [currentConfiguration, setCurrentConfiguration] = React.useState({
+	const [currentConfiguration, setCurrentConfiguration] = React.useState<{
+		panelAutoMode: boolean
+		routines: Routine[]
+	}>({
 		panelAutoMode: false,
 		routines: [],
 	})
@@ -85,7 +107,11 @@ function App() {
 
 		axios
 			.post(
-				`${import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : ""}/api/analysis/${type}`,
+				`${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/analysis/${type}`,
 				formData,
 				{
 					headers: {
@@ -106,7 +132,11 @@ function App() {
 				// Get the user's data
 				try {
 					const response = await axios({
-						url: `${import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : ""}/api/accounts/me`,
+						url: `${
+							import.meta.env.MODE === 'development'
+								? import.meta.env.VITE_API_URL
+								: ''
+						}/api/accounts/me`,
 						method: 'get',
 						withCredentials: true,
 					})
@@ -117,9 +147,14 @@ function App() {
 				}
 			}
 
-			const newSocket = io(import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : "", {
-				autoConnect: true,
-			})
+			const newSocket = io(
+				import.meta.env.MODE === 'development'
+					? import.meta.env.VITE_API_URL
+					: '',
+				{
+					autoConnect: true,
+				}
+			)
 
 			newSocket.on('connect', () => {
 				console.log('Connected to server')
@@ -189,7 +224,7 @@ function App() {
 			{/* Navbar */}
 			<Navbar />
 
-			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-24 mt-32">
+			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
 				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white p-4 md:w-1/3">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Connection Status
@@ -308,7 +343,6 @@ function App() {
 								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
 									Set Interval
 								</button>
-
 							</div>
 						)}
 					</div>
@@ -352,7 +386,7 @@ function App() {
 					/>
 				</section>
 
-				{/* <section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2">
+				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
 						Current Routines
 					</h1>
@@ -361,7 +395,7 @@ function App() {
 						{currentConfiguration.routines.map((routine, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-200"
+								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100"
 							>
 								<p>{routine.name}</p>
 								<div className="flex gap-2">
@@ -376,10 +410,10 @@ function App() {
 						))}
 					</div>
 
-					<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2">
+					<Link to="/routines" className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2">
 						Add Routine
-					</button>
-				</section> */}
+					</Link>
+				</section>
 			</main>
 		</div>
 	)

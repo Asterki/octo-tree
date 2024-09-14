@@ -67,7 +67,7 @@ const HomePage = () => {
 									onClick={() => navigate('/dashboard')}
 									className="bg-emerald-600 text-white px-4 py-2 rounded-md mt-4 shadow-md"
 								>
-									{user ? t("home.buttons.dashboardd") :t("home.buttons.getStarted")}
+									{user ? t("home.buttons.dashboard") :t("home.buttons.getStarted")}
 								</button>
 							</p>
 						</div>
