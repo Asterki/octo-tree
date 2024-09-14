@@ -11,14 +11,25 @@ interface Routine {
 	name: string
 	execution: 'manual' | 'automated'
 	automatedExecution?: {
-		condition:
-			| 'temperatureexceeds'
-			| 'temperaturebelow'
-			| 'humidityexceeds'
-			| 'humiditybelow'
-			| 'interval'
-		conditionValue: number | string
-		checkInterval?: number
+		conditions: {
+			temperatureexceeds: {
+				active: boolean
+				value: number
+			}
+			temperaturebelow: {
+				active: boolean
+				value: number
+			}
+			humidityexceeds: {
+				active: boolean
+				value: number
+			}
+			humiditybelow: {
+				active: boolean
+				value: number
+			}
+		}
+		checkInterval: number
 	}
 	actions: {
 		type: 'water' | 'rotatepanel' | 'notify'
@@ -49,8 +60,25 @@ const Routines = () => {
 			name: 'Routine 2',
 			execution: 'automated',
 			automatedExecution: {
-				condition: 'temperatureexceeds',
-				conditionValue: 30,
+				conditions: {
+					temperatureexceeds: {
+						active: true,
+						value: 30,
+					},
+					temperaturebelow: {
+						active: false,
+						value: 20,
+					},
+					humiditybelow: {
+						active: false,
+						value: 30,
+					},
+					humidityexceeds: {
+						active: true,
+						value: 80,
+					},
+				},
+				checkInterval: 5,
 			},
 			actions: [
 				{
@@ -107,9 +135,277 @@ const Routines = () => {
 						</div>
 					))}
 				</div>
-				<div className="w-2/12">Hey there</div>
-				<div className="w-8/12">
-					Selected Routine: {routines[selectedRoutine].name}
+				<div className="w-10/12 py-4 min-h-screen">
+					<h1 className="text-xl font-bold px-2">Execution</h1>
+					<div className="px-2">
+						<select
+							value={routines[selectedRoutine].execution}
+							onChange={(e) => {
+								const newRoutines = [...routines]
+								newRoutines[selectedRoutine].execution = e
+									.target.value as 'manual' | 'automated'
+								setRoutines(newRoutines)
+							}}
+						>
+							<option value="manual">Manual</option>
+							<option value="automated">Automated</option>
+						</select>
+					</div>
+
+					<br />
+
+					<h1 className="text-xl font-bold px-2">Conditions</h1>
+					<div className="px-2">
+						{routines[selectedRoutine].execution === 'automated' ? (
+							<>
+								<p>
+									If no conditions are set, the routine will
+									execute every check interval.
+								</p>
+								<p>
+									If more than one condition is set, the
+									routine will execute if any of the
+									conditions are met.
+								</p>
+
+								<br />
+
+								<div>
+									<input
+										type="checkbox"
+										checked={
+											routines[selectedRoutine]
+												.automatedExecution?.conditions
+												.temperatureexceeds.active
+										}
+										onChange={(e) => {
+											const newRoutines = [...routines]
+											newRoutines[
+												selectedRoutine
+											].automatedExecution!.conditions.temperatureexceeds.active =
+												e.target.checked
+											setRoutines(newRoutines)
+										}}
+										className="mr-2"
+									/>
+									<label className="font-bold">
+										Temperature Above *C°
+									</label>
+
+									<br />
+
+									{routines[selectedRoutine]
+										.automatedExecution?.conditions
+										.temperatureexceeds.active && (
+										<input
+											type="number"
+											value={
+												routines[selectedRoutine]
+													.automatedExecution
+													?.conditions
+													.temperatureexceeds.value
+											}
+											onChange={(e) => {
+												const newRoutines = [
+													...routines,
+												]
+												newRoutines[
+													selectedRoutine
+												].automatedExecution!.conditions.temperatureexceeds.value =
+													parseInt(e.target.value)
+												setRoutines(newRoutines)
+											}}
+										/>
+									)}
+								</div>
+
+								<br />
+
+								<div>
+									<input
+										type="checkbox"
+										checked={
+											routines[selectedRoutine]
+												.automatedExecution?.conditions
+												.temperaturebelow.active
+										}
+										onChange={(e) => {
+											const newRoutines = [...routines]
+											newRoutines[
+												selectedRoutine
+											].automatedExecution!.conditions.temperaturebelow.active =
+												e.target.checked
+											setRoutines(newRoutines)
+										}}
+										className="mr-2"
+									/>
+									<label className="font-bold">
+										Temperature Below *C°
+									</label>
+
+									<br />
+
+									{routines[selectedRoutine]
+										.automatedExecution?.conditions
+										.temperaturebelow.active && (
+										<input
+											type="number"
+											value={
+												routines[selectedRoutine]
+													.automatedExecution
+													?.conditions
+													.temperaturebelow.value
+											}
+											onChange={(e) => {
+												const newRoutines = [
+													...routines,
+												]
+												newRoutines[
+													selectedRoutine
+												].automatedExecution!.conditions.temperaturebelow.value =
+													parseInt(e.target.value)
+												setRoutines(newRoutines)
+											}}
+										/>
+									)}
+								</div>
+
+								<br />
+
+								<div>
+									<input
+										type="checkbox"
+										checked={
+											routines[selectedRoutine]
+												.automatedExecution?.conditions
+												.humidityexceeds.active
+										}
+										onChange={(e) => {
+											const newRoutines = [...routines]
+											newRoutines[
+												selectedRoutine
+											].automatedExecution!.conditions.humidityexceeds.active =
+												e.target.checked
+											setRoutines(newRoutines)
+										}}
+										className="mr-2"
+									/>
+									<label className="font-bold">
+										Humidity Above *%
+									</label>
+
+									<br />
+
+									{routines[selectedRoutine]
+										.automatedExecution?.conditions
+										.humidityexceeds.active && (
+										<input
+											type="number"
+											value={
+												routines[selectedRoutine]
+													.automatedExecution
+													?.conditions.humidityexceeds
+													.value
+											}
+											onChange={(e) => {
+												const newRoutines = [
+													...routines,
+												]
+												newRoutines[
+													selectedRoutine
+												].automatedExecution!.conditions.humidityexceeds.value =
+													parseInt(e.target.value)
+												setRoutines(newRoutines)
+											}}
+										/>
+									)}
+								</div>
+
+								<br />
+
+								<div>
+									<input
+										type="checkbox"
+										checked={
+											routines[selectedRoutine]
+												.automatedExecution?.conditions
+												.humiditybelow.active
+										}
+										onChange={(e) => {
+											const newRoutines = [...routines]
+											newRoutines[
+												selectedRoutine
+											].automatedExecution!.conditions.humiditybelow.active =
+												e.target.checked
+											setRoutines(newRoutines)
+										}}
+										className="mr-2"
+									/>
+
+									<label className="font-bold">
+										Humidity Below *%
+									</label>
+
+									<br />
+
+									{routines[selectedRoutine]
+										.automatedExecution?.conditions
+										.humiditybelow.active && (
+										<input
+											type="number"
+											value={
+												routines[selectedRoutine]
+													.automatedExecution
+													?.conditions.humiditybelow
+													.value
+											}
+											onChange={(e) => {
+												const newRoutines = [
+													...routines,
+												]
+												newRoutines[
+													selectedRoutine
+												].automatedExecution!.conditions.humiditybelow.value =
+													parseInt(e.target.value)
+												setRoutines(newRoutines)
+											}}
+										/>
+									)}
+								</div>
+
+								<br />
+
+								<div>
+									<label className="font-bold">
+										Check Interval (Minutes)
+									</label>{' '}
+									<br />
+									<input
+										type="number"
+										value={
+											routines[selectedRoutine]
+												.automatedExecution
+												?.checkInterval
+										}
+										onChange={(e) => {
+											const newRoutines = [...routines]
+											newRoutines[
+												selectedRoutine
+											].automatedExecution!.checkInterval =
+												parseInt(e.target.value)
+											setRoutines(newRoutines)
+										}}
+									/>
+								</div>
+							</>
+						) : (
+							<h2>Manual Execution</h2>
+						)}
+					</div>
+
+					<br />
+
+					<h1 className="text-xl font-bold px-2">Actions</h1>
 				</div>
 			</main>
 		</div>

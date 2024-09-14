@@ -166,7 +166,7 @@ function App() {
 						boardID: '123123123',
 						sensorShareToken: '123123123',
 					})
-				}, 500)
+				}, 5000)
 			})
 
 			newSocket.on('disconnect', () => {
