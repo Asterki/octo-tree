@@ -116,5 +116,23 @@
 		"saveChanges": "Enregistrer les Modifications",
 		"changesSaved": "Modifications enregistrées avec succès.",
 		"changesFailed": "Échec de l'enregistrement des modifications."
-	}
+	},
+	"dashboard": {
+        "connectionStatus": "État de la Connexion",
+        "connected": "Connecté au serveur",
+        "disconnected": "Déconnecté de l'hôte",
+        "soilSolarPanelAnalysis": "Analyse du Sol et du Panneau Solaire",
+        "panelPositionOrientation": "Position et Orientation du Panneau",
+        "autoMode": "Mode Automatique",
+        "manualMode": "Mode Manuel",
+        "setPosition": "Définir la Position",
+        "updateEvery": "Mettre à Jour Chaque",
+        "setInterval": "Définir l'Intervalle",
+        "temperature": "Température",
+        "humidity": "Humidité",
+        "currentRoutines": "Routines Actuelles",
+        "edit": "Éditer",
+        "delete": "Supprimer",
+        "addRoutine": "Ajouter une Routine"
+    }
 }

@@ -28,6 +28,8 @@ import {
 	faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 
+import { useTranslation } from 'react-i18next'
+
 ChartJS.register(
 	CategoryScale,
 	LinearScale,
@@ -77,6 +79,7 @@ function App() {
 	const navigate = useNavigate()
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
+	const { t } = useTranslation('common')
 
 	const [socket, setSocket] = React.useState<Socket | null>(null)
 
@@ -227,7 +230,7 @@ function App() {
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
 				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white p-4 md:w-1/3">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Connection Status
+						{t('dashboard.connectionStatus')}
 					</h1>
 					<div
 						className={`${
@@ -241,14 +244,14 @@ function App() {
 					</div>
 					<p className="text-center">
 						{socket !== null
-							? 'Connected to the server'
-							: 'Disconnected from the host'}
+							? t('dashboard.connected')
+							: t('dashboard.disconnected')}
 					</p>
 				</section>
 
 				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-7/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Soil & Solar Panel Analysis
+						{t('dashboard.soilSolarPanelAnalysis')}
 					</h1>
 
 					<input
@@ -290,12 +293,12 @@ function App() {
 
 				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-3/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Panel Position & Orientation
+						{t('dashboard.panelPositionOrientation')}
 					</h1>
 
 					{/* Switch to auto mode */}
 					<div className="flex flex-col items-center justify-center gap-2">
-						<p>Auto Mode</p>
+						<p>{t('dashboard.autoMode')}</p>
 						<label className="switch">
 							<input
 								type="checkbox"
@@ -316,7 +319,7 @@ function App() {
 
 						{!currentConfiguration.panelAutoMode && (
 							<div>
-								<p>Manual Mode</p>
+								<p>{t('dashboard.manualMode')}</p>
 								<input
 									type="number"
 									name=""
@@ -325,14 +328,14 @@ function App() {
 									placeholder="0-90"
 								/>
 								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-									Set Position
+									{t('dashboard.setPosition')}
 								</button>
 							</div>
 						)}
 
 						{currentConfiguration.panelAutoMode && (
 							<div>
-								<p>Update Every</p>
+								<p>{t('dashboard.updateEvery')}</p>
 								<input
 									type="number"
 									name=""
@@ -341,7 +344,7 @@ function App() {
 									placeholder="0-90m"
 								/>
 								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-									Set Interval
+									{t('dashboard.setInterval')}
 								</button>
 							</div>
 						)}
@@ -350,7 +353,7 @@ function App() {
 
 				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-4/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Temperature
+						{t('dashboard.temperature')}
 					</h1>
 					<Line
 						options={options}
@@ -358,7 +361,7 @@ function App() {
 							labels: currentTimeLabels,
 							datasets: [
 								{
-									label: 'Temperature',
+									label: t('dashboard.temperature'),
 									data: temperatureData,
 									backgroundColor: 'rgb(255, 99, 132)',
 								},
@@ -369,7 +372,7 @@ function App() {
 
 				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 md:w-4/12">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Humidity
+						{t('dashboard.humidity')}
 					</h1>
 					<Line
 						options={options}
@@ -377,7 +380,7 @@ function App() {
 							labels: currentTimeLabels,
 							datasets: [
 								{
-									label: 'Humidity',
+									label: t('dashboard.humidity'),
 									data: humidityData,
 									backgroundColor: 'rgb(255, 99, 132)',
 								},
@@ -388,7 +391,7 @@ function App() {
 
 				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2">
 					<h1 className="text-slate-700 text-2xl text-center font-bold">
-						Current Routines
+						{t('dashboard.currentRoutines')}
 					</h1>
 
 					<div className="flex flex-col gap-2">
@@ -400,18 +403,21 @@ function App() {
 								<p>{routine.name}</p>
 								<div className="flex gap-2">
 									<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-										Edit
+										{t('dashboard.edit')}
 									</button>
 									<button className="bg-red-600 text-white px-4 py-2 rounded-md shadow-md">
-										Delete
+										{t('dashboard.delete')}
 									</button>
 								</div>
 							</div>
 						))}
 					</div>
 
-					<Link to="/routines" className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2">
-						Add Routine
+					<Link
+						to="/routines"
+						className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2"
+					>
+						{t('dashboard.addRoutine')}
 					</Link>
 				</section>
 			</main>

@@ -116,5 +116,23 @@
 		"saveChanges": "Änderungen Speichern",
 		"changesSaved": "Änderungen erfolgreich gespeichert.",
 		"changesFailed": "Fehler beim Speichern der Änderungen."
-	}
+	},
+	"dashboard": {
+        "connectionStatus": "Verbindungsstatus",
+        "connected": "Mit dem Server verbunden",
+        "disconnected": "Vom Host getrennt",
+        "soilSolarPanelAnalysis": "Boden- und Solarpanelanalyse",
+        "panelPositionOrientation": "Panelposition und -ausrichtung",
+        "autoMode": "Automatischer Modus",
+        "manualMode": "Manueller Modus",
+        "setPosition": "Position Festlegen",
+        "updateEvery": "Aktualisieren Alle",
+        "setInterval": "Intervall Festlegen",
+        "temperature": "Temperatur",
+        "humidity": "Luftfeuchtigkeit",
+        "currentRoutines": "Aktuelle Routinen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "addRoutine": "Routine Hinzufügen"
+    }
 }
