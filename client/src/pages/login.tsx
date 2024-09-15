@@ -119,7 +119,7 @@ const LoginPage = () => {
 	}, [])
 
 	return (
-		<div className="bg-neutral-100 min-h-screen text-neutral-600">
+		<div className="bg-neutral-100 min-h-screen text-neutral-600 dark:bg-gray-700 dark:text-white">
 			<NavbarComponent />
 
 			<main className="min-h-screen flex items-center justify-center">
@@ -134,18 +134,18 @@ const LoginPage = () => {
 							type="email"
 							ref={emailRef}
 							placeholder={t('login.email')}
-							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
+							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full mt-2 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
 
 						<input
 							type="password"
 							ref={passwordRef}
 							placeholder={t('login.password')}
-							className="p-2 border border-neutral-200 rounded-md w-full mt-2 focus:border-emerald-600 transition-all outline-emerald-600"
+							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full mt-2 focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
 						<button
 							type="submit"
-							className="bg-emerald-700 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
+							className="bg-emerald-700 dark:bg-emerald-500 text-white w-full p-2 rounded-md mt-4 hover:brightness-110 transition-all"
 						>
 							{t('login.login')}
 						</button>
@@ -153,7 +153,7 @@ const LoginPage = () => {
 
 					<p className="mt-2 text-center">
 						{t("login.noAccountPreLink")}{' '}
-						<Link to="/register" className="text-emerald-700">
+						<Link to="/register" className="text-emerald-700 dark:text-emerald-500">
 							{t('login.noAccountLink')}
 						</Link>
 					</p>
