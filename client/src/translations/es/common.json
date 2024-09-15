@@ -88,5 +88,32 @@
 				"content": "Si tienes alguna pregunta o inquietud sobre esta Política de Privacidad, por favor contáctanos en asterki.tech/contact"
 			}
 		}
-	}
+	},
+	"routines": {
+        "currentRoutines": "Rutinas Actuales",
+        "addRoutine": "Agregar Rutina",
+        "selectRoutine": "Seleccione una Rutina para comenzar",
+        "name": "Nombre",
+        "execution": "Ejecución",
+        "manual": "Manual",
+        "automated": "Automatizado",
+        "conditions": "Condiciones",
+        "noConditions": "Si no se establecen condiciones, la rutina se ejecutará en cada intervalo de verificación.",
+        "multipleConditions": "Si se establecen más de una condición, la rutina se ejecutará si se cumple alguna de las condiciones.",
+        "temperatureAbove": "Temperatura Superior a *C°",
+        "temperatureBelow": "Temperatura Inferior a *C°",
+        "humidityAbove": "Humedad Superior a *%",
+        "humidityBelow": "Humedad Inferior a *%",
+        "checkInterval": "Intervalo de Verificación (Minutos)",
+        "checkIntervalRecommendation": "Se recomienda tener al menos 30 minutos por intervalo de verificación.",
+        "actions": "Acciones",
+        "water": "Agua (segundos)",
+        "rotatePanel": "Rotar Panel (automatizado)",
+        "notify": "Notificar",
+        "notifyDescription": "Se le notificará si se ejecuta la rutina.",
+        "deleteRoutine": "Eliminar Rutina",
+        "saveChanges": "Guardar Cambios",
+        "changesSaved": "Cambios guardados con éxito.",
+        "changesFailed": "Error al guardar los cambios."
+    }
 }

@@ -88,5 +88,32 @@
 				"content": "Wenn Sie Fragen oder Bedenken zu dieser Datenschutzerklärung haben, kontaktieren Sie uns bitte unter asterki.tech/contact"
 			}
 		}
+	},
+	"routines": {
+		"currentRoutines": "Aktuelle Routinen",
+		"addRoutine": "Routine Hinzufügen",
+		"selectRoutine": "Wählen Sie eine Routine, um zu beginnen",
+		"name": "Name",
+		"execution": "Ausführung",
+		"manual": "Manuell",
+		"automated": "Automatisiert",
+		"conditions": "Bedingungen",
+		"noConditions": "Wenn keine Bedingungen festgelegt sind, wird die Routine bei jedem Überprüfungsintervall ausgeführt.",
+		"multipleConditions": "Wenn mehr als eine Bedingung festgelegt ist, wird die Routine ausgeführt, wenn eine der Bedingungen erfüllt ist.",
+		"temperatureAbove": "Temperatur Über *C°",
+		"temperatureBelow": "Temperatur Unter *C°",
+		"humidityAbove": "Luftfeuchtigkeit Über *%",
+		"humidityBelow": "Luftfeuchtigkeit Unter *%",
+		"checkInterval": "Überprüfungsintervall (Minuten)",
+		"checkIntervalRecommendation": "Es wird empfohlen, mindestens 30 Minuten pro Überprüfungsintervall zu haben.",
+		"actions": "Aktionen",
+		"water": "Wasser (Sekunden)",
+		"rotatePanel": "Panel Drehen (automatisiert)",
+		"notify": "Benachrichtigen",
+		"notifyDescription": "Sie werden benachrichtigt, wenn die Routine ausgeführt wird.",
+		"deleteRoutine": "Routine Löschen",
+		"saveChanges": "Änderungen Speichern",
+		"changesSaved": "Änderungen erfolgreich gespeichert.",
+		"changesFailed": "Fehler beim Speichern der Änderungen."
 	}
 }

@@ -88,5 +88,32 @@
 				"content": "If you have any questions or concerns about this Privacy Policy, please contact us at asterki.tech/contact"
 			}
 		}
+	},
+	"routines": {
+		"currentRoutines": "Current Routines",
+		"addRoutine": "Add Routine",
+		"selectRoutine": "Select a Routine to begin",
+		"name": "Name",
+		"execution": "Execution",
+		"manual": "Manual",
+		"automated": "Automated",
+		"conditions": "Conditions",
+		"noConditions": "If no conditions are set, the routine will execute every check interval.",
+		"multipleConditions": "If more than one condition is set, the routine will execute if any of the conditions are met.",
+		"temperatureAbove": "Temperature Above *C°",
+		"temperatureBelow": "Temperature Below *C°",
+		"humidityAbove": "Humidity Above *%",
+		"humidityBelow": "Humidity Below *%",
+		"checkInterval": "Check Interval (Minutes)",
+		"checkIntervalRecommendation": "It is recommended to have at least 30 minutes per check interval.",
+		"actions": "Actions",
+		"water": "Water (seconds)",
+		"rotatePanel": "Rotate Panel (automated)",
+		"notify": "Notify",
+		"notifyDescription": "You will be notified if the routine is executed.",
+		"deleteRoutine": "Delete Routine",
+		"saveChanges": "Save Changes",
+		"changesSaved": "Changes saved successfully.",
+		"changesFailed": "Failed to save changes."
 	}
 }
