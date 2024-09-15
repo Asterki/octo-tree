@@ -30,6 +30,8 @@ import {
 
 import { useTranslation } from 'react-i18next'
 
+import type { Routine } from '../types'
+
 ChartJS.register(
 	CategoryScale,
 	LinearScale,
@@ -56,32 +58,127 @@ export const options = {
 	},
 }
 
-interface Routine {
-	name: string
-	execution: 'manual' | 'automated'
-	automatedExecution?: {
-		condition:
-			| 'temperatureexceeds'
-			| 'temperaturebelow'
-			| 'humidityexceeds'
-			| 'humiditybelow'
-			| 'interval'
-		conditionValue: number | string
-		checkInterval?: number
-	}
-	actions: {
-		type: 'water' | 'rotatepanel' | 'notify'
-		amount?: number
-	}[]
-}
-
-function App() {
+const Dashboard = () => {
 	const navigate = useNavigate()
 	const user = useAppSelector((state) => state.page.user)
 	const dispatch = useAppDispatch()
 	const { t } = useTranslation('common')
 
 	const [socket, setSocket] = React.useState<Socket | null>(null)
+
+	const [routines, setRoutines] = React.useState<Routine[]>([
+		{
+			name: 'Routine 1',
+			execution: 'manual',
+			automatedExecution: {
+				conditions: {
+					temperatureexceeds: {
+						active: true,
+						value: 30,
+					},
+					temperaturebelow: {
+						active: false,
+						value: 0,
+					},
+					humidityexceeds: {
+						active: false,
+						value: 0,
+					},
+					humiditybelow: {
+						active: false,
+						value: 0,
+					},
+				},
+				checkInterval: 0,
+			},
+			actions: {
+				water: {
+					active: true,
+					amount: 0,
+				},
+				rotatepanel: {
+					active: true,
+				},
+				notify: {
+					active: true,
+				},
+			},
+		},
+		{
+			name: 'Routine 2',
+			execution: 'automated',
+			automatedExecution: {
+				conditions: {
+					temperatureexceeds: {
+						active: true,
+						value: 30,
+					},
+					temperaturebelow: {
+						active: false,
+						value: 0,
+					},
+					humidityexceeds: {
+						active: false,
+						value: 0,
+					},
+					humiditybelow: {
+						active: false,
+						value: 0,
+					},
+				},
+				checkInterval: 0,
+			},
+			actions: {
+				water: {
+					active: true,
+					amount: 0,
+				},
+				rotatepanel: {
+					active: true,
+				},
+				notify: {
+					active: true,
+				},
+			},
+		},
+		{
+			name: 'Routine 3',
+			execution: 'manual',
+			automatedExecution: {
+				conditions: {
+					temperatureexceeds: {
+						active: true,
+						value: 30,
+					},
+					temperaturebelow: {
+						active: false,
+						value: 0,
+					},
+					humidityexceeds: {
+						active: false,
+						value: 0,
+					},
+					humiditybelow: {
+						active: false,
+						value: 0,
+					},
+				},
+				checkInterval: 0,
+			},
+			actions: {
+				water: {
+					active: true,
+					amount: 0,
+				},
+				rotatepanel: {
+					active: true,
+				},
+				notify: {
+					active: true,
+				},
+			},
+		}
+	])
 
 	const [currentTimeLabels, setCurrentTimeLabels] = React.useState(
 		[] as string[]
@@ -415,14 +512,45 @@ function App() {
 
 					<Link
 						to="/routines"
-						className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md mt-2"
+						className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 block text-center"
 					>
 						{t('dashboard.addRoutine')}
 					</Link>
+
+					{routines.length != 0 &&
+						routines.map((routine, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 my-2"
+							>
+								<p>{routine.name} ({routine.execution})</p>
+								<div className="flex gap-2">
+									{/* Show if the routine is automated, if not, add a button to execute it */}
+									{routine.execution === 'automated' && (
+										<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+											{t('dashboard.execute')}
+										</button>
+									)}
+
+									{/* Show if the routine is manual, if not, add a button to execute it */}	
+									{routine.execution === 'manual' && (
+										<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+											{t('dashboard.execute')}
+										</button>
+									)}
+								</div>
+							</div>
+						))}
+
+					{routines.length === 0 && (
+						<div className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100">
+							<p>{t('dashboard.noRoutines')}</p>
+						</div>
+					)}
 				</section>
 			</main>
 		</div>
 	)
 }
 
-export default App
+export default Dashboard

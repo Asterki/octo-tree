@@ -115,7 +115,8 @@
         "deleteRoutine": "Eliminar Rutina",
         "saveChanges": "Guardar Cambios",
         "changesSaved": "Cambios guardados con éxito.",
-        "changesFailed": "Error al guardar los cambios."
+        "changesFailed": "Error al guardar los cambios.",
+		"manualExecution": "Ejecución Manual"
     },
 	"dashboard": {
         "connectionStatus": "Estado de Conexión",
@@ -133,6 +134,7 @@
         "currentRoutines": "Rutinas Actuales",
         "edit": "Editar",
         "delete": "Eliminar",
-        "addRoutine": "Agregar Rutina"
+        "addRoutine": "Agregar Rutina",
+		"execute": "Ejecutar"
     }
 }

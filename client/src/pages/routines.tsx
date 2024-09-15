@@ -9,43 +9,7 @@ import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
 import { useTranslation } from 'react-i18next'
 
-interface Routine {
-    name: string
-    execution: 'manual' | 'automated'
-    automatedExecution?: {
-		conditions: {
-            temperatureexceeds: {
-                active: boolean
-                value: number
-            }
-            temperaturebelow: {
-                active: boolean
-                value: number
-            }
-            humidityexceeds: {
-                active: boolean
-                value: number
-            }
-            humiditybelow: {
-                active: boolean
-                value: number
-            }
-        }
-        checkInterval: number
-    }
-    actions: {
-        water: {
-            active: boolean
-            amount: number
-        }
-        rotatepanel: {
-            active: boolean
-        }
-        notify: {
-            active: boolean
-        }
-    }
-}
+import type { Routine } from '../types'
 
 const Routines = () => {
     const navigate = useNavigate()
@@ -77,6 +41,8 @@ const Routines = () => {
     }
 
     const saveChanges = async () => {
+        console.log(routines)
+
         try {
             await axios({
                 url: `${
@@ -136,6 +102,7 @@ const Routines = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
     return (
         <div className="bg-neutral-100 min-h-screen text-neutral-600">
             {/* Navbar */}
@@ -161,19 +128,40 @@ const Routines = () => {
                         onClick={() => {
                             const newRoutines = [...routines]
                             newRoutines.push({
-                                name: t('routines.newRoutine'),
+                                name: 'New Routine',
                                 execution: 'manual',
                                 actions: {
-                                    water: {
+                                    notify: {
                                         active: false,
-                                        amount: 50,
                                     },
                                     rotatepanel: {
                                         active: false,
                                     },
-                                    notify: {
+                                    water: {
                                         active: false,
+                                        amount: 0,
                                     },
+                                },
+                                automatedExecution: {
+                                    conditions: {
+                                        humiditybelow: {
+                                            active: false,
+                                            value: 0,
+                                        },
+                                        humidityexceeds: {
+                                            active: false,
+                                            value: 0,
+                                        },
+                                        temperaturebelow: {
+                                            active: false,
+                                            value: 0,
+                                        },
+                                        temperatureexceeds: {
+                                            active: false,
+                                            value: 0,
+                                        },
+                                    },
+                                    checkInterval: 0,
                                 },
                             })
                             setRoutines(newRoutines)

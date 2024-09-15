@@ -115,7 +115,8 @@
 		"deleteRoutine": "Delete Routine",
 		"saveChanges": "Save Changes",
 		"changesSaved": "Changes saved successfully.",
-		"changesFailed": "Failed to save changes."
+		"changesFailed": "Failed to save changes.",
+		"manualExecution": "Manual Execution"
 	},
 	"dashboard": {
         "connectionStatus": "Connection Status",
@@ -133,6 +134,7 @@
         "currentRoutines": "Current Routines",
         "edit": "Edit",
         "delete": "Delete",
-        "addRoutine": "Add Routine"
+        "addRoutine": "Add Routine",
+		"execute": "Execute"
     }
 }

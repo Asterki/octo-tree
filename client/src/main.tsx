@@ -21,8 +21,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import enCommon from './translations/en/common.json'
 import enComponents from './translations/en/components.json'
 
-import esCommon from './translations/en/common.json'
-import esComponents from './translations/en/components.json'
+import esCommon from './translations/es/common.json'
+import esComponents from './translations/es/components.json'
 
 import frCommon from './translations/fr/common.json'
 import frComponents from './translations/fr/components.json'
