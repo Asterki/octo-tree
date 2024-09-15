@@ -473,6 +473,114 @@ const Routines = () => {
 					<br />
 
 					<h1 className="text-xl font-bold px-2">Actions</h1>
+					<div className="px-2">
+						<div>
+							<input
+								type="checkbox"
+								checked={
+									routines[selectedRoutine].actions.water
+										.active
+								}
+								onChange={(e) => {
+									const newRoutines = [...routines]
+									newRoutines[
+										selectedRoutine
+									].actions.water.active = e.target.checked
+									setRoutines(newRoutines)
+								}}
+								className="mr-2"
+							/>
+							<label className="font-bold">Water</label>
+							<br />
+							{routines[selectedRoutine].actions.water.active && (
+								<input
+									type="number"
+									value={
+										routines[selectedRoutine].actions.water
+											.amount
+									}
+									onChange={(e) => {
+										const newRoutines = [...routines]
+										newRoutines[
+											selectedRoutine
+										].actions.water.amount = parseInt(
+											e.target.value
+										)
+										setRoutines(newRoutines)
+									}}
+								/>
+							)}
+						</div>
+
+						<br />
+
+						<div>
+							<input
+								type="checkbox"
+								checked={
+									routines[selectedRoutine].actions
+										.rotatepanel.active
+								}
+								onChange={(e) => {
+									const newRoutines = [...routines]
+									newRoutines[
+										selectedRoutine
+									].actions.rotatepanel.active =
+										e.target.checked
+									setRoutines(newRoutines)
+								}}
+								className="mr-2"
+							/>
+							<label className="font-bold">Rotate Panel</label>
+							<br />
+							{routines[selectedRoutine].actions.rotatepanel
+								.active && (
+								<input
+									type="number"
+									value={
+										routines[selectedRoutine].actions
+											.rotatepanel.amount
+									}
+									onChange={(e) => {
+										const newRoutines = [...routines]
+										newRoutines[
+											selectedRoutine
+										].actions.rotatepanel.amount = parseInt(
+											e.target.value
+										)
+										setRoutines(newRoutines)
+									}}
+								/>
+							)}
+						</div>
+
+						<br />
+
+						<div>
+							<input
+								type="checkbox"
+								checked={
+									routines[selectedRoutine].actions.notify
+										.active
+								}
+								onChange={(e) => {
+									const newRoutines = [...routines]
+									newRoutines[
+										selectedRoutine
+									].actions.notify.active = e.target.checked
+									setRoutines(newRoutines)
+								}}
+								className="mr-2"
+							/>
+							<label className="font-bold">Notify</label>
+
+							<br />
+
+							<p>
+								You will be notified if the routine is executed.
+							</p>
+						</div>
+					</div>
 				</div>
 			</main>
 		</div>
