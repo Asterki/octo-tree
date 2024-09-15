@@ -32,9 +32,18 @@ interface Routine {
 		checkInterval: number
 	}
 	actions: {
-		type: 'water' | 'rotatepanel' | 'notify'
-		amount?: number
-	}[]
+		water: {
+			active: boolean
+			amount: number
+		}
+		rotatepanel: {
+			active: boolean
+			amount: number
+		}
+		notify: {
+			active: boolean
+		}
+	}
 }
 
 const Routines = () => {
@@ -46,15 +55,19 @@ const Routines = () => {
 		{
 			name: 'Routine 1',
 			execution: 'manual',
-			actions: [
-				{
-					type: 'water',
-					amount: 200,
+			actions: {
+				water: {
+					active: true,
+					amount: 50,
 				},
-				{
-					type: 'rotatepanel',
+				rotatepanel: {
+					active: false,
+					amount: 90,
 				},
-			],
+				notify: {
+					active: false,
+				},
+			},
 		},
 		{
 			name: 'Routine 2',
@@ -80,11 +93,19 @@ const Routines = () => {
 				},
 				checkInterval: 5,
 			},
-			actions: [
-				{
-					type: 'notify',
+			actions: {
+				water: {
+					active: true,
+					amount: 50,
 				},
-			],
+				rotatepanel: {
+					active: false,
+					amount: 90,
+				},
+				notify: {
+					active: false,
+				},
+			},
 		},
 	])
 
@@ -121,7 +142,7 @@ const Routines = () => {
 			<Navbar />
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch justify-center md:mt-16 mt-32">
-				<div className="w-2/12 py-4 bg-neutral-200 min-h-screen box-border border-r-2 border-neutral-300">
+				<div className="w-2/12 py-4 bg-neutral-200 min-h-screen box-border border-r-2 border-neutral-300 flex flex-col itmes-center">
 					<h1 className="text-xl font-bold px-2">Current Routines</h1>
 					{routines.map((routine, index) => (
 						<div
@@ -130,12 +151,55 @@ const Routines = () => {
 							}`}
 							onClick={() => setSelectedRoutine(index)}
 						>
-							<h2>{routine.name}</h2>
+							<h2 className="font-semibold">{routine.name}</h2>
 							<p>{routine.execution}</p>
 						</div>
 					))}
+
+					<button
+						className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4"
+						onClick={() => {
+							const newRoutines = [...routines]
+							newRoutines.push({
+								name: 'New Routine',
+								execution: 'manual',
+								actions: {
+									water: {
+										active: false,
+										amount: 50,
+									},
+									rotatepanel: {
+										active: false,
+										amount: 90,
+									},
+									notify: {
+										active: false,
+									},
+								},
+							})
+							setRoutines(newRoutines)
+						}}
+					>
+						Add Routine
+					</button>
 				</div>
 				<div className="w-10/12 py-4 min-h-screen">
+					<h1 className="text-xl font-bold px-2">Name</h1>
+					<div className="px-2">
+						<input
+							type="text"
+							value={routines[selectedRoutine].name}
+							onChange={(e) => {
+								const newRoutines = [...routines]
+								newRoutines[selectedRoutine].name =
+									e.target.value
+								setRoutines(newRoutines)
+							}}
+						/>
+					</div>
+
+					<br />
+
 					<h1 className="text-xl font-bold px-2">Execution</h1>
 					<div className="px-2">
 						<select
@@ -379,7 +443,10 @@ const Routines = () => {
 									<label className="font-bold">
 										Check Interval (Minutes)
 									</label>{' '}
-									<br />
+									<p>
+										It is recommended to have at least 30
+										minutes per check interval.
+									</p>
 									<input
 										type="number"
 										value={
