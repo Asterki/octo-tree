@@ -9,7 +9,7 @@ import RoutinesPage from './pages/routines.tsx'
 import IndexPage from './pages/home.tsx'
 import PrivacyPolicy from './pages/privacy.tsx'
 
-import { I18nextProvider } from 'react-i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
 import i18next from 'i18next'
 
 import store from './store'
@@ -30,30 +30,33 @@ import frComponents from './translations/fr/components.json'
 import deCommon from './translations/de/common.json'
 import deComponents from './translations/de/components.json'
 
-i18next.init({
-	interpolation: { escapeValue: false }, // React already does escaping
-	initImmediate: false,
-	lng: 'en',
-	// Import resources from the JSON Files
-	resources: {
-		en: {
-			common: enCommon,
-			components: enComponents,
-		},
-		es: {
-			common: esCommon,
-			components: esComponents,
-		},
-		fr: {
-			common: frCommon,
-			components: frComponents,
-		},
-		de: {
-			common: deCommon,
-			components: deComponents,
-		},
-	},
-})
+i18next
+    .use(initReactI18next)
+    .init({
+        interpolation: { escapeValue: false }, // React already does escaping
+        initImmediate: false,
+        debug: true,
+        fallbackLng: 'en',
+        lng: navigator.language, // Detect the browser language
+        resources: {
+            de: {
+                common: deCommon,
+                components: deComponents,
+            },
+            en: {
+                common: enCommon,
+                components: enComponents,
+            },
+            es: {
+                common: esCommon,
+                components: esComponents,
+            },
+            fr: {
+                common: frCommon,
+                components: frComponents,
+            },
+        },
+    })
 
 const router = createBrowserRouter([
 	{

@@ -105,6 +105,7 @@
 		"humidityAbove": "Humidity Above *%",
 		"humidityBelow": "Humidity Below *%",
 		"checkInterval": "Check Interval (Minutes)",
+		"newRoutine": "New Routine",
 		"checkIntervalRecommendation": "It is recommended to have at least 30 minutes per check interval.",
 		"actions": "Actions",
 		"water": "Water (seconds)",

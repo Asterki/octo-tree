@@ -107,6 +107,7 @@
         "checkInterval": "Intervalo de Verificación (Minutos)",
         "checkIntervalRecommendation": "Se recomienda tener al menos 30 minutos por intervalo de verificación.",
         "actions": "Acciones",
+		"newRoutine": "Nueva Rutina",
         "water": "Agua (segundos)",
         "rotatePanel": "Rotar Panel (automatizado)",
         "notify": "Notificar",

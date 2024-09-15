@@ -107,6 +107,7 @@
 		"checkInterval": "Überprüfungsintervall (Minuten)",
 		"checkIntervalRecommendation": "Es wird empfohlen, mindestens 30 Minuten pro Überprüfungsintervall zu haben.",
 		"actions": "Aktionen",
+		"newRoutine": "Neue Routine",
 		"water": "Wasser (Sekunden)",
 		"rotatePanel": "Panel Drehen (automatisiert)",
 		"notify": "Benachrichtigen",
