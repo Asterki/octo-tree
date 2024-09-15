@@ -320,13 +320,13 @@ const Dashboard = () => {
 	}, [socket])
 
 	return (
-		<div className="bg-neutral-100 min-h-screen text-neutral-600">
+		<div className="bg-neutral-100 dark:bg-gray-700 min-h-screen text-neutral-600 dark:text-white dark:bg-gray-700">
 			{/* Navbar */}
 			<Navbar />
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
-				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white p-4 md:w-1/3">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white dark:bg-gray-800 dark:text-white p-4 md:w-1/3">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.connectionStatus')}
 					</h1>
 					<div
@@ -346,8 +346,8 @@ const Dashboard = () => {
 					</p>
 				</section>
 
-				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-7/12">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 md:w-7/12">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.soilSolarPanelAnalysis')}
 					</h1>
 
@@ -368,7 +368,7 @@ const Dashboard = () => {
 
 					<div className="flex gap-2">
 						<button
-							className="h-32 w-1/2 rounded-md bg-neutral-200"
+							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600"
 							onClick={() => soilImageInputRef.current?.click()}
 						>
 							<FontAwesomeIcon
@@ -377,7 +377,7 @@ const Dashboard = () => {
 							/>
 						</button>
 						<button
-							className="h-32 w-1/2 rounded-md bg-neutral-200"
+							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600"
 							onClick={() => panelImageInputRef.current?.click()}
 						>
 							<FontAwesomeIcon
@@ -388,8 +388,8 @@ const Dashboard = () => {
 					</div>
 				</section>
 
-				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-3/12">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-3/12">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.panelPositionOrientation')}
 					</h1>
 
@@ -448,8 +448,8 @@ const Dashboard = () => {
 					</div>
 				</section>
 
-				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2 md:w-4/12">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-4/12">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.temperature')}
 					</h1>
 					<Line
@@ -467,8 +467,8 @@ const Dashboard = () => {
 					/>
 				</section>
 
-				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 md:w-4/12">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 md:w-4/12">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.humidity')}
 					</h1>
 					<Line
@@ -486,8 +486,8 @@ const Dashboard = () => {
 					/>
 				</section>
 
-				<section className="w-11/12 bg-white rounded-md shadow-lg p-2 my-2">
-					<h1 className="text-slate-700 text-2xl text-center font-bold">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2">
+					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.currentRoutines')}
 					</h1>
 
@@ -495,7 +495,7 @@ const Dashboard = () => {
 						{currentConfiguration.routines.map((routine, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100"
+								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700"
 							>
 								<p>{routine.name}</p>
 								<div className="flex gap-2">
@@ -521,7 +521,7 @@ const Dashboard = () => {
 						routines.map((routine, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 my-2"
+								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700 my-2"
 							>
 								<p>{routine.name} ({routine.execution})</p>
 								<div className="flex gap-2">
@@ -543,7 +543,7 @@ const Dashboard = () => {
 						))}
 
 					{routines.length === 0 && (
-						<div className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100">
+						<div className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700">
 							<p>{t('dashboard.noRoutines')}</p>
 						</div>
 					)}
