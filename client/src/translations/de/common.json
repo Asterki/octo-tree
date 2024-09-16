@@ -135,6 +135,7 @@
 		"edit": "Bearbeiten",
 		"delete": "Löschen",
 		"addRoutine": "Routine Hinzufügen",
-		"execute": "Ausführen"
+		"execute": "Ausführen",
+		"noRoutines": "Keine Routinen gefunden."
 	}
 }
