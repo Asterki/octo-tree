@@ -27,6 +27,12 @@ import routinesGet, {
 import routinesUpdate, {
 	limiter as routinesUpdateLimiter,
 } from '../routes/routines/update'
+import routinesCreate, {
+	limiter as routinesCreateLimiter,
+} from '../routes/routines/create'
+import routinesDelete, {
+	limiter as routinesDeleteLimiter,
+} from '../routes/routines/delete'
 
 // Hardware routes
 import hardwareSensors from '../routes/hardware/sensors'
@@ -67,7 +73,21 @@ class Router {
 
 		// Routines routes
 		this.routinesRouter.get('/get', routinesGetLimiter, routinesGet)
-		this.routinesRouter.post('/update', routinesUpdateLimiter, routinesUpdate)
+		this.routinesRouter.post(
+			'/update',
+			routinesUpdateLimiter,
+			routinesUpdate
+		)
+		this.routinesRouter.post(
+			'/create',
+			routinesCreateLimiter,
+			routinesCreate
+		)
+		this.routinesRouter.post(
+			'/delete',
+			routinesDeleteLimiter,
+			routinesDelete
+		)
 
 		// Hardware routes
 		this.hardwareRouter.post('/update', hardwareSensors)
