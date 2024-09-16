@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/navbar'
+import AlertComponent from '../components/alert'
 
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { setUser } from '../store/slices/pages'
@@ -65,125 +66,16 @@ const Dashboard = () => {
 	const { t } = useTranslation('common')
 
 	const [socket, setSocket] = React.useState<Socket | null>(null)
+	const [alertState, setAlertState] = React.useState({
+		show: false,
+		content: '',
+	})
 
-	const [routines, setRoutines] = React.useState<Routine[]>([
-		{
-			name: 'Routine 1',
-			execution: 'manual',
-			automatedExecution: {
-				conditions: {
-					temperatureexceeds: {
-						active: true,
-						value: 30,
-					},
-					temperaturebelow: {
-						active: false,
-						value: 0,
-					},
-					humidityexceeds: {
-						active: false,
-						value: 0,
-					},
-					humiditybelow: {
-						active: false,
-						value: 0,
-					},
-				},
-				checkInterval: 0,
-			},
-			actions: {
-				water: {
-					active: true,
-					amount: 0,
-				},
-				rotatepanel: {
-					active: true,
-				},
-				notify: {
-					active: true,
-				},
-			},
-		},
-		{
-			name: 'Routine 2',
-			execution: 'automated',
-			automatedExecution: {
-				conditions: {
-					temperatureexceeds: {
-						active: true,
-						value: 30,
-					},
-					temperaturebelow: {
-						active: false,
-						value: 0,
-					},
-					humidityexceeds: {
-						active: false,
-						value: 0,
-					},
-					humiditybelow: {
-						active: false,
-						value: 0,
-					},
-				},
-				checkInterval: 0,
-			},
-			actions: {
-				water: {
-					active: true,
-					amount: 0,
-				},
-				rotatepanel: {
-					active: true,
-				},
-				notify: {
-					active: true,
-				},
-			},
-		},
-		{
-			name: 'Routine 3',
-			execution: 'manual',
-			automatedExecution: {
-				conditions: {
-					temperatureexceeds: {
-						active: true,
-						value: 30,
-					},
-					temperaturebelow: {
-						active: false,
-						value: 0,
-					},
-					humidityexceeds: {
-						active: false,
-						value: 0,
-					},
-					humiditybelow: {
-						active: false,
-						value: 0,
-					},
-				},
-				checkInterval: 0,
-			},
-			actions: {
-				water: {
-					active: true,
-					amount: 0,
-				},
-				rotatepanel: {
-					active: true,
-				},
-				notify: {
-					active: true,
-				},
-			},
-		},
-	])
+	const [routines, setRoutines] = React.useState<Routine[]>([])
 
 	const [currentTimeLabels, setCurrentTimeLabels] = React.useState(
 		[] as string[]
 	)
-
 	const [temperatureData, setTemperatureData] = React.useState<number[]>([])
 	const [humidityData, setHumidityData] = React.useState<number[]>([])
 
@@ -226,6 +118,20 @@ const Dashboard = () => {
 			})
 	}
 
+	const showAlert = (content: string) => {
+		setAlertState({
+			show: true,
+			content,
+		})
+
+		setTimeout(() => {
+			setAlertState({
+				show: false,
+				content: '',
+			})
+		}, 3000)
+	}
+
 	React.useEffect(() => {
 		;(async () => {
 			// Check if the user is logged in
@@ -246,6 +152,24 @@ const Dashboard = () => {
 				} catch (error) {
 					navigate('/login')
 				}
+			}
+
+			// Get the current routines
+			try {
+				const response = await axios({
+					url: `${
+						import.meta.env.MODE === 'development'
+							? import.meta.env.VITE_API_URL
+							: ''
+					}/api/routines/get`,
+					method: 'get',
+					withCredentials: true,
+				})
+
+				console.log(response.data.routines)
+				setRoutines(response.data.routines)
+			} catch (error) {
+				showAlert(t('dashboard.errorGettingRoutines'))
 			}
 
 			const newSocket = io(
@@ -321,7 +245,7 @@ const Dashboard = () => {
 	}, [socket])
 
 	return (
-		<div className="bg-neutral-100 dark:bg-gray-700 min-h-screen text-neutral-600 dark:text-white dark:bg-gray-700">
+		<div className="bg-neutral-100 min-h-screen text-neutral-600 dark:text-white dark:bg-gray-700">
 			{/* Navbar */}
 			<Navbar />
 
@@ -552,6 +476,12 @@ const Dashboard = () => {
 					)}
 				</section>
 			</main>
+
+			<AlertComponent
+				content={alertState.content}
+				showing={alertState.show}
+				setShowing={setAlertState}
+			/>
 		</div>
 	)
 }

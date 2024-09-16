@@ -62,11 +62,11 @@ model AutomatedExecution {
   checkInterval         Int
   nextExecutionInterval Int
 
-  routineId Int     @unique
-  routine   Routine @relation(fields: [routineId], references: [id])
+  routineId Int?     @unique
+  routine   Routine? @relation(fields: [routineId], references: [id])
 
-  conditionsId Int        @unique
-  conditions   Conditions @relation(fields: [conditionsId], references: [id])
+  conditionsId Int?        @unique
+  conditions   Conditions? @relation(fields: [conditionsId], references: [id])
 }
 
 model Conditions {

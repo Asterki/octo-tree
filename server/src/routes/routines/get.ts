@@ -44,17 +44,33 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			where: {
 				boardId: board?.id,
 			},
+			// Include everything
 			include: {
-				actions: true,
-				automatedExecution: true,
+				automatedExecution: {
+					include: {
+						conditions: {
+							include: {
+								temperatureExceeds: true,
+								temperatureBelow: true,
+								humidityExceeds: true,
+								humidityBelow: true,
+							},
+						},
+					},
+				},
+				actions: {
+					include: {
+						water: true,
+						rotatePanel: true,
+						notify: true,
+					},
+				},
 			},
 		})
 
-		console.log(routines)
-
 		res.status(200).send({
 			status: 'success',
-            routines,
+			routines,
 		})
 	} catch (error) {
 		return res.status(500).send({
