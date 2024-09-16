@@ -41,8 +41,6 @@ const Routines = () => {
 	}
 
 	const saveChanges = async () => {
-		console.log(routines)
-
 		try {
 			await axios({
 				url: `${
@@ -92,7 +90,8 @@ const Routines = () => {
 						withCredentials: true,
 					})
 
-					setRoutines(routinesResponse.data)
+					console.log(JSON.stringify(routinesResponse.data.routines))
+					setRoutines(routinesResponse.data.routines)
 					setSelectedRoutine(0)
 				} catch (error) {
 					navigate('/login')
@@ -112,19 +111,22 @@ const Routines = () => {
 					<h1 className="text-xl font-bold px-2">
 						{t('routines.currentRoutines')}
 					</h1>
-					{routines.map((routine, index) => (
-						<div
-							className={`px-2 w-full border-t border-t-neutral-300 dark:border-t-gray-600 hover:bg-neutral-300 hover:dark:bg-gray-600 transition-all cursor-pointer ${
-								selectedRoutine == index
-									? 'bg-neutral-300 dark:bg-gray-600'
-									: ''
-							}`}
-							onClick={() => setSelectedRoutine(index)}
-						>
-							<h2 className="font-semibold">{routine.name}</h2>
-							<p>{routine.execution}</p>
-						</div>
-					))}
+					{routines.length !== 0 &&
+						routines.map((routine, index) => (
+							<div
+								className={`px-2 w-full border-t border-t-neutral-300 dark:border-t-gray-600 hover:bg-neutral-300 hover:dark:bg-gray-600 transition-all cursor-pointer ${
+									selectedRoutine == index
+										? 'bg-neutral-300 dark:bg-gray-600'
+										: ''
+								}`}
+								onClick={() => setSelectedRoutine(index)}
+							>
+								<h2 className="font-semibold">
+									{routine.name}
+								</h2>
+								<p>{routine.execution}</p>
+							</div>
+						))}
 
 					<button
 						className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4"
@@ -133,11 +135,13 @@ const Routines = () => {
 							newRoutines.push({
 								name: 'New Routine',
 								execution: 'manual',
+								boardId: '', // This will be updated by the server
+								id: 0, // This will be updated by the server
 								actions: {
 									notify: {
 										active: false,
 									},
-									rotatepanel: {
+									rotatePanel: {
 										active: false,
 									},
 									water: {
@@ -147,19 +151,19 @@ const Routines = () => {
 								},
 								automatedExecution: {
 									conditions: {
-										humiditybelow: {
+										humidityBelow: {
 											active: false,
 											value: 0,
 										},
-										humidityexceeds: {
+										humidityExceeds: {
 											active: false,
 											value: 0,
 										},
-										temperaturebelow: {
+										temperatureBelow: {
 											active: false,
 											value: 0,
 										},
-										temperatureexceeds: {
+										temperatureExceeds: {
 											active: false,
 											value: 0,
 										},
@@ -248,7 +252,7 @@ const Routines = () => {
 												routines[selectedRoutine]
 													.automatedExecution
 													?.conditions
-													.temperatureexceeds.active
+													.temperatureExceeds.active
 											}
 											onChange={(e) => {
 												const newRoutines = [
@@ -256,7 +260,7 @@ const Routines = () => {
 												]
 												newRoutines[
 													selectedRoutine
-												].automatedExecution!.conditions.temperatureexceeds.active =
+												].automatedExecution!.conditions.temperatureExceeds.active =
 													e.target.checked
 												setRoutines(newRoutines)
 											}}
@@ -270,7 +274,7 @@ const Routines = () => {
 
 										{routines[selectedRoutine]
 											.automatedExecution?.conditions
-											.temperatureexceeds.active && (
+											.temperatureExceeds.active && (
 											<input
 												className="dark:bg-gray-600 dark:text-white"
 												type="number"
@@ -278,7 +282,7 @@ const Routines = () => {
 													routines[selectedRoutine]
 														.automatedExecution
 														?.conditions
-														.temperatureexceeds
+														.temperatureExceeds
 														.value
 												}
 												onChange={(e) => {
@@ -287,7 +291,7 @@ const Routines = () => {
 													]
 													newRoutines[
 														selectedRoutine
-													].automatedExecution!.conditions.temperatureexceeds.value =
+													].automatedExecution!.conditions.temperatureExceeds.value =
 														parseInt(e.target.value)
 													setRoutines(newRoutines)
 												}}
@@ -304,7 +308,7 @@ const Routines = () => {
 												routines[selectedRoutine]
 													.automatedExecution
 													?.conditions
-													.temperaturebelow.active
+													.temperatureBelow.active
 											}
 											onChange={(e) => {
 												const newRoutines = [
@@ -312,7 +316,7 @@ const Routines = () => {
 												]
 												newRoutines[
 													selectedRoutine
-												].automatedExecution!.conditions.temperaturebelow.active =
+												].automatedExecution!.conditions.temperatureBelow.active =
 													e.target.checked
 												setRoutines(newRoutines)
 											}}
@@ -326,7 +330,7 @@ const Routines = () => {
 
 										{routines[selectedRoutine]
 											.automatedExecution?.conditions
-											.temperaturebelow.active && (
+											.temperatureBelow.active && (
 											<input
 												className="dark:bg-gray-600 dark:text-white"
 												type="number"
@@ -334,7 +338,7 @@ const Routines = () => {
 													routines[selectedRoutine]
 														.automatedExecution
 														?.conditions
-														.temperaturebelow.value
+														.temperatureBelow.value
 												}
 												onChange={(e) => {
 													const newRoutines = [
@@ -342,7 +346,7 @@ const Routines = () => {
 													]
 													newRoutines[
 														selectedRoutine
-													].automatedExecution!.conditions.temperaturebelow.value =
+													].automatedExecution!.conditions.temperatureBelow.value =
 														parseInt(e.target.value)
 													setRoutines(newRoutines)
 												}}
@@ -358,7 +362,7 @@ const Routines = () => {
 											checked={
 												routines[selectedRoutine]
 													.automatedExecution
-													?.conditions.humidityexceeds
+													?.conditions.humidityExceeds
 													.active
 											}
 											onChange={(e) => {
@@ -367,7 +371,7 @@ const Routines = () => {
 												]
 												newRoutines[
 													selectedRoutine
-												].automatedExecution!.conditions.humidityexceeds.active =
+												].automatedExecution!.conditions.humidityExceeds.active =
 													e.target.checked
 												setRoutines(newRoutines)
 											}}
@@ -381,7 +385,7 @@ const Routines = () => {
 
 										{routines[selectedRoutine]
 											.automatedExecution?.conditions
-											.humidityexceeds.active && (
+											.humidityExceeds.active && (
 											<input
 												className="dark:bg-gray-600 dark:text-white"
 												type="number"
@@ -389,7 +393,7 @@ const Routines = () => {
 													routines[selectedRoutine]
 														.automatedExecution
 														?.conditions
-														.humidityexceeds.value
+														.humidityExceeds.value
 												}
 												onChange={(e) => {
 													const newRoutines = [
@@ -397,7 +401,7 @@ const Routines = () => {
 													]
 													newRoutines[
 														selectedRoutine
-													].automatedExecution!.conditions.humidityexceeds.value =
+													].automatedExecution!.conditions.humidityExceeds.value =
 														parseInt(e.target.value)
 													setRoutines(newRoutines)
 												}}
@@ -413,7 +417,7 @@ const Routines = () => {
 											checked={
 												routines[selectedRoutine]
 													.automatedExecution
-													?.conditions.humiditybelow
+													?.conditions.humidityBelow
 													.active
 											}
 											onChange={(e) => {
@@ -422,7 +426,7 @@ const Routines = () => {
 												]
 												newRoutines[
 													selectedRoutine
-												].automatedExecution!.conditions.humiditybelow.active =
+												].automatedExecution!.conditions.humidityBelow.active =
 													e.target.checked
 												setRoutines(newRoutines)
 											}}
@@ -437,7 +441,7 @@ const Routines = () => {
 
 										{routines[selectedRoutine]
 											.automatedExecution?.conditions
-											.humiditybelow.active && (
+											.humidityBelow.active && (
 											<input
 												className="dark:bg-gray-600 dark:text-white"
 												type="number"
@@ -445,7 +449,7 @@ const Routines = () => {
 													routines[selectedRoutine]
 														.automatedExecution
 														?.conditions
-														.humiditybelow.value
+														.humidityBelow.value
 												}
 												onChange={(e) => {
 													const newRoutines = [
@@ -453,7 +457,7 @@ const Routines = () => {
 													]
 													newRoutines[
 														selectedRoutine
-													].automatedExecution!.conditions.humiditybelow.value =
+													].automatedExecution!.conditions.humidityBelow.value =
 														parseInt(e.target.value)
 													setRoutines(newRoutines)
 												}}
@@ -554,13 +558,13 @@ const Routines = () => {
 									type="checkbox"
 									checked={
 										routines[selectedRoutine].actions
-											.rotatepanel.active
+											.rotatePanel.active
 									}
 									onChange={(e) => {
 										const newRoutines = [...routines]
 										newRoutines[
 											selectedRoutine
-										].actions.rotatepanel.active =
+										].actions.rotatePanel.active =
 											e.target.checked
 										setRoutines(newRoutines)
 									}}

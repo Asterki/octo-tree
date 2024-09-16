@@ -1,34 +1,36 @@
 interface Routine {
+	id: number
 	name: string
-	execution: 'manual' | 'automated'
-	automatedExecution?: {
+	execution: string
+	boardId: string
+	automatedExecution: {
+		checkInterval: number
+		nextExecutionInterval: number
 		conditions: {
-			temperatureexceeds: {
+			temperatureExceeds: {
 				active: boolean
 				value: number
 			}
-			temperaturebelow: {
+			temperatureBelow: {
 				active: boolean
 				value: number
 			}
-			humidityexceeds: {
+			humidityExceeds: {
 				active: boolean
 				value: number
 			}
-			humiditybelow: {
+			humidityBelow: {
 				active: boolean
 				value: number
 			}
 		}
-		checkInterval: number
-		nextExecutionInterval: number
 	}
 	actions: {
 		water: {
 			active: boolean
 			amount: number
 		}
-		rotatepanel: {
+		rotatePanel: {
 			active: boolean
 		}
 		notify: {
