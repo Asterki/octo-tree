@@ -29,8 +29,32 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const prisma = new PrismaClient()
 
+		const board = await prisma.board.findFirst({
+			where: {
+				user_id: (user as any).id,
+			},
+		})
+
+		if (!board)
+			return res.status(404).send({
+				status: 'not-found',
+			})
+
+		const routines = await prisma.routine.findMany({
+			where: {
+				boardId: board?.id,
+			},
+			include: {
+				actions: true,
+				automatedExecution: true,
+			},
+		})
+
+		console.log(routines)
+
 		res.status(200).send({
 			status: 'success',
+            routines,
 		})
 	} catch (error) {
 		return res.status(500).send({

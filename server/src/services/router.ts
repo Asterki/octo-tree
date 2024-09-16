@@ -10,14 +10,19 @@ import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/acco
 import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soil'
 import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
 
+// Routines routes
+import routinesGet, { limiter as routinesGetLimiter } from '../routes/routines/get'
+
+
 // Hardware routes
 import hardwareSensors from '../routes/hardware/sensors'
 import hardwareGet from '../routes/hardware/get'
 
 class Router {
-	public accountRouter: ExpressRouter = express.Router()
+	public accountRouter = express.Router()
 	public soilRouter = express.Router()
 	public hardwareRouter = express.Router()
+	public routinesRouter = express.Router()
 	private instance: Router | null = null
 
 	constructor() {}
@@ -38,6 +43,9 @@ class Router {
 		this.soilRouter.post('/panel', panelUploadLimiter, panelUpload)
 		this.soilRouter.post('/soil', soilUploadLimiter, soilUpload)
 
+		// Routines routes
+		this.routinesRouter.get('/get', routinesGetLimiter, routinesGet)
+
 		// Hardware routes
 		this.hardwareRouter.post('/update', hardwareSensors)
 		this.hardwareRouter.post('/get', hardwareGet)
@@ -45,6 +53,7 @@ class Router {
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)
 		server.use('/api/hardware', this.hardwareRouter)
+		server.use('/api/routines', this.routinesRouter)
 	}
 }
 

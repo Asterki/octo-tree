@@ -40,7 +40,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		const prisma = new PrismaClient()
 
 		// Get the board given the board ID
-		const board = await prisma.boards.findFirst({
+		const board = await prisma.board.findFirst({
 			where: {
 				id: parsedBody.data.boardID,
 			},
@@ -62,7 +62,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		// 	})
 
 		// Update the sensor data
-		await prisma.boards.update({
+		await prisma.board.update({
 			where: {
 				id: parsedBody.data.boardID,
 			},

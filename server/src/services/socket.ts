@@ -49,23 +49,23 @@ class SocketServer {
 				return
 
 				// Get the sensor data
-				const prisma = new PrismaClient()
-				prisma.boards
-					.findFirst({
-						where: {
-							id: boardID,
-							user_id: userID,
-						},
-					})
-					.then((board) => {
-						if (!board) return
-						// if (!bcrypt.compareSync(data.sensorShareToken, board.sensorShareToken)) return
+				// const prisma = new PrismaClient()
+				// prisma.boards
+				// 	.findFirst({
+				// 		where: {
+				// 			id: boardID,
+				// 			user_id: userID,
+				// 		},
+				// 	})
+				// 	.then((board) => {
+				// 		if (!board) return
+				// 		// if (!bcrypt.compareSync(data.sensorShareToken, board.sensorShareToken)) return
 
-						socket.emit('sensordata', {
-							boardID,
-							data: board.sensorData,
-						})
-					})
+				// 		socket.emit('sensordata', {
+				// 			boardID,
+				// 			data: board.sensorData,
+				// 		})
+				// 	})
 			})
 		})
 

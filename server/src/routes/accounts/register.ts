@@ -69,7 +69,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		})
 
 		// Check if the product exists
-		const productExists = await prisma.boards.findFirst({
+		const productExists = await prisma.board.findFirst({
 			where: {
 				id: parsedBody.data.productID,
 			},
@@ -80,7 +80,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 
 		// Register the user to the product
-		await prisma.boards.update({
+		await prisma.board.update({
 			where: {
 				id: parsedBody.data.productID,
 			},

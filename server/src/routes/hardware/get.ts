@@ -41,7 +41,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		const prisma = new PrismaClient()
 
 		// Get the board given the board ID
-		const board = await prisma.boards.findFirst({
+		const board = await prisma.board.findFirst({
 			where: {
 				id: parsedBody.data.boardID,
 			},
@@ -63,7 +63,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		// 	})
 
 		// Get the actions given the board ID
-		const actions = await prisma.boards.findFirst({
+		const actions = await prisma.board.findFirst({
 			where: {
 				id: parsedBody.data.boardID,
 			},
