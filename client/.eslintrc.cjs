@@ -15,5 +15,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'no-extra-semi': 'off',
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
   },
 }

@@ -177,7 +177,7 @@ const Dashboard = () => {
 					active: true,
 				},
 			},
-		}
+		},
 	])
 
 	const [currentTimeLabels, setCurrentTimeLabels] = React.useState(
@@ -199,6 +199,7 @@ const Dashboard = () => {
 	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
 
 	const uploadImage = (type: 'soil' | 'panel') => {
+		setRoutines([])
 		const input = type == 'soil' ? soilImageInputRef : panelImageInputRef
 		const file = (input.current as HTMLInputElement).files?.[0]
 
@@ -523,7 +524,9 @@ const Dashboard = () => {
 								key={index}
 								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700 my-2"
 							>
-								<p>{routine.name} ({routine.execution})</p>
+								<p>
+									{routine.name} ({routine.execution})
+								</p>
 								<div className="flex gap-2">
 									{/* Show if the routine is automated, if not, add a button to execute it */}
 									{routine.execution === 'automated' && (
@@ -532,7 +535,7 @@ const Dashboard = () => {
 										</button>
 									)}
 
-									{/* Show if the routine is manual, if not, add a button to execute it */}	
+									{/* Show if the routine is manual, if not, add a button to execute it */}
 									{routine.execution === 'manual' && (
 										<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
 											{t('dashboard.execute')}

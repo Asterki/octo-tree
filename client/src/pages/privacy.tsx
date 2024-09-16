@@ -1,4 +1,3 @@
-import * as React from 'react'
 import NavbarComponent from '../components/navbar'
 import { useTranslation } from 'react-i18next'
 

@@ -49,7 +49,7 @@ const Routines = () => {
 					import.meta.env.MODE === 'development'
 						? import.meta.env.VITE_API_URL
 						: ''
-				}/api/routines`,
+				}/api/routines/update`,
 				method: 'post',
 				data: {
 					routines,
@@ -87,7 +87,7 @@ const Routines = () => {
 							import.meta.env.MODE === 'development'
 								? import.meta.env.VITE_API_URL
 								: ''
-						}/api/routines`,
+						}/api/routines/get`,
 						method: 'get',
 						withCredentials: true,
 					})
@@ -165,6 +165,7 @@ const Routines = () => {
 										},
 									},
 									checkInterval: 0,
+									nextExecutionInterval: 0,
 								},
 							})
 							setRoutines(newRoutines)
