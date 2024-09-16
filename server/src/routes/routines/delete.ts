@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import bcrypt from 'bcrypt'
 
 import { rateLimit } from 'express-rate-limit'
 import { RedisStore } from 'rate-limit-redis'
@@ -22,68 +21,58 @@ const limiter = rateLimit({
 })
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
-	console.log('Received request from hardware to update their settings')
-	console.log(req.body)
+	const user = req.user
+	if (!user)
+		return res.status(401).send({
+			status: 'unauthenticated',
+		})
 
 	const parsedBody = z
 		.object({
-			boardID: z.string(),
-			boardKey: z.string(),
+			routine_id: z.number(),
 		})
 		.safeParse(req.body)
 
 	if (!parsedBody.success)
 		return res.status(400).send({
 			status: 'invalid-parameters',
+			errors: parsedBody.error,
 		})
 
 	try {
 		const prisma = new PrismaClient()
 
-		// Get the board given the board ID
 		const board = await prisma.board.findFirst({
 			where: {
-				id: parsedBody.data.boardID,
+				user_id: (user as any).id,
 			},
 		})
 
-		if (!board)
-			return res.status(404).send({
-				status: 'not-found',
-			})
-
-		// Check the token using bcrypt
-		// const tokenMatch = await bcrypt.compare(
-		// 	parsedBody.data.sensorShareToken,
-		// 	board.sensorShareToken
-		// )
-		// if (!tokenMatch)
-		// 	return res.status(401).send({
-		// 		status: 'unauthenticated',
-		// 	})
-
-		// Get the actions given the board ID
-		const actions = await prisma.board.findFirst({
+		const routine = await prisma.routine.findFirst({
 			where: {
-				id: parsedBody.data.boardID,
-			},
-			include: {
-				pendingActions: true,
+				id: parsedBody.data.routine_id,
+				boardId: board?.id,
 			},
 		})
 
-		if (!actions)
-			return res.status(404).send({
-				status: 'not-found',
-			})
+        if (!routine)
+            return res.status(404).send({
+                status: 'not-found',
+            })
 
-		await prisma.$disconnect()
+        await prisma.routine.delete({
+            where: {
+                id: routine.id,
+            },
+        })
 
-		res.status(200).send({
-			status: 'success',
-			actions: actions,
-		})
+        await prisma.$disconnect()
+
+        return res.status(200).send({
+            status: 'success',
+        })
 	} catch (error) {
+		console.error(error)
 		return res.status(500).send({
 			status: 'internal-server-error',
 		})

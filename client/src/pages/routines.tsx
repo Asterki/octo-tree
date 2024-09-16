@@ -90,7 +90,6 @@ const Routines = () => {
 						withCredentials: true,
 					})
 
-					console.log(JSON.stringify(routinesResponse.data.routines))
 					setRoutines(routinesResponse.data.routines)
 					setSelectedRoutine(0)
 				} catch (error) {
@@ -114,6 +113,7 @@ const Routines = () => {
 					{routines.length !== 0 &&
 						routines.map((routine, index) => (
 							<div
+								key={routine.id}
 								className={`px-2 w-full border-t border-t-neutral-300 dark:border-t-gray-600 hover:bg-neutral-300 hover:dark:bg-gray-600 transition-all cursor-pointer ${
 									selectedRoutine == index
 										? 'bg-neutral-300 dark:bg-gray-600'

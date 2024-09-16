@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-
 import { rateLimit } from 'express-rate-limit'
 import { RedisStore } from 'rate-limit-redis'
 
@@ -29,8 +28,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 	const parsedBody = z
 		.object({
-			routine_id: z.number(),
-			board_id: z.number(),
 			routine: z.object({
 				name: z.string(),
 				execution: z.string(),
@@ -94,30 +91,14 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 		}
 
-		// Update the routine
-		const routine = await prisma.routine.findFirst({
-			where: {
-				id: parsedBody.data.routine_id,
-				boardId: board?.id,
-			},
-		})
-
-		if (!routine) {
-			await prisma.$disconnect()
-			return res.status(404).send({
-				status: 'not-found',
-			})
-		}
-
-		await prisma.routine.update({
-			where: {
-				id: routine.id,
-			},
+		// Create a new routine
+		await prisma.routine.create({
 			data: {
-				name: parsedBody.data.routine.name,
+				boardId: board.id,
 				execution: parsedBody.data.routine.execution,
+				name: parsedBody.data.routine.name,
 				automatedExecution: {
-					update: {
+					create: {
 						checkInterval:
 							parsedBody.data.routine.automatedExecution
 								.checkInterval,
@@ -125,9 +106,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 							parsedBody.data.routine.automatedExecution
 								.nextExecutionInterval,
 						conditions: {
-							update: {
+							create: {
 								temperatureExceeds: {
-									update: {
+									create: {
 										active: parsedBody.data.routine
 											.automatedExecution.conditions
 											.temperatureExceeds.active,
@@ -137,7 +118,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 									},
 								},
 								temperatureBelow: {
-									update: {
+									create: {
 										active: parsedBody.data.routine
 											.automatedExecution.conditions
 											.temperatureBelow.active,
@@ -147,7 +128,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 									},
 								},
 								humidityExceeds: {
-									update: {
+									create: {
 										active: parsedBody.data.routine
 											.automatedExecution.conditions
 											.humidityExceeds.active,
@@ -157,7 +138,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 									},
 								},
 								humidityBelow: {
-									update: {
+									create: {
 										active: parsedBody.data.routine
 											.automatedExecution.conditions
 											.humidityBelow.active,
@@ -170,40 +151,15 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 						},
 					},
 				},
-				actions: {
-					update: {
-						water: {
-							update: {
-								active: parsedBody.data.routine.actions.water
-									.active,
-								amount: parsedBody.data.routine.actions.water
-									.amount,
-							},
-						},
-						rotatePanel: {
-							update: {
-								active: parsedBody.data.routine.actions
-									.rotatePanel.active,
-							},
-						},
-						notify: {
-							update: {
-								active: parsedBody.data.routine.actions.notify
-									.active,
-							},
-						},
-					},
-				},
 			},
 		})
 
 		await prisma.$disconnect()
 
-		return res.status(200).send({
+		res.status(200).send({
 			status: 'success',
 		})
 	} catch (error) {
-		console.error(error)
 		return res.status(500).send({
 			status: 'internal-server-error',
 		})

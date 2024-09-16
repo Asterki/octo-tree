@@ -191,7 +191,7 @@ const Dashboard = () => {
 						boardID: '123123123',
 						sensorShareToken: '123123123',
 					})
-				}, 5000)
+				}, 500)
 			})
 
 			newSocket.on('disconnect', () => {

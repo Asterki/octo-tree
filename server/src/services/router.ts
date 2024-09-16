@@ -1,18 +1,32 @@
 import express, { Express, Router as ExpressRouter } from 'express'
 
 // Account routes
-import accountsRegister, { limiter as accountsRegisterLimiter } from '../routes/accounts/register'
-import accountsLogin, { limiter as accountsLoginLimiter } from '../routes/accounts/login'
+import accountsRegister, {
+	limiter as accountsRegisterLimiter,
+} from '../routes/accounts/register'
+import accountsLogin, {
+	limiter as accountsLoginLimiter,
+} from '../routes/accounts/login'
 import accountsMe, { limiter as accountsMeLimiter } from '../routes/accounts/me'
-import accountsLogout, { limiter as accountsLogoutLimiter } from '../routes/accounts/logout'
+import accountsLogout, {
+	limiter as accountsLogoutLimiter,
+} from '../routes/accounts/logout'
 
 // Analysis routes
-import soilUpload, { limiter as soilUploadLimiter } from '../routes/analysis/soil'
-import panelUpload, { limiter as panelUploadLimiter } from '../routes/analysis/panel'
+import soilUpload, {
+	limiter as soilUploadLimiter,
+} from '../routes/analysis/soil'
+import panelUpload, {
+	limiter as panelUploadLimiter,
+} from '../routes/analysis/panel'
 
 // Routines routes
-import routinesGet, { limiter as routinesGetLimiter } from '../routes/routines/get'
-
+import routinesGet, {
+	limiter as routinesGetLimiter,
+} from '../routes/routines/get'
+import routinesUpdate, {
+	limiter as routinesUpdateLimiter,
+} from '../routes/routines/update'
 
 // Hardware routes
 import hardwareSensors from '../routes/hardware/sensors'
@@ -34,10 +48,18 @@ class Router {
 
 	public registerRoutes = (server: Express) => {
 		// Account routes
-		this.accountRouter.post('/register', accountsRegisterLimiter, accountsRegister)
+		this.accountRouter.post(
+			'/register',
+			accountsRegisterLimiter,
+			accountsRegister
+		)
 		this.accountRouter.post('/login', accountsLoginLimiter, accountsLogin)
 		this.accountRouter.get('/me', accountsMeLimiter, accountsMe)
-		this.accountRouter.post('/logout', accountsLogoutLimiter, accountsLogout)
+		this.accountRouter.post(
+			'/logout',
+			accountsLogoutLimiter,
+			accountsLogout
+		)
 
 		// Analysis routes
 		this.soilRouter.post('/panel', panelUploadLimiter, panelUpload)
@@ -45,6 +67,7 @@ class Router {
 
 		// Routines routes
 		this.routinesRouter.get('/get', routinesGetLimiter, routinesGet)
+		this.routinesRouter.post('/update', routinesUpdateLimiter, routinesUpdate)
 
 		// Hardware routes
 		this.hardwareRouter.post('/update', hardwareSensors)

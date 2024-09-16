@@ -68,6 +68,8 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			},
 		})
 
+		await prisma.$disconnect()
+
 		res.status(200).send({
 			status: 'success',
 			routines,
