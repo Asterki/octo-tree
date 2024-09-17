@@ -28,9 +28,14 @@ class SocketServer {
 
 		this.io.on('connection', (socket) => {
 			console.log('Socket connected')
+			let a = 0
 
 			socket.on('event_name', (data) => {
 				console.log(data)
+				socket.emit('led', {
+					state: a,
+				})
+				a = a === 1 ? 0 : 1
 			})
 
 			socket.on('getsensordata', (data) => {
