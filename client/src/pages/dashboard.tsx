@@ -89,6 +89,30 @@ const Dashboard = () => {
 	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
 	const aiQuestionInputRef = React.useRef<HTMLInputElement>(null)
 
+	const executeRoutine = async (routineID: number) => {
+		try {
+			const response = await axios.post(
+				`${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/routines/execute`,
+				{
+					routine_id: routineID,
+				},
+				{
+					withCredentials: true,
+				}
+			)
+
+			if (response.data.status == 'success') {
+				showAlert(t('dashboard.routineExecuted'))
+			}
+		} catch (error) {
+			showAlert(t('dashboard.errorExecutingRoutine'))
+		}
+	}
+
 	const uploadImage = (type: 'soil' | 'panel') => {
 		setRoutines([])
 		const input = type == 'soil' ? soilImageInputRef : panelImageInputRef
@@ -435,19 +459,14 @@ const Dashboard = () => {
 										{routine.name} ({routine.execution})
 									</p>
 									<div className="flex gap-2">
-										{/* Show if the routine is automated, if not, add a button to execute it */}
-										{routine.execution === 'automated' && (
-											<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-												{t('dashboard.execute')}
-											</button>
-										)}
-
-										{/* Show if the routine is manual, if not, add a button to execute it */}
-										{routine.execution === 'manual' && (
-											<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-												{t('dashboard.execute')}
-											</button>
-										)}
+										<button
+											className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md"
+											onClick={() =>
+												executeRoutine(routine.id)
+											}
+										>
+											{t('dashboard.execute')}
+										</button>
 									</div>
 								</div>
 							))}

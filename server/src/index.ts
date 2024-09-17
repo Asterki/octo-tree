@@ -12,6 +12,9 @@ import SessionController from './services/sessions'
 import SocketServer from './services/socket'
 import Logger from './services/logger'
 
+// Controllers
+import RoutineController from './controllers/routines'
+
 import 'dotenv/config'
 
 class Server {
@@ -57,6 +60,8 @@ class Server {
 
 			this.socketServer.loadToServer(this.httpServer)
 			Logger.getInstance().info('Server started', true)
+
+			RoutineController.getInstance().loadToServer()
 		} catch (error) {
 			Logger.getInstance().error(
 				`Failed to start server: ${(error as any).message}`,
