@@ -33,10 +33,12 @@ import routinesCreate, {
 import routinesDelete, {
 	limiter as routinesDeleteLimiter,
 } from '../routes/routines/delete'
+import routinesExecute, {
+	limiter as routinesExecuteLimiter,
+} from '../routes/routines/execute'
 
 // AI routes
 import aiAsk, { limiter as aiAskLimiter } from '../routes/ai/ask'
-
 
 class Router {
 	public accountRouter = express.Router()
@@ -88,10 +90,14 @@ class Router {
 			routinesDeleteLimiter,
 			routinesDelete
 		)
+		this.routinesRouter.post(
+			'/execute',
+			routinesExecuteLimiter,
+			routinesExecute
+		)
 
 		// AI routes
 		this.aiRouter.post('/ask', aiAskLimiter, aiAsk)
-
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)
