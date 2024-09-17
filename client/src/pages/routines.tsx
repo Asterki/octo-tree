@@ -40,6 +40,22 @@ const Routines = () => {
 		}, 3000)
 	}
 
+	const fetchRoutines = async () => {
+		// Get the routines
+		const routinesResponse = await axios({
+			url: `${
+				import.meta.env.MODE === 'development'
+					? import.meta.env.VITE_API_URL
+					: ''
+			}/api/routines/get`,
+			method: 'get',
+			withCredentials: true,
+		})
+
+		setRoutines(routinesResponse.data.routines)
+		setSelectedRoutine(-1)
+	}
+
 	const saveChanges = async () => {
 		try {
 			await axios({
@@ -62,8 +78,49 @@ const Routines = () => {
 	}
 
 	const createRoutine = async () => {
+		setSelectedRoutine(-1)
+
 		try {
-			const response = await axios({
+			const newRoutine = {
+				name: 'New Routine',
+				execution: 'manual',
+				actions: {
+					notify: {
+						active: false,
+					},
+					rotatePanel: {
+						active: false,
+					},
+					water: {
+						active: false,
+						amount: 0,
+					},
+				},
+				automatedExecution: {
+					conditions: {
+						humidityBelow: {
+							active: false,
+							value: 0,
+						},
+						humidityExceeds: {
+							active: false,
+							value: 0,
+						},
+						temperatureBelow: {
+							active: false,
+							value: 0,
+						},
+						temperatureExceeds: {
+							active: false,
+							value: 0,
+						},
+					},
+					checkInterval: 0,
+					nextExecutionInterval: 0,
+				},
+			}
+
+			await axios({
 				url: `${
 					import.meta.env.MODE === 'development'
 						? import.meta.env.VITE_API_URL
@@ -71,51 +128,12 @@ const Routines = () => {
 				}/api/routines/create`,
 				method: 'post',
 				data: {
-					name: 'New Routine',
-					execution: 'manual',
-					actions: {
-						notify: {
-							active: false,
-						},
-						rotatePanel: {
-							active: false,
-						},
-						water: {
-							active: false,
-							amount: 0,
-						},
-					},
-					automatedExecution: {
-						conditions: {
-							humidityBelow: {
-								active: false,
-								value: 0,
-							},
-							humidityExceeds: {
-								active: false,
-								value: 0,
-							},
-							temperatureBelow: {
-								active: false,
-								value: 0,
-							},
-							temperatureExceeds: {
-								active: false,
-								value: 0,
-							},
-						},
-						checkInterval: 0,
-						nextExecutionInterval: 0,
-					},
+					routine: newRoutine,
 				},
 				withCredentials: true,
 			})
 
-			console.log(response)
-
-			const newRoutines = [...routines]
-			newRoutines.push(response.data.routine)
-			setRoutines(newRoutines)
+			await fetchRoutines()
 		} catch (error) {
 			showAlert(t('routines.couldNotCreateRoutine'))
 		}
@@ -145,20 +163,7 @@ const Routines = () => {
 			}
 
 			// Get the routines
-			const routinesResponse = await axios({
-				url: `${
-					import.meta.env.MODE === 'development'
-						? import.meta.env.VITE_API_URL
-						: ''
-				}/api/routines/get`,
-				method: 'get',
-				withCredentials: true,
-			})
-
-			console.log(routinesResponse)
-
-			setRoutines(routinesResponse.data.routines)
-			setSelectedRoutine(-1)
+			await fetchRoutines()
 		})()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

@@ -151,6 +151,30 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 						},
 					},
 				},
+				actions: {
+					create: {
+						water: {
+							create: {
+								active: parsedBody.data.routine.actions.water
+									.active,
+								amount: parsedBody.data.routine.actions.water
+									.amount,
+							},
+						},
+						rotatePanel: {
+							create: {
+								active: parsedBody.data.routine.actions
+									.rotatePanel.active,
+							},
+						},
+						notify: {
+							create: {
+								active: parsedBody.data.routine.actions.notify
+									.active,
+							},
+						},
+					},
+				},
 			},
 		})
 
