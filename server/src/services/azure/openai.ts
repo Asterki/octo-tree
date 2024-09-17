@@ -30,7 +30,7 @@ class OpenAIService {
 	}
 
 	public async genrateAnswer(
-		role: "function" | "system" | "user" | "assistant" | "tool",
+		role: 'function' | 'system' | 'user' | 'assistant' | 'tool',
 		content: string
 	) {
 		if (!this.OpenAIClient) throw new Error('OpenAI client not initialized')
@@ -39,11 +39,22 @@ class OpenAIService {
 			model: 'davinci',
 			messages: [
 				{
+					role: 'system',
+					content:
+						'You are a helpful assistant that allow people to ask questions about the app octo-tree',
+				},
+				{
 					role: role as any,
 					content: content,
 				},
 			],
+			stream: false,
+			stop: ['\n'],
+			max_tokens: 150,
 		})
+
+		console.log(JSON.stringify(response, null, 2))
+
 		return response
 	}
 }

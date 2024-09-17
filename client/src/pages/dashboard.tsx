@@ -87,6 +87,7 @@ const Dashboard = () => {
 
 	const panelImageInputRef = React.useRef<HTMLInputElement>(null)
 	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
+	const aiQuestionInputRef = React.useRef<HTMLInputElement>(null)
 
 	const uploadImage = (type: 'soil' | 'panel') => {
 		setRoutines([])
@@ -114,6 +115,48 @@ const Dashboard = () => {
 			.then((response) => {
 				console.log(response)
 			})
+	}
+
+	const askQuestionToAI = async () => {
+		const question = aiQuestionInputRef.current!.value
+
+		if (question?.length < 8 || question?.length > 256) {
+			showAlert(t('dashboard.invalidQuestion'))
+			return
+		}
+
+		setCurrentChat((prevChat) => [
+			...prevChat,
+			{
+				author: 'You',
+				message: question,
+			},
+		])
+
+		const response = await axios.post(
+			`${
+				import.meta.env.MODE === 'development'
+					? import.meta.env.VITE_API_URL
+					: ''
+			}/api/ai/ask`,
+			{
+				question,
+			},
+			{
+				withCredentials: true,
+			}
+		)
+
+		// Clear the input
+		aiQuestionInputRef.current!.value = ''
+
+		setCurrentChat((prevChat) => [
+			...prevChat,
+			{
+				author: 'Octo-Tree AI',
+				message: response.data.result.choices[0].message.content,
+			},
+		])
 	}
 
 	const showAlert = (content: string) => {
@@ -330,7 +373,7 @@ const Dashboard = () => {
 					</div>
 					<div className="gap-2 w-full h-96 overflow-y-scroll overflow-x-hidden px-32 my-2">
 						{currentChat.map((chat, index) => (
-							<div key={index} className="gap-2">
+							<div key={index} className="gap-2 my-2">
 								<p>
 									<b>{chat.author}: </b> <br /> {chat.message}
 								</p>
@@ -340,10 +383,14 @@ const Dashboard = () => {
 					<div className="flex items-center justify-center w-full gap-2 px-32">
 						<input
 							type="text"
+							ref={aiQuestionInputRef}
 							placeholder="Enter your message"
 							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
-						<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-1/12">
+						<button
+							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-1/12"
+							onClick={askQuestionToAI}
+						>
 							Send
 						</button>
 					</div>

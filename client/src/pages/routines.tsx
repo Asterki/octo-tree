@@ -61,6 +61,64 @@ const Routines = () => {
 		}
 	}
 
+	const createRoutine = async () => {
+		try {
+			const response = await axios({
+				url: `${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/routines/create`,
+				method: 'post',
+				data: {
+					name: 'New Routine',
+					execution: 'manual',
+					actions: {
+						notify: {
+							active: false,
+						},
+						rotatePanel: {
+							active: false,
+						},
+						water: {
+							active: false,
+							amount: 0,
+						},
+					},
+					automatedExecution: {
+						conditions: {
+							humidityBelow: {
+								active: false,
+								value: 0,
+							},
+							humidityExceeds: {
+								active: false,
+								value: 0,
+							},
+							temperatureBelow: {
+								active: false,
+								value: 0,
+							},
+							temperatureExceeds: {
+								active: false,
+								value: 0,
+							},
+						},
+						checkInterval: 0,
+						nextExecutionInterval: 0,
+					},
+				},
+				withCredentials: true,
+			})
+
+			const newRoutines = [...routines]
+			newRoutines.push(response.data.routine)
+			setRoutines(newRoutines)
+		} catch (error) {
+			showAlert(t('routines.couldNotCreateRoutine'))
+		}
+	}
+
 	React.useEffect(() => {
 		;(async () => {
 			// Check if the user is logged in
@@ -623,14 +681,16 @@ const Routines = () => {
 			</main>
 
 			{/* Save button */}
-			<footer className="fixed bottom-0 w-full bg-neutral-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-4 border-t-2 border-t-neutral-300 flex items-end justify-end">
-				<button
-					className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4 text-xl"
-					onClick={saveChanges}
-				>
-					{t('routines.saveChanges')}
-				</button>
-			</footer>
+			{selectedRoutine !== -1 && (
+				<footer className="fixed bottom-0 w-full bg-neutral-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-4 border-t-2 border-t-neutral-300 flex items-end justify-end">
+					<button
+						className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4 text-xl"
+						onClick={saveChanges}
+					>
+						{t('routines.saveChanges')}
+					</button>
+				</footer>
+			)}
 
 			<AlertComponent
 				content={alertState.content}
