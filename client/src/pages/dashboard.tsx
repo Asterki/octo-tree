@@ -133,6 +133,10 @@ const Dashboard = () => {
 			},
 		])
 
+		// Clear the input
+		aiQuestionInputRef.current!.value = ''
+		aiQuestionInputRef.current!.disabled = true
+
 		const response = await axios.post(
 			`${
 				import.meta.env.MODE === 'development'
@@ -141,14 +145,14 @@ const Dashboard = () => {
 			}/api/ai/ask`,
 			{
 				question,
+				pastMessages: currentChat.slice(-10),
 			},
 			{
 				withCredentials: true,
 			}
 		)
 
-		// Clear the input
-		aiQuestionInputRef.current!.value = ''
+		console.log(response)
 
 		setCurrentChat((prevChat) => [
 			...prevChat,
@@ -157,6 +161,9 @@ const Dashboard = () => {
 				message: response.data.result.choices[0].message.content,
 			},
 		])
+
+		// Enable the input
+		aiQuestionInputRef.current!.disabled = false
 	}
 
 	const showAlert = (content: string) => {
@@ -388,10 +395,16 @@ const Dashboard = () => {
 							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
 						<button
-							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-1/12"
+							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
 							onClick={askQuestionToAI}
 						>
 							Send
+						</button>
+						<button
+							className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
+							onClick={() => setCurrentChat([])}
+						>
+							Clear Chat
 						</button>
 					</div>
 				</section>
