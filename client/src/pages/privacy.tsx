@@ -32,18 +32,14 @@ const PrivacyPolicy = () => {
 							{t('privacy.sections.dataCollectionUsage.imageData.title')}
 						</h3>
 						<p className="mb-4">
-							{t(
-								'sections.dataCollectionUsage.imageData.content'
-							)}
+							{t('privacy.sections.dataCollectionUsage.imageData.content')}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
 							{t('privacy.sections.dataCollectionUsage.sensorData.title')}
 						</h3>
 						<p className="mb-4">
-							{t(
-								'sections.dataCollectionUsage.sensorData.content'
-							)}
+							{t('privacy.sections.dataCollectionUsage.sensorData.content')}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
@@ -63,23 +59,23 @@ const PrivacyPolicy = () => {
 					<div className="ml-4">
 						<h3 className="text-lg font-semibold mb-1">
 							{t(
-								'sections.dataSecurity.passwordProtection.title'
+								'privacy.sections.dataSecurity.passwordProtection.title'
 							)}
 						</h3>
 						<p className="mb-4">
 							{t(
-								'sections.dataSecurity.passwordProtection.content'
+								'privacy.sections.dataSecurity.passwordProtection.content'
 							)}
 						</p>
 
 						<h3 className="text-lg font-semibold mb-1">
 							{t(
-								'sections.dataSecurity.communicationSecurity.title'
+								'privacy.sections.dataSecurity.communicationSecurity.title'
 							)}
 						</h3>
 						<p className="mb-4">
 							{t(
-								'sections.dataSecurity.communicationSecurity.content'
+								'privacy.sections.dataSecurity.communicationSecurity.content'
 							)}
 						</p>
 					</div>
@@ -97,12 +93,12 @@ const PrivacyPolicy = () => {
 
 						<h3 className="text-lg font-semibold mb-1">
 							{t(
-								'sections.dataRetentionDeletion.requestingAccountDeletion.title'
+								'privacy.sections.dataRetentionDeletion.requestingAccountDeletion.title'
 							)}
 						</h3>
 						<p className="mb-4">
 							{t(
-								'sections.dataRetentionDeletion.requestingAccountDeletion.content'
+								'privacy.sections.dataRetentionDeletion.requestingAccountDeletion.content'
 							)}
 						</p>
 					</div>
