@@ -37,14 +37,10 @@ import routinesDelete, {
 // AI routes
 import aiAsk, { limiter as aiAskLimiter } from '../routes/ai/ask'
 
-// Hardware routes
-import hardwareSensors from '../routes/hardware/sensors'
-import hardwareGet from '../routes/hardware/get'
 
 class Router {
 	public accountRouter = express.Router()
 	public soilRouter = express.Router()
-	public hardwareRouter = express.Router()
 	public routinesRouter = express.Router()
 	public aiRouter = express.Router()
 	private instance: Router | null = null
@@ -96,13 +92,9 @@ class Router {
 		// AI routes
 		this.aiRouter.post('/ask', aiAskLimiter, aiAsk)
 
-		// Hardware routes
-		this.hardwareRouter.post('/update', hardwareSensors)
-		this.hardwareRouter.post('/get', hardwareGet)
 
 		server.use('/api/accounts', this.accountRouter)
 		server.use('/api/analysis', this.soilRouter)
-		server.use('/api/hardware', this.hardwareRouter)
 		server.use('/api/routines', this.routinesRouter)
 		server.use('/api/ai', this.aiRouter)
 	}
