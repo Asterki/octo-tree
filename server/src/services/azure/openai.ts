@@ -59,8 +59,6 @@ class OpenAIService {
 			max_tokens: 150,
 		})
 
-		console.log(JSON.stringify(response, null, 2))
-
 		return response
 	}
 }
