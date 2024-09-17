@@ -111,6 +111,8 @@ const Routines = () => {
 				withCredentials: true,
 			})
 
+			console.log(response)
+
 			const newRoutines = [...routines]
 			newRoutines.push(response.data.routine)
 			setRoutines(newRoutines)
@@ -121,6 +123,7 @@ const Routines = () => {
 
 	React.useEffect(() => {
 		;(async () => {
+			console.log(user)
 			// Check if the user is logged in
 			if (!user) {
 				// Get the user's data
@@ -136,24 +139,26 @@ const Routines = () => {
 					})
 
 					dispatch(setUser(response.data.user))
-
-					// Get the routines
-					const routinesResponse = await axios({
-						url: `${
-							import.meta.env.MODE === 'development'
-								? import.meta.env.VITE_API_URL
-								: ''
-						}/api/routines/get`,
-						method: 'get',
-						withCredentials: true,
-					})
-
-					setRoutines(routinesResponse.data.routines)
-					setSelectedRoutine(0)
 				} catch (error) {
 					navigate('/login')
 				}
 			}
+
+			// Get the routines
+			const routinesResponse = await axios({
+				url: `${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/routines/get`,
+				method: 'get',
+				withCredentials: true,
+			})
+
+			console.log(routinesResponse)
+
+			setRoutines(routinesResponse.data.routines)
+			setSelectedRoutine(-1)
 		})()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -188,50 +193,7 @@ const Routines = () => {
 
 					<button
 						className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4"
-						onClick={() => {
-							const newRoutines = [...routines]
-							newRoutines.push({
-								name: 'New Routine',
-								execution: 'manual',
-								boardId: '', // This will be updated by the server
-								id: 0, // This will be updated by the server
-								actions: {
-									notify: {
-										active: false,
-									},
-									rotatePanel: {
-										active: false,
-									},
-									water: {
-										active: false,
-										amount: 0,
-									},
-								},
-								automatedExecution: {
-									conditions: {
-										humidityBelow: {
-											active: false,
-											value: 0,
-										},
-										humidityExceeds: {
-											active: false,
-											value: 0,
-										},
-										temperatureBelow: {
-											active: false,
-											value: 0,
-										},
-										temperatureExceeds: {
-											active: false,
-											value: 0,
-										},
-									},
-									checkInterval: 0,
-									nextExecutionInterval: 0,
-								},
-							})
-							setRoutines(newRoutines)
-						}}
+						onClick={createRoutine}
 					>
 						{t('routines.addRoutine')}
 					</button>

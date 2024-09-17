@@ -152,8 +152,6 @@ const Dashboard = () => {
 			}
 		)
 
-		console.log(response)
-
 		setCurrentChat((prevChat) => [
 			...prevChat,
 			{
@@ -217,7 +215,12 @@ const Dashboard = () => {
 			} catch (error) {
 				showAlert(t('dashboard.errorGettingRoutines'))
 			}
+		})()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
+	React.useEffect(() => {
+		if (user) {
 			const newSocket = io(
 				import.meta.env.MODE === 'development'
 					? import.meta.env.VITE_API_URL
@@ -232,21 +235,21 @@ const Dashboard = () => {
 				setSocket(newSocket)
 
 				setInterval(() => {
-					newSocket.emit('getsensordata', {
-						userID: '6c8378d7-cbc7-4ef2-aa92-76d155544d5e',
-						boardID: '123123123',
-						sensorShareToken: '123123123',
+					newSocket.emit('get_sensor_data', {
+						userID: (user as unknown as { id: string }).id,
+						boardID: (
+							user as unknown as { board: { id: string }[] }
+						).board[0].id,
 					})
-				}, 500)
+				}, 5000)
 			})
 
 			newSocket.on('disconnect', () => {
 				console.log('Disconnected from server')
 				setSocket(null)
 			})
-		})()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+		}
+	}, [user])
 
 	React.useEffect(() => {
 		if (!socket) return

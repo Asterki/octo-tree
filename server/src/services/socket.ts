@@ -4,6 +4,8 @@ import { createServer } from 'http'
 import bcrypt from 'bcrypt'
 import { PrismaClient } from '@prisma/client'
 
+const prisma = new PrismaClient()
+
 class SocketServer {
 	private static instance: SocketServer | null = null
 	io: Server = new Server()
@@ -27,50 +29,70 @@ class SocketServer {
 		})
 
 		this.io.on('connection', (socket) => {
-			console.log('Socket connected')
-			let a = 0
+			socket.on(
+				'sensor_update',
+				async (data: {
+					time_online: number
+					temperature: number
+					humidity: number
+					pressure: number
+					light1: number
+					light2: number
+					board_id: string
+					board_key: string
+				}) => {
+					// Verify the board ID and key
+					if (!data.board_id || !data.board_key) return
 
-			socket.on('event_name', (data) => {
-				console.log(data)
-				socket.emit('led', {
-					state: a,
-				})
-				a = a === 1 ? 0 : 1
-			})
+					const board = prisma.board.findFirst({
+						where: {
+							id: data.board_id,
+						},
+					})
 
-			socket.on('getsensordata', (data) => {
+					if (!board) return
+
+					// Compare the key using bcrypt
+					// if (!bcrypt.compareSync(data.key, board.sensorShareToken)) return // Commented out for now
+
+					// Update the sensor data
+					await prisma.board.update({
+						where: {
+							id: data.board_id,
+						},
+						data: {
+							sensorData: JSON.stringify({
+								temperature: data.temperature,
+								humidity: data.humidity,
+								pressure: data.pressure,
+								light1: data.light1,
+								light2: data.light2,
+							}),
+						},
+					})
+				}
+			)
+
+			socket.on('get_sensor_data', (data) => {
 				const { userID, boardID } = data
 				if (!userID || !boardID) return
 
-				// Return random data if on dev mode
-				socket.emit('sensordata', {
-					boardID,
-					data: JSON.stringify({
-						temperature: Math.floor(Math.random() * 100),
-						humidity: Math.floor(Math.random() * 100),
-					}),
-				})
-
-				return
-
 				// Get the sensor data
-				// const prisma = new PrismaClient()
-				// prisma.boards
-				// 	.findFirst({
-				// 		where: {
-				// 			id: boardID,
-				// 			user_id: userID,
-				// 		},
-				// 	})
-				// 	.then((board) => {
-				// 		if (!board) return
-				// 		// if (!bcrypt.compareSync(data.sensorShareToken, board.sensorShareToken)) return
+				prisma.board
+					.findFirst({
+						where: {
+							id: boardID,
+							user_id: userID,
+						},
+					})
+					.then((board) => {
+						if (!board) return
 
-				// 		socket.emit('sensordata', {
-				// 			boardID,
-				// 			data: board.sensorData,
-				// 		})
-				// 	})
+						socket.emit('sensordata', {
+							boardID,
+							data: board.sensorData,
+						})
+					})
 			})
 		})
 

@@ -169,6 +169,18 @@ void setup()
   if (!wifiManager.autoConnect("Octo-Tree"))
   {
     Serial.println("Failed to connect, resetting...");
+
+    // Blink the LED 3 times to indicate WiFi needs to be configured
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED on
+      delay(500);                       // Wait for 500 milliseconds
+      digitalWrite(LED_BUILTIN, LOW);   // Turn the LED off
+      delay(500);                       // Wait for 500 milliseconds
+    }
+
+    // Start the configuration portal
+    wifiManager.startConfigPortal("Octo-Tree");
+
     ESP.restart();
   }
 
@@ -210,10 +222,10 @@ void loop()
     DynamicJsonDocument doc(1024);
     JsonArray array = doc.to<JsonArray>();
 
-    array.add("event_name");
+    array.add("sensor_update");
 
     JsonObject param1 = array.createNestedObject();
-    param1["now"] = (uint32_t)now;
+    param1["time_online"] = (uint32_t)now;
     param1["temperature"] = analogRead(temperaturePin);
     param1["humidity"] = analogRead(humidityPin);
     param1["pressure"] = analogRead(pressurePin);
