@@ -77,7 +77,7 @@ const Routines = () => {
 						withCredentials: true,
 					})
 
-					dispatch(setUser(response.data))
+					dispatch(setUser(response.data.user))
 
 					// Get the routines
 					const routinesResponse = await axios({

@@ -109,7 +109,7 @@ const Register = () => {
 					withCredentials: true,
 				})
 
-				dispatch(setUser(response.data))
+				dispatch(setUser(response.data.user))
 				navigate('/dashboard')
 			}
 		})()

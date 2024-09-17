@@ -72,20 +72,18 @@ const Dashboard = () => {
 	})
 
 	const [routines, setRoutines] = React.useState<Routine[]>([])
+	const [currentChat, setCurrentChat] = React.useState([
+		{
+			author: 'Octo-Tree',
+			message: 'Hello! How can I help you today?',
+		},
+	])
 
 	const [currentTimeLabels, setCurrentTimeLabels] = React.useState(
 		[] as string[]
 	)
 	const [temperatureData, setTemperatureData] = React.useState<number[]>([])
 	const [humidityData, setHumidityData] = React.useState<number[]>([])
-
-	const [currentConfiguration, setCurrentConfiguration] = React.useState<{
-		panelAutoMode: boolean
-		routines: Routine[]
-	}>({
-		panelAutoMode: false,
-		routines: [],
-	})
 
 	const panelImageInputRef = React.useRef<HTMLInputElement>(null)
 	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
@@ -148,7 +146,7 @@ const Dashboard = () => {
 						withCredentials: true,
 					})
 
-					dispatch(setUser(response.data))
+					dispatch(setUser(response.data.user))
 				} catch (error) {
 					navigate('/login')
 				}
@@ -165,8 +163,6 @@ const Dashboard = () => {
 					method: 'get',
 					withCredentials: true,
 				})
-
-				console.log(response.data.routines)
 				setRoutines(response.data.routines)
 			} catch (error) {
 				showAlert(t('dashboard.errorGettingRoutines'))
@@ -250,6 +246,15 @@ const Dashboard = () => {
 			<Navbar />
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
+				<div className="w-full text-center">
+					{user && (
+						<p className="text-2xl">
+							{t('dashboard.connectionStatus')}{' '}
+							<b>{(user as { email: string }).email}</b>
+						</p>
+					)}
+				</div>
+
 				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white dark:bg-gray-800 dark:text-white p-4 md:w-1/3">
 					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.connectionStatus')}
@@ -313,61 +318,80 @@ const Dashboard = () => {
 					</div>
 				</section>
 
-				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-3/12">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-[calc(91.66%+0.6rem)]">
+					<div>
+						<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
+							Octo-Tree AI Chat
+						</h1>
+						<p className="text-center">
+							Chat with Octo-Tree to get help with your garden,
+							and manage your routines!
+						</p>
+					</div>
+					<div className="gap-2 w-full h-96 overflow-y-scroll overflow-x-hidden px-32 my-2">
+						{currentChat.map((chat, index) => (
+							<div key={index} className="gap-2">
+								<p>
+									<b>{chat.author}: </b> <br /> {chat.message}
+								</p>
+							</div>
+						))}
+					</div>
+					<div className="flex items-center justify-center w-full gap-2 px-32">
+						<input
+							type="text"
+							placeholder="Enter your message"
+							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
+						/>
+						<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-1/12">
+							Send
+						</button>
+					</div>
+				</section>
+
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg relative flex flex-col p-2 my-2 md:w-3/12">
 					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
-						{t('dashboard.panelPositionOrientation')}
+						{t('dashboard.currentRoutines')}
 					</h1>
 
-					{/* Switch to auto mode */}
-					<div className="flex flex-col items-center justify-center gap-2">
-						<p>{t('dashboard.autoMode')}</p>
-						<label className="switch">
-							<input
-								type="checkbox"
-								onChange={(e) => {
-									setCurrentConfiguration({
-										...currentConfiguration,
-										panelAutoMode: e.target.checked,
-									})
-								}}
-								defaultChecked={
-									currentConfiguration.panelAutoMode
-								}
-							/>
-							<span className="slider round"></span>
-						</label>
+					<Link
+						to="/routines"
+						className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 block text-center"
+					>
+						{t('dashboard.addRoutine')}
+					</Link>
 
-						<br />
+					<div className="overflow-y-scroll w-full flex h-full flex-col">
+						{routines.length != 0 &&
+							routines.map((routine, index) => (
+								<div
+									key={index}
+									className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700 my-2"
+								>
+									<p>
+										{routine.name} ({routine.execution})
+									</p>
+									<div className="flex gap-2">
+										{/* Show if the routine is automated, if not, add a button to execute it */}
+										{routine.execution === 'automated' && (
+											<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+												{t('dashboard.execute')}
+											</button>
+										)}
 
-						{!currentConfiguration.panelAutoMode && (
-							<div>
-								<p>{t('dashboard.manualMode')}</p>
-								<input
-									type="number"
-									name=""
-									id=""
-									className="w-1/2 rounded-md border transition-all hover:border-emerald-600 outline-none"
-									placeholder="0-90"
-								/>
-								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-									{t('dashboard.setPosition')}
-								</button>
-							</div>
-						)}
+										{/* Show if the routine is manual, if not, add a button to execute it */}
+										{routine.execution === 'manual' && (
+											<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
+												{t('dashboard.execute')}
+											</button>
+										)}
+									</div>
+								</div>
+							))}
 
-						{currentConfiguration.panelAutoMode && (
-							<div>
-								<p>{t('dashboard.updateEvery')}</p>
-								<input
-									type="number"
-									name=""
-									id=""
-									className="w-1/2 rounded-md border transition-all hover:border-emerald-600 outline-none"
-									placeholder="0-90m"
-								/>
-								<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-									{t('dashboard.setInterval')}
-								</button>
+						{routines.length === 0 && (
+							<div className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700">
+								<p>{t('dashboard.noRoutines')}</p>
 							</div>
 						)}
 					</div>
@@ -392,7 +416,7 @@ const Dashboard = () => {
 					/>
 				</section>
 
-				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 md:w-4/12">
+				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-4/12">
 					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.humidity')}
 					</h1>
@@ -409,71 +433,6 @@ const Dashboard = () => {
 							],
 						}}
 					/>
-				</section>
-
-				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2">
-					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
-						{t('dashboard.currentRoutines')}
-					</h1>
-
-					<div className="flex flex-col gap-2">
-						{currentConfiguration.routines.map((routine, index) => (
-							<div
-								key={index}
-								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700"
-							>
-								<p>{routine.name}</p>
-								<div className="flex gap-2">
-									<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-										{t('dashboard.edit')}
-									</button>
-									<button className="bg-red-600 text-white px-4 py-2 rounded-md shadow-md">
-										{t('dashboard.delete')}
-									</button>
-								</div>
-							</div>
-						))}
-					</div>
-
-					<Link
-						to="/routines"
-						className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 block text-center"
-					>
-						{t('dashboard.addRoutine')}
-					</Link>
-
-					{routines.length != 0 &&
-						routines.map((routine, index) => (
-							<div
-								key={index}
-								className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700 my-2"
-							>
-								<p>
-									{routine.name} ({routine.execution})
-								</p>
-								<div className="flex gap-2">
-									{/* Show if the routine is automated, if not, add a button to execute it */}
-									{routine.execution === 'automated' && (
-										<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-											{t('dashboard.execute')}
-										</button>
-									)}
-
-									{/* Show if the routine is manual, if not, add a button to execute it */}
-									{routine.execution === 'manual' && (
-										<button className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md">
-											{t('dashboard.execute')}
-										</button>
-									)}
-								</div>
-							</div>
-						))}
-
-					{routines.length === 0 && (
-						<div className="flex items-center justify-between gap-2 p-2 rounded-md bg-neutral-100 dark:bg-gray-700">
-							<p>{t('dashboard.noRoutines')}</p>
-						</div>
-					)}
 				</section>
 			</main>
 

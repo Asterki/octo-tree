@@ -29,7 +29,7 @@ const HomePage = () => {
 						withCredentials: true,
 					})
 
-					dispatch(setUser(response.data))
+					dispatch(setUser(response.data.user))
 				} catch (error) {
 					console.error(error)
 				}
