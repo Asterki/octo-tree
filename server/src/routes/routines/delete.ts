@@ -60,12 +60,27 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
                 status: 'not-found',
             })
 
-        await prisma.routine.delete({
-            where: {
-                id: routine.id,
-            },
-        })
+		// First delete the automated execution
+		await prisma.automatedExecution.deleteMany({
+			where: {
+				routineId: routine.id,
+			},
+		})
 
+		// Then delete the actions related to the routine
+		await prisma.actions.deleteMany({
+			where: {
+				routineId: routine.id,
+			},
+		})
+
+		// At last delete the routine
+		await prisma.routine.delete({
+			where: {
+				id: routine.id,
+			},
+		})
+		
         await prisma.$disconnect()
 
         return res.status(200).send({

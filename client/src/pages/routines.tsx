@@ -77,6 +77,33 @@ const Routines = () => {
 		}
 	}
 
+	const deleteRoutine = async () => {
+		if (selectedRoutine === -1) return
+
+		const routine_id = routines[selectedRoutine].id
+		setSelectedRoutine(-1)
+		try {
+			await axios({
+				url: `${
+					import.meta.env.MODE === 'development'
+						? import.meta.env.VITE_API_URL
+						: ''
+				}/api/routines/delete`,
+				method: 'post',
+				data: {
+					routine_id,
+				},
+				withCredentials: true,
+			})
+
+			await fetchRoutines()
+
+			showAlert(t('routines.routineDeleted'))
+		} catch (error) {
+			showAlert(t('routines.couldNotDelete'))
+		}
+	}
+
 	const createRoutine = async () => {
 		setSelectedRoutine(-1)
 
@@ -134,6 +161,8 @@ const Routines = () => {
 			})
 
 			await fetchRoutines()
+
+			showAlert(t('routines.routineCreated'))
 		} catch (error) {
 			showAlert(t('routines.couldNotCreateRoutine'))
 		}
@@ -635,10 +664,7 @@ const Routines = () => {
 						<button
 							className="bg-red-500 text-white px-2 py-1 rounded-md mt-2 mx-4"
 							onClick={() => {
-								const newRoutines = [...routines]
-								newRoutines.splice(selectedRoutine, 1)
-								setRoutines(newRoutines)
-								setSelectedRoutine(-1)
+								deleteRoutine()
 							}}
 						>
 							{t('routines.deleteRoutine')}
