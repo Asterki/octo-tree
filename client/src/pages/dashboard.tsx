@@ -71,6 +71,11 @@ const Dashboard = () => {
 		content: '',
 	})
 
+    const [imageAnalysis, setImageAnalysis] = React.useState({
+        showing: false,
+        result: {}
+    })
+
 	const [routines, setRoutines] = React.useState<Routine[]>([])
 	const [currentChat, setCurrentChat] = React.useState([
 		{
@@ -137,7 +142,10 @@ const Dashboard = () => {
 				}
 			)
 			.then((response) => {
-				console.log(response)
+                setImageAnalysis({
+                    showing: true,
+                    result: response.data.result,
+                })
 			})
 	}
 
@@ -321,6 +329,26 @@ const Dashboard = () => {
 		<div className="bg-neutral-100 min-h-screen text-neutral-600 dark:text-white dark:bg-gray-700">
 			{/* Navbar */}
 			<Navbar />
+
+            {imageAnalysis.showing && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center">
+                    <div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4">
+                        <h1 className="text-2xl text-center font-bold">
+                            Image Analysis Result
+                        </h1>
+                        <p>
+                            {/* <b>Analysis:</b> {imageAnalysis.result.soil} */}
+                        </p>
+
+                        <button
+                            className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2"
+                            onClick={() => setImageAnalysis({ showing: false, result: {} })}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
 				<div className="w-full text-center">
