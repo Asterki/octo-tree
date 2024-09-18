@@ -28,6 +28,8 @@ class SocketServer {
 			},
 		})
 
+		let humidityOvertime = []
+
 		this.io.on('connection', (socket) => {
 			socket.on(
 				'sensor_update',
@@ -41,6 +43,11 @@ class SocketServer {
 					board_id: string
 					board_key: string
 				}) => {
+					// COnvert the light2 to a scale between 170 and 4000, 4000 being 0% and 170 being 100%
+					data.light2 = ((4095 - data.light2) / 4095) * 100
+
+					console.log(data)
+
 					// Verify the board ID and key
 					if (!data.board_id || !data.board_key) return
 

@@ -1,3 +1,6 @@
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 #include <WiFiManager.h> // Include the WiFiManager library
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -6,24 +9,24 @@
 
 SocketIOclient socketIO;
 
-#define _WEBSOCKETS_LOGLEVEL_ 4
+// Define the pins for the sensors (you might not need these if you're using BME280)
+const int humidityPin = 35;
+const int lightPin1 = 39;
+const int lightPin2 = 20;
+const int servoPin = 33;
+const int pumpPin = 32;
+const int sensorSDAPin = 8;
+const int sensorSCLPin = 9;
+
+Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
 
 IPAddress clientIP(192, 168, 0, 15);
 IPAddress serverIP(192, 168, 0, 15);
 
 const int serverPort = 3000;
-
 const String serverURL = "http://192.168.0.15:3000";
 const String boardID = "123123123";
 const String boardKey = "123123123";
-
-// Define the pins for the sensors
-const int temperaturePin = 34;
-const int humidityPin = 35;
-const int pressurePin = 36;
-const int lightPin1 = 39;
-const int lightPin2 = 38;
-const int servoPin = 33;
 
 int status = WL_IDLE_STATUS;
 
@@ -91,66 +94,46 @@ void socketIOEvent(const socketIOmessageType_t &type, uint8_t *payload, const si
   {
   case sIOtype_DISCONNECT:
     Serial.println("[IOc] Disconnected");
-
     break;
 
   case sIOtype_CONNECT:
     Serial.print("[IOc] Connected to url: ");
     Serial.println((char *)payload);
-
-    // join default namespace (no auto join in Socket.IO V3)
     socketIO.send(sIOtype_CONNECT, "/");
-
     break;
 
   case sIOtype_EVENT:
     Serial.print("[IOc] Get event: ");
     Serial.println((char *)payload);
-
     handleEvent((char *)payload);
-
     break;
 
   case sIOtype_ACK:
     Serial.print("[IOc] Get ack: ");
     Serial.println(length);
-
-    // hexdump(payload, length);
-
     break;
 
   case sIOtype_ERROR:
     Serial.print("[IOc] Get error: ");
     Serial.println(length);
-
-    // hexdump(payload, length);
-
     break;
 
   case sIOtype_BINARY_EVENT:
     Serial.print("[IOc] Get binary: ");
     Serial.println(length);
-
-    // hexdump(payload, length);
-
     break;
 
   case sIOtype_BINARY_ACK:
     Serial.print("[IOc] Get binary ack: ");
     Serial.println(length);
-
-    // hexdump(payload, length);
-
     break;
 
   case sIOtype_PING:
     Serial.println("[IOc] Get PING");
-
     break;
 
   case sIOtype_PONG:
     Serial.println("[IOc] Get PONG");
-
     break;
 
   default:
@@ -162,6 +145,15 @@ void setup()
 {
   Serial.begin(115200);
 
+  // Initialize I2C on GPIO8 (SDA) and GPIO9 (SCL)
+  Wire.begin(sensorSDAPin, sensorSCLPin);
+
+  // Initialize BME280
+  if (!bme.begin(0x76)) {  // If your BME280 uses 0x77, change it here
+    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    while (1);
+  }
+  
   // Create a WiFiManager object
   WiFiManager wifiManager;
 
@@ -169,38 +161,26 @@ void setup()
   if (!wifiManager.autoConnect("Octo-Tree"))
   {
     Serial.println("Failed to connect, resetting...");
-
-    // Blink the LED 3 times to indicate WiFi needs to be configured
     for (int i = 0; i < 3; i++) {
       digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED on
       delay(500);                       // Wait for 500 milliseconds
       digitalWrite(LED_BUILTIN, LOW);   // Turn the LED off
       delay(500);                       // Wait for 500 milliseconds
     }
-
-    // Start the configuration portal
     wifiManager.startConfigPortal("Octo-Tree");
-
     ESP.restart();
   }
 
   // If you reach here, you are connected to WiFi
   Serial.println("Connected to WiFi!");
-
-  // Turn on the LED to indicate that we are connected
   digitalWrite(LED_BUILTIN, HIGH);
 
   // SocketIO setup
-  int status = WL_IDLE_STATUS;
-
   socketIO.setReconnectInterval(10000);
   socketIO.begin(serverIP, serverPort);
   socketIO.onEvent(socketIOEvent);
 
   // Configure the pins
-  pinMode(temperaturePin, INPUT);
-  pinMode(humidityPin, INPUT);
-  pinMode(pressurePin, INPUT);
   pinMode(lightPin1, INPUT);
   pinMode(lightPin2, INPUT);
   pinMode(servoPin, OUTPUT);
@@ -226,9 +206,9 @@ void loop()
 
     JsonObject param1 = array.createNestedObject();
     param1["time_online"] = (uint32_t)now;
-    param1["temperature"] = analogRead(temperaturePin);
-    param1["humidity"] = analogRead(humidityPin);
-    param1["pressure"] = analogRead(pressurePin);
+    param1["temperature"] = bme.readTemperature();
+    param1["humidity"] = bme.readHumidity();
+    param1["pressure"] = bme.readPressure() / 100.0F;
     param1["light1"] = analogRead(lightPin1);
     param1["light2"] = analogRead(lightPin2);
     param1["board_id"] = boardID;
