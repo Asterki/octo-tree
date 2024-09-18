@@ -6,26 +6,30 @@
 #include <ArduinoJson.h>
 #include <WebSocketsClient_Generic.h>
 #include <SocketIOclient_Generic.h>
+#include <Servo.h>
 
-SocketIOclient socketIO;
 
 // Define the pins for the sensors (you might not need these if you're using BME280)
 const int humidityPin = 35;
-const int lightPin1 = 35;
-const int lightPin2 = 36;
-const int servoPin = 33;
-const int pumpPin = 32;
-const int soilHumidityPin = 34;
+const int lightPin1 = 4;
+const int lightPin2 = 16;
+const int servoPin = 16;
+const int pumpPin = 15;
+const int soilHumidityPin = 7;
 const int sensorSDAPin = 8;
 const int sensorSCLPin = 9;
+const int panelServoPin = 14;
+const int ledLightPin = 11;
 
+SocketIOclient socketIO; // Create an instance of the SocketIO client
 Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
+Servo panelServo = Servo(); // Create an instance of the servo motor
 
 IPAddress clientIP(192, 168, 0, 15);
 IPAddress serverIP(192, 168, 0, 15);
 
 const int serverPort = 3000;
-const String serverURL = "http://192.168.0.15:3000";
+const String serverURL = "192.168.0.15";
 const String boardID = "123123123";
 const String boardKey = "123123123";
 
@@ -60,11 +64,11 @@ void handleEvent(const char *payload)
     int state = params["state"];
     if (state == 1)
     {
-      digitalWrite(33, HIGH);
+      digitalWrite(pumpPin, HIGH);
     }
     else
     {
-      digitalWrite(33, LOW);
+      digitalWrite(pumpPin, LOW);
     }
   }
 
@@ -76,13 +80,24 @@ void handleEvent(const char *payload)
 
     if (light1 > light2)
     {
-      // Turn the servo to the left
-      Serial.println("Turning servo to the left");
+    panelServo.write(panelServoPin, 0);
     }
     else
     {
-      // Turn the servo to the right
-      Serial.println("Turning servo to the right");
+    panelServo.write(panelServoPin, 180);
+    }
+  }
+
+  if (eventName == "led_light")
+  {
+    int state = params["state"];
+    if (state == 1)
+    {
+      digitalWrite(ledLightPin, HIGH);
+    }
+    else
+    {
+      digitalWrite(ledLightPin, LOW);
     }
   }
 }
@@ -145,6 +160,7 @@ void socketIOEvent(const socketIOmessageType_t &type, uint8_t *payload, const si
 void setup()
 {
   Serial.begin(115200);
+  digitalWrite(LED_BUILTIN, LOW);
 
   // Initialize I2C on GPIO8 (SDA) and GPIO9 (SCL)
   Wire.begin(sensorSDAPin, sensorSCLPin);
@@ -178,25 +194,20 @@ void setup()
 
   // SocketIO setup
   socketIO.setReconnectInterval(10000);
-  socketIO.begin(serverIP, serverPort);
+  socketIO.begin(serverURL, serverPort);
   socketIO.onEvent(socketIOEvent);
 
   // Configure the pins
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(pumpPin, OUTPUT);
+  pinMode(humidityPin, INPUT);
   pinMode(lightPin1, INPUT);
   pinMode(lightPin2, INPUT);
-  pinMode(servoPin, OUTPUT);
-  pinMode(33, OUTPUT);
+  pinMode(soilHumidityPin, INPUT);
+  panelServo.attach(servoPin);
 }
 
 unsigned long messageTimestamp = 0;
-
-// Define the minimum and maximum values for scaling the LDR readings
-const int LDR_MIN = 0;       // Minimum raw value from analogRead()
-const int LDR_MAX = 1023;    // Maximum raw value from analogRead()
-
-// Define the scaled range
-const int SCALED_MIN = 1;    // Minimum value after scaling
-const int SCALED_MAX = 100;  // Maximum value after scaling
 
 void loop()
 {
@@ -219,17 +230,8 @@ void loop()
     param1["temperature"] = bme.readTemperature();
     param1["humidity"] = bme.readHumidity();
     param1["pressure"] = bme.readPressure() / 100.0F;
-
-    // Read LDR values and scale them
-    int rawLight1 = analogRead(lightPin1);
-    int rawLight2 = analogRead(lightPin2);
-
-    // Scale the raw LDR readings to 1-100
-    int scaledLight1 = map(rawLight1, LDR_MIN, LDR_MAX, SCALED_MIN, SCALED_MAX);
-    int scaledLight2 = map(rawLight2, LDR_MIN, LDR_MAX, SCALED_MIN, SCALED_MAX);
-
-    param1["light1"] = scaledLight1;
-    param1["light2"] = scaledLight2;
+    param1["light1"] = analogRead(lightPin1);
+    param1["light2"] = analogRead(lightPin2);
     param1["board_id"] = boardID;
     param1["board_key"] = boardKey;
 
