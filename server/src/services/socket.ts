@@ -28,8 +28,7 @@ class SocketServer {
 			},
 		})
 
-		let humidityOvertime = []
-
+		let thing = 0
 		this.io.on('connection', (socket) => {
 			socket.on(
 				'sensor_update',
@@ -43,11 +42,6 @@ class SocketServer {
 					board_id: string
 					board_key: string
 				}) => {
-					// COnvert the light2 to a scale between 170 and 4000, 4000 being 0% and 170 being 100%
-					data.light2 = ((4095 - data.light2) / 4095) * 100
-
-					console.log(data)
-
 					// Verify the board ID and key
 					if (!data.board_id || !data.board_key) return
 
@@ -69,6 +63,7 @@ class SocketServer {
 						},
 						data: {
 							sensorData: JSON.stringify({
+								timeOnline: data.time_online,
 								temperature: data.temperature,
 								humidity: data.humidity,
 								pressure: data.pressure,
@@ -79,6 +74,13 @@ class SocketServer {
 					})
 				}
 			)
+
+			setInterval(() => {
+				socket.emit('pump', {
+					state: thing,
+				})
+				thing = thing === 0 ? 1 : 0
+			}, 3000)
 
 			socket.on('get_pending_actions', async (data) => {
 				// Verify the board ID and key
