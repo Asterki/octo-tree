@@ -11,10 +11,11 @@ SocketIOclient socketIO;
 
 // Define the pins for the sensors (you might not need these if you're using BME280)
 const int humidityPin = 35;
-const int lightPin1 = 39;
-const int lightPin2 = 20;
+const int lightPin1 = 35;
+const int lightPin2 = 36;
 const int servoPin = 33;
 const int pumpPin = 32;
+const int soilHumidityPin = 34;
 const int sensorSDAPin = 8;
 const int sensorSCLPin = 9;
 
@@ -188,6 +189,15 @@ void setup()
 }
 
 unsigned long messageTimestamp = 0;
+
+// Define the minimum and maximum values for scaling the LDR readings
+const int LDR_MIN = 0;       // Minimum raw value from analogRead()
+const int LDR_MAX = 1023;    // Maximum raw value from analogRead()
+
+// Define the scaled range
+const int SCALED_MIN = 1;    // Minimum value after scaling
+const int SCALED_MAX = 100;  // Maximum value after scaling
+
 void loop()
 {
   socketIO.loop();
@@ -209,8 +219,17 @@ void loop()
     param1["temperature"] = bme.readTemperature();
     param1["humidity"] = bme.readHumidity();
     param1["pressure"] = bme.readPressure() / 100.0F;
-    param1["light1"] = analogRead(lightPin1);
-    param1["light2"] = analogRead(lightPin2);
+
+    // Read LDR values and scale them
+    int rawLight1 = analogRead(lightPin1);
+    int rawLight2 = analogRead(lightPin2);
+
+    // Scale the raw LDR readings to 1-100
+    int scaledLight1 = map(rawLight1, LDR_MIN, LDR_MAX, SCALED_MIN, SCALED_MAX);
+    int scaledLight2 = map(rawLight2, LDR_MIN, LDR_MAX, SCALED_MIN, SCALED_MAX);
+
+    param1["light1"] = scaledLight1;
+    param1["light2"] = scaledLight2;
     param1["board_id"] = boardID;
     param1["board_key"] = boardKey;
 

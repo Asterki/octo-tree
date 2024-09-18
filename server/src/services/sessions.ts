@@ -71,10 +71,10 @@ class SessionManager {
 				cookie: {
 					secure: false,
 					maxAge: 1000 * 60 * 60 * 24 * 7,
-					sameSite: 'lax',
+					sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
 					httpOnly: false,
 					path: '/',
-					domain: 'localhost',
+					domain: process.env.NODE_ENV === 'production' ? process.env.DOMAIN : 'localhost',
 				},
 				store: new PrismaSessionStore(new PrismaClient(), {
 					checkPeriod: 2 * 60 * 1000, // 2 minutes
