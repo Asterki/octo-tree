@@ -85,7 +85,6 @@ class RoutineController {
 									.temperatureExceeds.value! <
 									sensorData.temperature)
 						) {
-							console.log('Executing routine')
 							await this.executeRoutine(routine)
 						}
 

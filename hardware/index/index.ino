@@ -87,19 +87,6 @@ void handleEvent(const char *payload)
     // panelServo.write(panelServoPin, 180);
     }
   }
-
-  if (eventName == "led_light")
-  {
-    int state = params["state"];
-    if (state == 1)
-    {
-      digitalWrite(ledLightPin, HIGH);
-    }
-    else
-    {
-      digitalWrite(ledLightPin, LOW);
-    }
-  }
 }
 
 void socketIOEvent(const socketIOmessageType_t &type, uint8_t *payload, const size_t &length)

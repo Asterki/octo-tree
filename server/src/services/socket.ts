@@ -50,7 +50,6 @@ class SocketServer {
 
 					// Add the board to the room corresponding to its ID
 					socket.join(`board_${data.board_id}`)
-					console.log(`C- board_${data.board_id}`)
 				}
 			)
 
