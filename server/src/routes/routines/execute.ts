@@ -79,7 +79,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 					actionType: 'water',
 					actionValue: routine.actions.water.amount,
 					boardId: board?.id,
-					executeAt: new Date(Date.now()),
 				},
 			})
 		}
@@ -89,7 +88,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 					actionType: 'rotatePanel',
 					actionValue: 0.0,
 					boardId: board?.id,
-					executeAt: new Date(Date.now()),
 				},
 			})
 		}

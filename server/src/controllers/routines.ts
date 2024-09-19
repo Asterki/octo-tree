@@ -34,15 +34,122 @@ class RoutineController {
 							rotatePanel: true,
 						},
 					},
+					automatedExecution: {
+						select: {
+							conditions: {
+								select: {
+									humidityBelow: true,
+									humidityExceeds: true,
+									temperatureBelow: true,
+									temperatureExceeds: true,
+								},
+							},
+							checkInterval: true,
+						},
+					},
 				},
 			})
 
-            // console.log(routines)
+			if (!routines) return
 
 			for (const routine of routines) {
-				if (routine.execution == "automated") { // Check if the routine is automated
-                    // Check if the routine has any conditions
-                } 
+				let board = await prisma.board.findFirst({
+					where: {
+						id: routine.boardId!,
+					},
+				})
+				if (!board) return
+				let sensorData = JSON.parse(board.sensorData)
+
+				const executeRoutine = async (routine: any) => {
+					if (routine.actions.notify) {
+						// Send a notification
+					}
+
+					if (routine.actions.water) {
+						await prisma.triggeredActions.update({
+							where: {
+								id: routine.id,
+							},
+							data: {
+								actionType: 'water',
+								boardId: routine.boardId,
+							},
+						})
+					}
+
+					if (routine.actions.rotatePanel) {
+						await prisma.triggeredActions.update({
+							where: {
+								id: routine.id,
+							},
+							data: {
+								actionType: 'rotatePanel',
+								boardId: routine.boardId,
+							},
+						})
+					}
+
+					console.log("SOMETHING EXECUTED AAAAAAAAA")
+				}
+
+				if (routine.execution == 'automated') {
+					// Check if the routine is automated
+					// Check the conditions for the routine
+
+					if (
+						routine.automatedExecution?.conditions?.humidityBelow
+							.active &&
+						routine.automatedExecution.conditions.humidityBelow
+							.value >= sensorData.humidity
+					) {
+						executeRoutine(routine)
+					}
+
+					if (
+						routine.automatedExecution?.conditions?.humidityExceeds
+							.active &&
+						routine.automatedExecution.conditions.humidityExceeds
+							.value <= sensorData.humidity
+					) {
+						executeRoutine(routine)
+					}
+
+					if (
+						routine.automatedExecution?.conditions?.temperatureBelow
+							.active &&
+						routine.automatedExecution.conditions.temperatureBelow
+							.value >= sensorData.temperature
+					) {
+						executeRoutine(routine)
+					}
+
+					if (
+						routine.automatedExecution?.conditions
+							?.temperatureExceeds.active &&
+						routine.automatedExecution.conditions.temperatureExceeds
+							.value <= sensorData.temperature
+					) {
+						executeRoutine(routine)
+					}
+
+					// Update the routine
+					await prisma.routine.update({
+						where: {
+							id: routine.id,
+						},
+						data: {
+							automatedExecution: {
+								update: {
+									nextExecutionInterval:
+										Date.now() +
+										routine.automatedExecution!
+											.checkInterval,
+								},
+							},
+						},
+					})
+				}
 			}
 		}, 5000)
 	}

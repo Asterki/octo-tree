@@ -39,7 +39,6 @@ model TriggeredActions {
   id          Int      @id @default(autoincrement())
   actionType  String
   actionValue Float
-  executeAt   DateTime
 
   boardId String
   board   Board  @relation(fields: [boardId], references: [id])
@@ -60,7 +59,7 @@ model Routine {
 model AutomatedExecution {
   id                    Int @id @default(autoincrement())
   checkInterval         Int
-  nextExecutionInterval Int
+  nextExecutionInterval DateTime
 
   routineId Int?     @unique
   routine   Routine? @relation(fields: [routineId], references: [id])

@@ -142,8 +142,8 @@ const Routines = () => {
 							value: 0,
 						},
 					},
-					checkInterval: 0,
-					nextExecutionInterval: 0,
+					checkInterval: 180000,
+					nextExecutionInterval: new Date(Date.now() + 180000),
 				},
 			}
 

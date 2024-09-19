@@ -75,6 +75,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			routines,
 		})
 	} catch (error) {
+		console.log(error)
 		return res.status(500).send({
 			status: 'internal-server-error',
 		})

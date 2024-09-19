@@ -36,7 +36,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				execution: z.string(),
 				automatedExecution: z.object({
 					checkInterval: z.number(),
-					nextExecutionInterval: z.number(),
+					nextExecutionInterval: z.date(),
 					conditions: z.object({
 						temperatureExceeds: z.object({
 							active: z.boolean(),

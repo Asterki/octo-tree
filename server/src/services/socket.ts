@@ -57,7 +57,7 @@ class SocketServer {
 					// if (!bcrypt.compareSync(data.key, board.sensorShareToken)) return // Commented out for now
 
 					// Update the sensor data
-					await prisma.board.update({
+					let res = await prisma.board.update({
 						where: {
 							id: data.board_id,
 						},
