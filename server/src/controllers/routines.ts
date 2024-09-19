@@ -21,8 +21,9 @@ class RoutineController {
 			const routines = await prisma.routine.findMany({
 				where: {
 					automatedExecution: {
+						// This is datetime object,
 						nextExecutionInterval: {
-							lte: Date.now(),
+							lte: new Date(Date.now()),
 						},
 					},
 				},
@@ -44,6 +45,7 @@ class RoutineController {
 									temperatureExceeds: true,
 								},
 							},
+							nextExecutionInterval: true,
 							checkInterval: true,
 						},
 					},
@@ -67,30 +69,46 @@ class RoutineController {
 					}
 
 					if (routine.actions.water) {
-						await prisma.triggeredActions.update({
-							where: {
-								id: routine.id,
-							},
-							data: {
-								actionType: 'water',
-								boardId: routine.boardId,
-							},
-						})
+						// First check if there are any pending water action
+						let pendingWaterAction =
+							await prisma.triggeredActions.findFirst({
+								where: {
+									actionType: 'water',
+									boardId: routine.boardId,
+								},
+							})
+
+						if (!pendingWaterAction) {
+							await prisma.triggeredActions.create({
+								data: {
+									actionType: 'water',
+									boardId: routine.boardId,
+									actionValue: routine.actions.water.amount,
+								},
+							})
+						}
 					}
 
 					if (routine.actions.rotatePanel) {
-						await prisma.triggeredActions.update({
-							where: {
-								id: routine.id,
-							},
-							data: {
-								actionType: 'rotatePanel',
-								boardId: routine.boardId,
-							},
-						})
-					}
+						// First check if there are any pending rotatePanel action
+						let pendingRotatePanelAction =
+							await prisma.triggeredActions.findFirst({
+								where: {
+									actionType: 'rotatePanel',
+									boardId: routine.boardId,
+								},
+							})
 
-					console.log("SOMETHING EXECUTED AAAAAAAAA")
+						if (!pendingRotatePanelAction) {
+							await prisma.triggeredActions.create({
+								data: {
+									actionType: 'rotatePanel',
+									boardId: routine.boardId,
+									actionValue: 0.0,
+								},
+							})
+						}
+					}
 				}
 
 				if (routine.execution == 'automated') {
@@ -141,10 +159,11 @@ class RoutineController {
 						data: {
 							automatedExecution: {
 								update: {
-									nextExecutionInterval:
+									nextExecutionInterval: new Date(
 										Date.now() +
-										routine.automatedExecution!
-											.checkInterval,
+											routine.automatedExecution!
+												.checkInterval
+									),
 								},
 							},
 						},
