@@ -1,9 +1,11 @@
+import SocketServer from '../services/socket'
 import { PrismaClient } from '@prisma/client'
 
 class RoutineController {
 	private static instance: RoutineController | null = null
 	private prisma = new PrismaClient()
 	private intervalId: NodeJS.Timeout | undefined
+	private socket = SocketServer.getInstance()
 
 	public static getInstance() {
 		if (!RoutineController.instance) {
@@ -23,6 +25,7 @@ class RoutineController {
 								lte: new Date(Date.now()),
 							},
 						},
+						execution: 'automated',
 					},
 					include: {
 						actions: {
@@ -61,27 +64,28 @@ class RoutineController {
 					if (routine.execution === 'automated') {
 						// Check conditions
 						if (
-							this.checkCondition(
+							(routine!.automatedExecution!.conditions!
+								.humidityBelow.active && // Check if the condition is active
 								routine!.automatedExecution!.conditions!
-									.humidityBelow,
-								sensorData.humidity
-							) ||
-							this.checkCondition(
+									.humidityBelow.value! >
+									sensorData.humidity) || //
+							(routine!.automatedExecution!.conditions!
+								.humidityExceeds.active &&
 								routine!.automatedExecution!.conditions!
-									.humidityExceeds,
-								sensorData.humidity
-							) ||
-							this.checkCondition(
+									.humidityExceeds.value! <
+									sensorData.humidity) ||
+							(routine!.automatedExecution!.conditions!
+								.temperatureBelow.active &&
 								routine!.automatedExecution!.conditions!
-									.temperatureBelow,
-								sensorData.temperature
-							) ||
-							this.checkCondition(
+									.temperatureBelow.value! >
+									sensorData.temperature) ||
+							(routine!.automatedExecution!.conditions!
+								.temperatureExceeds.active &&
 								routine!.automatedExecution!.conditions!
-									.temperatureExceeds,
-								sensorData.temperature
-							)
+									.temperatureExceeds.value! <
+									sensorData.temperature)
 						) {
+							console.log('Executing routine')
 							await this.executeRoutine(routine)
 						}
 
@@ -94,7 +98,9 @@ class RoutineController {
 										nextExecutionInterval: new Date(
 											Date.now() +
 												routine.automatedExecution!
-													.checkInterval
+													.checkInterval *
+													1000 *
+													60 // Convert minutes to milliseconds
 										),
 									},
 								},
@@ -108,48 +114,30 @@ class RoutineController {
 		}, 5000)
 	}
 
-	private async executeRoutine(routine: any) {
-		if (routine.actions.notify) {
+	public async executeRoutine(routine: any) {
+		if (routine.actions.notify.active) {
 			// Send a notification
 		}
 
-		if (routine.actions.water) {
-			// First check if there are any pending water action
-			this.createIfNotExists(
-				'water',
-				routine.boardId,
-				routine.actions.water.amount
-			)
+		if (routine.actions.water.active) {
+			// Water the plants
+			this.socket
+				.getClient()
+				.to(`board_${routine.boardId}`)
+				.emit('pump', {
+					time: routine.actions.notify.amount,
+				})
 		}
 
-		if (routine.actions.rotatePanel) {
-			// First check if there are any pending rotatePanel action
-			this.createIfNotExists(
-				'rotatePanel',
-				routine.boardId,
-				routine.actions.rotatePanel.amount
-			)
+		if (routine.actions.rotatePanel.active) {
+			// Rotate the panel
+			this.socket
+				.getClient()
+				.to(`board_${routine.boardId}`)
+				.emit('rotate_panel', {
+					state: 1,
+				})
 		}
-	}
-
-	private async createIfNotExists(
-		actionType: string,
-		boardId: string,
-		actionValue: number
-	) {
-		const pendingAction = await this.prisma.triggeredActions.findFirst({
-			where: { actionType, boardId },
-		})
-
-		if (!pendingAction) {
-			await this.prisma.triggeredActions.create({
-				data: { actionType, boardId, actionValue },
-			})
-		}
-	}
-
-	private checkCondition(condition: any, sensorValue: number): boolean {
-		return condition.active && condition.value >= sensorValue
 	}
 
 	public async cleanup() {

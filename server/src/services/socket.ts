@@ -30,6 +30,30 @@ class SocketServer {
 
 		let thing = 0
 		this.io.on('connection', (socket) => {
+			// Register the board when it connects
+			socket.on(
+				'register_board',
+				async (data: { board_id: string; board_key: string }) => {
+					// Verify the board ID and key
+					if (!data.board_id || !data.board_key) return
+
+					const board = prisma.board.findFirst({
+						where: {
+							id: data.board_id,
+						},
+					})
+
+					if (!board) return
+
+					// Compare the key using bcrypt
+					// if (!bcrypt.compareSync(data.key, board.sensorShareToken)) return
+
+					// Add the board to the room corresponding to its ID
+					socket.join(`board_${data.board_id}`)
+					console.log(`C- board_${data.board_id}`)
+				}
+			)
+
 			socket.on(
 				'sensor_update',
 				async (data: {
@@ -74,13 +98,6 @@ class SocketServer {
 					})
 				}
 			)
-
-			setInterval(() => {
-				socket.emit('pump', {
-					state: thing,
-				})
-				thing = thing === 0 ? 1 : 0
-			}, 3000)
 
 			socket.on('get_pending_actions', async (data) => {
 				// Verify the board ID and key

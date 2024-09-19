@@ -5,6 +5,7 @@ import { RedisStore } from 'rate-limit-redis'
 
 // import RedisClient from '../../services/redis'
 import { PrismaClient } from '@prisma/client'
+import RoutineController from '../../controllers/routines'
 
 import { z } from 'zod'
 
@@ -70,30 +71,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 
 		// Add the routine to the pending actions queue
-		if (routine.actions?.notify.active) {
-			// TODO Notify via email
-		}
-		if (routine.actions?.water.active) {
-			await prisma.triggeredActions.create({
-				data: {
-					actionType: 'water',
-					actionValue: routine.actions.water.amount,
-					boardId: board?.id,
-				},
-			})
-		}
-		if (routine.actions?.rotatePanel.active) {
-			await prisma.triggeredActions.create({
-				data: {
-					actionType: 'rotatePanel',
-					actionValue: 0.0,
-					boardId: board?.id,
-				},
-			})
-		}
-
-
-		await prisma.$disconnect()
+		RoutineController.getInstance().executeRoutine(routine)
 
 		return res.status(200).send({
 			status: 'success',

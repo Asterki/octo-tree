@@ -6,7 +6,6 @@
 #include <ArduinoJson.h>
 #include <WebSocketsClient_Generic.h>
 #include <SocketIOclient_Generic.h>
-#include <Servo.h>
 
 
 // Define the pins for the sensors (you might not need these if you're using BME280)
@@ -23,7 +22,6 @@ const int ledLightPin = 11;
 
 SocketIOclient socketIO; // Create an instance of the SocketIO client
 Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
-Servo panelServo = Servo(); // Create an instance of the servo motor
 
 IPAddress clientIP(192, 168, 0, 15);
 IPAddress serverIP(192, 168, 0, 15);
@@ -44,6 +42,8 @@ void handleEvent(const char *payload)
   // Get the relevant information
   String eventName = doc[0];
   JsonObject params = doc[1];
+
+  Serial.println(eventName);
 
   // Handle the event
   if (eventName == "led")
@@ -80,11 +80,11 @@ void handleEvent(const char *payload)
 
     if (light1 > light2)
     {
-    panelServo.write(panelServoPin, 0);
+    // panelServo.write(panelServoPin, 0);
     }
     else
     {
-    panelServo.write(panelServoPin, 180);
+    // panelServo.write(panelServoPin, 180);
     }
   }
 
@@ -112,11 +112,30 @@ void socketIOEvent(const socketIOmessageType_t &type, uint8_t *payload, const si
     Serial.println("[IOc] Disconnected");
     break;
 
-  case sIOtype_CONNECT:
+  case sIOtype_CONNECT: {
     Serial.print("[IOc] Connected to url: ");
     Serial.println((char *)payload);
     socketIO.send(sIOtype_CONNECT, "/");
+
+    DynamicJsonDocument doc(1024);
+    JsonArray array = doc.to<JsonArray>();
+
+    array.add("register_board");
+
+    JsonObject param1 = array.createNestedObject();
+    param1["board_id"] = boardID;
+    param1["board_key"] = boardKey;
+
+    String output;
+
+    serializeJson(doc, output);
+
+    // Send event
+    socketIO.sendEVENT(output);
+    Serial.println(output);
+
     break;
+  }
 
   case sIOtype_EVENT:
     Serial.print("[IOc] Get event: ");
@@ -204,7 +223,7 @@ void setup()
   pinMode(lightPin1, INPUT);
   pinMode(lightPin2, INPUT);
   pinMode(soilHumidityPin, INPUT);
-  panelServo.attach(servoPin);
+  //panelServo.attach(servoPin);
 }
 
 unsigned long messageTimestamp = 0;

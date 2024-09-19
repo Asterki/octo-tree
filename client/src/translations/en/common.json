@@ -5,6 +5,22 @@
 		"buttons": {
 			"getStarted": "Get Started",
 			"dashboard": "Dashboard"
+		},
+		"characteristics": {
+			"title": "Octo-Tree Features",
+			"description": "Explore the advanced features of Octo-Tree that enable modern agricultural automation.",
+			"feature1": {
+				"title": "IoT Device Control",
+				"description": "Manage and control remote devices like irrigation systems, atmospheric sensors, and solar panels through an intuitive web interface."
+			},
+			"feature2": {
+				"title": "AI Virtual Assistant",
+				"description": "Interact with an AI-powered assistant trained on agricultural data to get advice on best practices, crop recommendations, and solutions to common challenges."
+			},
+			"feature3": {
+				"title": "Image Recognition",
+				"description": "Utilize computer vision to analyze images and identify soil types or detect potential damages in solar panels, enabling fast and accurate diagnostics."
+			}
 		}
 	},
 	"login": {
@@ -119,23 +135,23 @@
 		"manualExecution": "Manual Execution"
 	},
 	"dashboard": {
-        "connectionStatus": "Connection Status",
-        "connected": "Connected to the server",
-        "disconnected": "Disconnected from the host",
-        "soilSolarPanelAnalysis": "Soil & Solar Panel Analysis",
-        "panelPositionOrientation": "Panel Position & Orientation",
-        "autoMode": "Auto Mode",
-        "manualMode": "Manual Mode",
-        "setPosition": "Set Position",
-        "updateEvery": "Update Every",
-        "setInterval": "Set Interval",
-        "temperature": "Temperature",
-        "humidity": "Humidity",
-        "currentRoutines": "Current Routines",
-        "edit": "Edit",
-        "delete": "Delete",
-        "addRoutine": "Add Routine",
+		"connectionStatus": "Connection Status",
+		"connected": "Connected to the server",
+		"disconnected": "Disconnected from the host",
+		"soilSolarPanelAnalysis": "Soil & Solar Panel Analysis",
+		"panelPositionOrientation": "Panel Position & Orientation",
+		"autoMode": "Auto Mode",
+		"manualMode": "Manual Mode",
+		"setPosition": "Set Position",
+		"updateEvery": "Update Every",
+		"setInterval": "Set Interval",
+		"temperature": "Temperature",
+		"humidity": "Humidity",
+		"currentRoutines": "Current Routines",
+		"edit": "Edit",
+		"delete": "Delete",
+		"addRoutine": "Add Routine",
 		"execute": "Execute",
 		"noRoutines": "No routines found."
-    }
+	}
 }
