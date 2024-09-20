@@ -334,7 +334,7 @@ const Dashboard = () => {
                 <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center">
                     <div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4">
                         <h1 className="text-2xl text-center font-bold">
-                            Image Analysis Result
+                            {t('dashboard.analysisResult')}
                         </h1>
                         <p>
                             {/* <b>Analysis:</b> {imageAnalysis.result.soil} */}
@@ -354,7 +354,7 @@ const Dashboard = () => {
 				<div className="w-full text-center">
 					{user && (
 						<p className="text-2xl">
-							{t('dashboard.connectionStatus')}{' '}
+							{t('dashboard.welcome')}{' '}
 							<b>{(user as { email: string }).email}</b>
 						</p>
 					)}
@@ -426,11 +426,10 @@ const Dashboard = () => {
 				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-[calc(91.66%+0.6rem)]">
 					<div>
 						<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
-							Octo-Tree AI Chat
+						{t('dashboard.aiChatTitle')}
 						</h1>
 						<p className="text-center">
-							Chat with Octo-Tree to get help with your garden,
-							and manage your routines!
+							{t('dashboard.aiChatDescription')}
 						</p>
 					</div>
 					<div className="gap-2 w-full h-96 overflow-y-scroll overflow-x-hidden px-32 my-2">
@@ -453,13 +452,13 @@ const Dashboard = () => {
 							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
 							onClick={askQuestionToAI}
 						>
-							Send
+							{t('dashboard.send')}
 						</button>
 						<button
 							className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
 							onClick={() => setCurrentChat([])}
 						>
-							Clear Chat
+							{t('dashboard.clearChat')}
 						</button>
 					</div>
 				</section>

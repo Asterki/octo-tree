@@ -132,9 +132,20 @@
 		"saveChanges": "Save Changes",
 		"changesSaved": "Changes saved successfully.",
 		"changesFailed": "Failed to save changes.",
-		"manualExecution": "Manual Execution"
+		"manualExecution": "Manual Execution",
+		"routineCreated": "Routine created successfully.",
+		"routineDeleted": "Routine deleted successfully.",
+		"routineUpdated": "Routine updated successfully.",
+		"couldNotUpdate": "Could not update routine."
 	},
 	"dashboard": {
+		"close": "Close",
+		"send": "Send",
+		"analysisResult": "Analysis Result",
+		"welcome": "Welcome to the Octo-Tree Dashboard",
+		"aiChatTitle": "Octo-Tree AI Chat",
+		"aiChatDescription": "Chat with Octo-Tree to get help with your garden, and manage your routines!",
+		"clearChat": "Clear Chat",
 		"connectionStatus": "Connection Status",
 		"connected": "Connected to the server",
 		"disconnected": "Disconnected from the host",
@@ -150,7 +161,7 @@
 		"currentRoutines": "Current Routines",
 		"edit": "Edit",
 		"delete": "Delete",
-		"addRoutine": "Add Routine",
+		"addRoutine": "Manage Routines",
 		"execute": "Execute",
 		"noRoutines": "No routines found."
 	}

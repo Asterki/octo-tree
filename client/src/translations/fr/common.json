@@ -119,6 +119,7 @@
 		"manualExecution": "Exécution Manuelle"
 	},
 	"dashboard": {
+		"welcome": "Bienvenue sur le Tableau de Bord Octo-Tree",
         "connectionStatus": "État de la Connexion",
         "connected": "Connecté au serveur",
         "disconnected": "Déconnecté de l'hôte",
