@@ -33,7 +33,7 @@ class EmailService {
 	) {
 		try {
 			await this.transporters[transporter].sendMail({
-				from: `"Octo-Tree" <${process.env.EMAIL_FROM}>`,
+				from: `"Octo-Tree" <${process.env.EMAIL_SECURITY_USER}>`,
 				to: to,
 				subject: subject,
 				html: html,
