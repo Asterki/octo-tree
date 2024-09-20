@@ -29,8 +29,12 @@ COPY --from=build /app/client/dist ./client/dist
 WORKDIR /app/server
 RUN npm install
 
-# Expose port 3000
-EXPOSE 3000
+# Generate Prisma client
+RUN npx prisma generate
 
-# Command to start the server
-CMD ["npm", "run", "start"]
+# Expose ports 3000 and 5555
+EXPOSE 3000
+EXPOSE 5555
+
+# Command to start the server and Prisma Studio
+CMD ["sh", "-c", "npm run start & npx prisma studio"]

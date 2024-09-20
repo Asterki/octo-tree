@@ -26,3 +26,6 @@ client/.env
 *.swo
 *.bak
 *.tmp
+
+# Ignore the goddamn database
+*.db
