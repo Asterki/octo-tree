@@ -30,13 +30,12 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 	const parsedBody = z
 		.object({
 			routine_id: z.number(),
-			board_id: z.number(),
 			routine: z.object({
 				name: z.string(),
 				execution: z.string(),
+				active: z.boolean(),
 				automatedExecution: z.object({
 					checkInterval: z.number(),
-					nextExecutionInterval: z.date(),
 					conditions: z.object({
 						temperatureExceeds: z.object({
 							active: z.boolean(),
@@ -116,14 +115,12 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			data: {
 				name: parsedBody.data.routine.name,
 				execution: parsedBody.data.routine.execution,
+				active: parsedBody.data.routine.active,
 				automatedExecution: {
 					update: {
 						checkInterval:
 							parsedBody.data.routine.automatedExecution
 								.checkInterval,
-						nextExecutionInterval:
-							parsedBody.data.routine.automatedExecution
-								.nextExecutionInterval,
 						conditions: {
 							update: {
 								temperatureExceeds: {

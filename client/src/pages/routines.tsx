@@ -56,7 +56,10 @@ const Routines = () => {
 		setSelectedRoutine(-1)
 	}
 
-	const saveChanges = async () => {
+	const updateRoutine = async () => {
+		if (selectedRoutine === -1) return
+		const routine = routines[selectedRoutine]
+		
 		try {
 			await axios({
 				url: `${
@@ -66,14 +69,18 @@ const Routines = () => {
 				}/api/routines/update`,
 				method: 'post',
 				data: {
-					routines,
+					routine_id: routine.id,
+					board_id: routine.boardId as string,
+					routine,
 				},
 				withCredentials: true,
 			})
 
-			showAlert(t('routines.changesSaved'))
+			await fetchRoutines()
+
+			showAlert(t('routines.routineUpdated'))
 		} catch (error) {
-			showAlert(t('routines.changesFailed'))
+			showAlert(t('routines.couldNotUpdate'))
 		}
 	}
 
@@ -678,7 +685,7 @@ const Routines = () => {
 				<footer className="fixed bottom-0 w-full bg-neutral-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-4 border-t-2 border-t-neutral-300 flex items-end justify-end">
 					<button
 						className="bg-emerald-500 text-white px-2 py-1 rounded-md mt-2 mx-4 text-xl"
-						onClick={saveChanges}
+						onClick={() => updateRoutine()}
 					>
 						{t('routines.saveChanges')}
 					</button>

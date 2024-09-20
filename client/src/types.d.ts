@@ -1,6 +1,7 @@
 interface Routine {
 	id: number
 	name: string
+	active: boolean
 	execution: string
 	boardId: string
 	automatedExecution: {

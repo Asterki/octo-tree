@@ -26,6 +26,7 @@ class RoutineController {
 								lte: new Date(Date.now()),
 							},
 						},
+						active: true,
 						execution: 'automated',
 					},
 					include: {

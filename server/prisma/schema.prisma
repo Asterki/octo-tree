@@ -36,7 +36,7 @@ model Board {
 
 // This is used to send the actions to the board, it doesn't include any logic
 model TriggeredActions {
-  id          Int      @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   actionType  String
   actionValue Float
 
@@ -49,6 +49,7 @@ model Routine {
   id                 Int                 @id @default(autoincrement())
   name               String
   execution          String
+  active             Boolean         @default(true)
   automatedExecution AutomatedExecution?
   actions            Actions?
 
@@ -57,7 +58,7 @@ model Routine {
 }
 
 model AutomatedExecution {
-  id                    Int @id @default(autoincrement())
+  id                    Int      @id @default(autoincrement())
   checkInterval         Int
   nextExecutionInterval DateTime
 
