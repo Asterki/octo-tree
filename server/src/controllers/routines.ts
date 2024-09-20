@@ -1,4 +1,5 @@
 import SocketServer from '../services/socket'
+import EmailService from '../services/email'
 import { PrismaClient } from '@prisma/client'
 
 class RoutineController {
@@ -57,6 +58,9 @@ class RoutineController {
 				for (const routine of routines) {
 					const board = await this.prisma.board.findFirst({
 						where: { id: routine.boardId! },
+						include: {
+							user: true,
+						},
 					})
 					if (!board) return
 					const sensorData = JSON.parse(board.sensorData)
@@ -85,7 +89,7 @@ class RoutineController {
 									.temperatureExceeds.value! <
 									sensorData.temperature)
 						) {
-							await this.executeRoutine(routine)
+							await this.executeRoutine(routine as any, board)
 						}
 
 						// Update the routine
@@ -113,9 +117,19 @@ class RoutineController {
 		}, 5000)
 	}
 
-	public async executeRoutine(routine: any) {
+	public async executeRoutine(routine: any, board: any) {
 		if (routine.actions.notify.active) {
 			// Send a notification
+			EmailService.getInstance().sendEmail(
+				'Routine executed',
+				`
+				<p>Your routine has been executed.</p>
+				<p>Routine name: ${routine.name}</p>
+				<p>Board ID: ${routine.boardId}</p>
+				<p>Time: ${new Date().toLocaleString()}</p>
+				`,
+				board.user.email
+			)
 		}
 
 		if (routine.actions.water.active) {

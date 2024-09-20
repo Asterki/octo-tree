@@ -47,6 +47,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			where: {
 				user_id: (user as any).id,
 			},
+			include: {
+				user: true,
+			},
 		})
 
 		const routine = await prisma.routine.findFirst({
@@ -71,7 +74,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			})
 
 		// Add the routine to the pending actions queue
-		RoutineController.getInstance().executeRoutine(routine)
+		RoutineController.getInstance().executeRoutine(routine, board)
 
 		return res.status(200).send({
 			status: 'success',

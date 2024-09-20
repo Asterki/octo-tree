@@ -80,20 +80,20 @@ class Server {
 			'AZURE_VR_KEY',
 			'AZURE_OAI_ENDPOINT',
 			'AZURE_OAI_KEY',
-			'AZURE_OAI_API_VERSION',  // Added missing key
-			'AZURE_OAI_DEPLOYMENT',    // Added missing key
-			'AZURE_SA_ENDPOINT',       // Added missing key
-			'AZURE_SA_KEY',            // Added missing key
+			'AZURE_OAI_API_VERSION', // Added missing key
+			'AZURE_OAI_DEPLOYMENT', // Added missing key
+			'AZURE_SA_ENDPOINT', // Added missing key
+			'AZURE_SA_KEY', // Added missing key
 			'AZURE_PA_ENDPOINT',
 			'AZURE_PA_KEY',
 			'CLIENT_URL',
-			'DOMAIN',                  // Added missing key
-			'EMAIL_SECURITY_HOST',      // Added missing key
-			'EMAIL_SECURITY_PORT',      // Added missing key
-			'EMAIL_SECURITY_USER',      // Added missing key
-			'EMAIL_SECURITY_PASS',      // Added missing key
-		];
-		
+			'DOMAIN', // Added missing key
+			'EMAIL_SECURITY_HOST', // Added missing key
+			'EMAIL_SECURITY_PORT', // Added missing key
+			'EMAIL_SECURITY_USER', // Added missing key
+			'EMAIL_SECURITY_PASS', // Added missing key
+		]
+
 		for (const key of requiredKeys) {
 			if (!process.env[key]) {
 				const errorMessage = `Missing environment variable: ${key}`

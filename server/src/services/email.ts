@@ -38,7 +38,6 @@ class EmailService {
 				subject: subject,
 				html: html,
 			});
-			console.log(`Email sent to ${to} via ${transporter} transporter.`);
 		} catch (error) {
 			console.error(`Error sending email: ${error}`);
 		}
