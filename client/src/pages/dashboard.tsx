@@ -80,7 +80,7 @@ const Dashboard = () => {
 	const [currentChat, setCurrentChat] = React.useState([
 		{
 			author: 'Octo-Tree',
-			message: 'Hello! How can I help you today?',
+			message: t('dashboard.octoTreeFirstMessage'),
 		},
 	])
 
@@ -344,7 +344,7 @@ const Dashboard = () => {
                             className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2"
                             onClick={() => setImageAnalysis({ showing: false, result: {} })}
                         >
-                            Close
+                            {t('dashboard.close')}
                         </button>
                     </div>
                 </div>
@@ -445,7 +445,7 @@ const Dashboard = () => {
 						<input
 							type="text"
 							ref={aiQuestionInputRef}
-							placeholder="Enter your message"
+							placeholder={t('dashboard.enterYourMessage')}
 							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
 						<button

@@ -123,6 +123,9 @@
 		"couldNotUpdate": "Impossible de mettre à jour la routine."
 	},
 	"dashboard": {
+		"enterYourMessage": "Entrez votre message...",
+		"you": "Vous",
+		"octoTreeFirstMessage": "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
 		"close": "Fermer",
 		"send": "Envoyer",
 		"analysisResult": "Résultat de l'Analyse",
@@ -147,6 +150,7 @@
 		"delete": "Supprimer",
 		"addRoutine": "Gérer les Routines",
 		"execute": "Exécuter",
-		"noRoutines": "Aucune routine trouvée."
+		"noRoutines": "Aucune routine trouvée.",
+		"routineExecuted": "Routine exécutée avec succès."
 	}
 }

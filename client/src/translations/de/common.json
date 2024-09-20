@@ -124,6 +124,9 @@
 		"couldNotUpdate": "Routine konnte nicht aktualisiert werden."
 	},
 	"dashboard": {
+		"enterYourMessage": "Geben Sie Ihre Nachricht ein...",
+		"you": "Sie",
+		"octoTreeFirstMessage": "Hallo! Wie kann ich Ihnen heute helfen?",
 		"close": "Schließen",
 		"send": "Senden",
 		"analysisResult": "Analyseergebnis",
@@ -148,6 +151,7 @@
 		"delete": "Löschen",
 		"addRoutine": "Routinen Verwalten",
 		"execute": "Ausführen",
-		"noRoutines": "Keine Routinen gefunden."
+		"noRoutines": "Keine Routinen gefunden.",
+		"routineExecuted": "Routine erfolgreich ausgeführt."
 	}
 }

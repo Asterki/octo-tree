@@ -23,8 +23,9 @@ const int ledLightPin = 11;
 SocketIOclient socketIO; // Create an instance of the SocketIO client
 Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
 
-IPAddress clientIP(192, 168, 0, 15);
-IPAddress serverIP(192, 168, 0, 15);
+IPAddress clientIP(172, 212, 229, 131);
+IPAddress serverIP(172, 212, 229, 131);
+
 
 const int serverPort = 443;
 const String serverURL = "https://octo-tree.asterkionline.com";
@@ -163,9 +164,6 @@ void setup()
   Serial.begin(115200);
   digitalWrite(LED_BUILTIN, LOW);
 
-  // DEV ONLY, connect to a WiFi network
-  WiFi.begin("Fernando", "nacimiento2007");
-
   // Initialize I2C on GPIO8 (SDA) and GPIO9 (SCL)
   Wire.begin(sensorSDAPin, sensorSCLPin);
 
@@ -198,7 +196,7 @@ void setup()
 
   // SocketIO setup
   socketIO.setReconnectInterval(5000);
-  socketIO.beginSSL("octo-treee.azurewebsites.net", 443);
+  socketIO.begin("172.212.229.131", 3000);
   socketIO.onEvent(socketIOEvent);
 
   // Configure the pins

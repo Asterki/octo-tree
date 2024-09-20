@@ -123,6 +123,9 @@
 		"couldNotUpdate": "No se pudo actualizar la rutina."
 	},
 	"dashboard": {
+		"enterYourMessage": "Escribe tu mensaje...",
+		"you": "Tú",
+		"octoTreeFirstMessage": "¡Hola! ¿En qué puedo ayudarte hoy?",
 		"close": "Cerrar",
 		"send": "Enviar",
 		"analysisResult": "Resultado del Análisis",
@@ -147,6 +150,7 @@
 		"delete": "Eliminar",
 		"addRoutine": "Gestionar Rutinas",
 		"execute": "Ejecutar",
-		"noRoutines": "No se encontraron rutinas."
+		"noRoutines": "No se encontraron rutinas.",
+		"routineExecuted": "Rutina ejecutada con éxito."
 	}
 }
