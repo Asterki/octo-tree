@@ -26,8 +26,8 @@ Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
 IPAddress clientIP(192, 168, 0, 15);
 IPAddress serverIP(192, 168, 0, 15);
 
-const int serverPort = 3000;
-const String serverURL = "192.168.0.15";
+const int serverPort = 443;
+const String serverURL = "https://octo-tree.asterkionline.com";
 const String boardID = "123123123";
 const String boardKey = "123123123";
 
@@ -61,15 +61,10 @@ void handleEvent(const char *payload)
 
   if (eventName == "pump")
   {
-    int state = params["state"];
-    if (state == 1)
-    {
-      digitalWrite(pumpPin, HIGH);
-    }
-    else
-    {
-      digitalWrite(pumpPin, LOW);
-    }
+    int timeInSeconds = params["time"];
+    digitalWrite(pumpPin, HIGH);
+    delay(timeInSeconds * 1000);
+    digitalWrite(pumpPin, LOW);
   }
 
   if (eventName == "servo")
@@ -168,6 +163,9 @@ void setup()
   Serial.begin(115200);
   digitalWrite(LED_BUILTIN, LOW);
 
+  // DEV ONLY, connect to a WiFi network
+  WiFi.begin("Fernando", "nacimiento2007");
+
   // Initialize I2C on GPIO8 (SDA) and GPIO9 (SCL)
   Wire.begin(sensorSDAPin, sensorSCLPin);
 
@@ -199,8 +197,8 @@ void setup()
   digitalWrite(LED_BUILTIN, HIGH);
 
   // SocketIO setup
-  socketIO.setReconnectInterval(10000);
-  socketIO.begin(serverURL, serverPort);
+  socketIO.setReconnectInterval(5000);
+  socketIO.beginSSL("octo-treee.azurewebsites.net", 443);
   socketIO.onEvent(socketIOEvent);
 
   // Configure the pins

@@ -139,7 +139,7 @@ class RoutineController {
 				.getClient()
 				.to(`board_${routine.boardId}`)
 				.emit('pump', {
-					time: routine.actions.notify.amount,
+					time: routine.actions.water.amount,
 				})
 		}
 

@@ -62,6 +62,15 @@ class Server {
 			Logger.getInstance().info('Server started', true)
 
 			RoutineController.getInstance().loadToServer()
+
+			// Redirect all requests to the client
+			if (process.env.NODE_ENV !== 'development') {
+				this.app.get('*', (req, res) => {
+					res.sendFile(
+						path.join(__dirname, '../../client/dist/index.html')
+					)
+				})
+			}
 		} catch (error) {
 			Logger.getInstance().error(
 				`Failed to start server: ${(error as any).message}`,

@@ -10,7 +10,7 @@ import { z } from 'zod'
 
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	max: process.env.NODE_ENV === 'production' ? 3 : 10000, // limit each IP to 100 requests per windowMs
+	max: process.env.NODE_ENV === 'production' ? 30 : 10000, // limit each IP to 100 requests per windowMs
 	// store: new RedisStore({
 	// 	sendCommand: async (...args: string[]) =>
 	// 		(await RedisClient.getInstance())
