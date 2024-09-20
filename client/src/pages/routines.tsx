@@ -109,41 +109,43 @@ const Routines = () => {
 
 		try {
 			const newRoutine = {
-				name: 'New Routine',
-				execution: 'manual',
-				actions: {
-					notify: {
-						active: false,
-					},
-					rotatePanel: {
-						active: false,
-					},
-					water: {
-						active: false,
-						amount: 0,
-					},
-				},
-				automatedExecution: {
-					conditions: {
-						humidityBelow: {
+				routine: {
+					name: 'New Routine',
+					execution: 'manual',
+					actions: {
+						notify: {
 							active: false,
-							value: 0,
 						},
-						humidityExceeds: {
+						rotatePanel: {
 							active: false,
-							value: 0,
 						},
-						temperatureBelow: {
+						water: {
 							active: false,
-							value: 0,
-						},
-						temperatureExceeds: {
-							active: false,
-							value: 0,
+							amount: 0,
 						},
 					},
-					checkInterval: 180000,
-					nextExecutionInterval: new Date(Date.now() + 180000),
+					automatedExecution: {
+						conditions: {
+							humidityBelow: {
+								active: false,
+								value: 0,
+							},
+							humidityExceeds: {
+								active: false,
+								value: 0,
+							},
+							temperatureBelow: {
+								active: false,
+								value: 0,
+							},
+							temperatureExceeds: {
+								active: false,
+								value: 0,
+							},
+						},
+						checkInterval: 180000,
+						nextExecutionInterval: new Date(Date.now() + 180000).toISOString()
+					},
 				},
 			}
 
@@ -154,11 +156,9 @@ const Routines = () => {
 						: ''
 				}/api/routines/create`,
 				method: 'post',
-				data: {
-					routine: newRoutine,
-				},
+				data: newRoutine, // Directly send newRoutine
 				withCredentials: true,
-			})
+			});
 
 			await fetchRoutines()
 

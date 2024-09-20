@@ -33,7 +33,12 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 				execution: z.string(),
 				automatedExecution: z.object({
 					checkInterval: z.number(),
-					nextExecutionInterval: z.date(),
+					nextExecutionInterval: z.string().refine((dateStr) => {
+						const date = new Date(dateStr);
+						return !isNaN(date.getTime()); // Validate date
+					}, {
+						message: 'Invalid date format',
+					}),
 					conditions: z.object({
 						temperatureExceeds: z.object({
 							active: z.boolean(),
