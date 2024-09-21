@@ -97,31 +97,6 @@ class SocketServer {
 				}
 			)
 
-			socket.on('get_pending_actions', async (data) => {
-				// Verify the board ID and key
-				if (!data.board_id || !data.board_key) return
-
-				const board = prisma.board.findFirst({
-					where: {
-						id: data.board_id,
-					},
-				})
-
-				if (!board) return
-
-				// Compare the key using bcrypt
-				// if (!bcrypt.compareSync(data.key, board.sensorShareToken)) return // Commented out for now
-
-				// Get the pending actions
-				const actions = await prisma.triggeredActions.findMany({
-					where: {
-						boardId: data.board_id,
-					},
-				})
-
-				socket.emit('pending_actions', actions)
-			})
-
 			socket.on('get_sensor_data', (data) => {
 				const { userID, boardID } = data
 				if (!userID || !boardID) return
