@@ -5,6 +5,22 @@
 		"buttons": {
 			"getStarted": "Loslegen",
 			"dashboard": "Dashboard"
+		},
+		"characteristics": {
+			"title": "Octo-Tree Funktionen",
+			"description": "Entdecken Sie die fortschrittlichen Funktionen von Octo-Tree, die eine moderne landwirtschaftliche Automatisierung ermöglichen.",
+			"feature1": {
+				"title": "IoT-Gerätesteuerung",
+				"description": "Verwalten und steuern Sie entfernte Geräte wie Bewässerungssysteme, Atmosphärensensoren und Solarmodule über eine intuitive Weboberfläche."
+			},
+			"feature2": {
+				"title": "KI-Virtueller Assistent",
+				"description": "Interagieren Sie mit einem KI-gestützten Assistenten, der auf landwirtschaftlichen Daten trainiert ist, um Ratschläge zu Best Practices, Ernteempfehlungen und Lösungen für häufige Herausforderungen zu erhalten."
+			},
+			"feature3": {
+				"title": "Bilderkennung",
+				"description": "Nutzen Sie die Computer Vision, um Bilder zu analysieren und Bodentypen zu identifizieren oder potenzielle Schäden an Solarmodulen zu erkennen, was eine schnelle und genaue Diagnose ermöglicht."
+			}
 		}
 	},
 	"login": {

@@ -87,29 +87,44 @@ const HomePage = () => {
 					</p>
 
 					<div className="grid md:grid-cols-3 sm:grid-cols-1 gap-6">
-						<div className="bg-neutral-100 p-6 rounded-lg shadow-md">
+						<div className="bg-neutral-100 p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
 							<h3 className="text-2xl font-semibold mb-4">
 								{t('home.characteristics.feature1.title')}
 							</h3>
 							<p className="text-gray-700">
 								{t('home.characteristics.feature1.description')}
 							</p>
+							<img
+								src="/img/f1.png"
+								className='md:w-1/2 rounded-md text-center my-2 animate-pulse'
+								alt=""
+							/>
 						</div>
-						<div className="bg-neutral-100 p-6 rounded-lg shadow-md">
+						<div className="bg-neutral-100 p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
 							<h3 className="text-2xl font-semibold mb-4">
 								{t('home.characteristics.feature2.title')}
 							</h3>
 							<p className="text-gray-700">
 								{t('home.characteristics.feature2.description')}
 							</p>
+							<img
+								src="/img/f2.png"
+								className='md:w-1/2 rounded-md text-center my-2 animate-pulse'
+								alt=""
+							/>
 						</div>
-						<div className="bg-neutral-100 p-6 rounded-lg shadow-md">
+						<div className="bg-neutral-100 p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
 							<h3 className="text-2xl font-semibold mb-4">
 								{t('home.characteristics.feature3.title')}
 							</h3>
 							<p className="text-gray-700">
 								{t('home.characteristics.feature3.description')}
 							</p>
+							<img
+								src="/img/f3.png"
+								className='md:w-1/2 rounded-md text-center my-2 animate-pulse bg-white'
+								alt=""
+							/>
 						</div>
 					</div>
 				</section>

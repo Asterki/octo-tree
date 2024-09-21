@@ -28,7 +28,6 @@ class SocketServer {
 			},
 		})
 
-		let thing = 0
 		this.io.on('connection', (socket) => {
 			// Register the board when it connects
 			socket.on(

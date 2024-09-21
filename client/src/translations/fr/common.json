@@ -5,6 +5,22 @@
 		"buttons": {
 			"getStarted": "Commencer",
 			"dashboard": "Tableau de Bord"
+		},
+		"characteristics": {
+			"title": "Caractéristiques d'Octo-Tree",
+			"description": "Découvrez les fonctionnalités avancées d'Octo-Tree qui permettent l'automatisation agricole moderne.",
+			"feature1": {
+				"title": "Contrôle des Dispositifs IoT",
+				"description": "Gérez et contrôlez des dispositifs distants tels que les systèmes d'irrigation, les capteurs atmosphériques et les panneaux solaires via une interface web intuitive."
+			},
+			"feature2": {
+				"title": "Assistant Virtuel IA",
+				"description": "Interagissez avec un assistant basé sur l'IA, formé sur des données agricoles, pour obtenir des conseils sur les meilleures pratiques, des recommandations de cultures et des solutions aux défis courants."
+			},
+			"feature3": {
+				"title": "Reconnaissance d'Images",
+				"description": "Utilisez la vision par ordinateur pour analyser des images et identifier les types de sol ou détecter des dommages potentiels sur les panneaux solaires, permettant ainsi des diagnostics rapides et précis."
+			}
 		}
 	},
 	"login": {
