@@ -410,7 +410,7 @@ const Dashboard = () => {
 								icon={faPlantWilt}
 								className="text-3xl"
 							/>
-							Detect Soil Type
+							{t('dashboard.detectSoilType')}
 						</button>
 						<button
 							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600 flex flex-col items-center justify-center"
@@ -420,7 +420,7 @@ const Dashboard = () => {
 								icon={faSolarPanel}
 								className="text-3xl"
 							/>
-							Detect Solar Panel Damages
+							{t("dashboard.detectSolarPanelDamages")}
 						</button>
 					</div>
 				</section>

@@ -145,6 +145,8 @@
 		"updateEvery": "Aktualisierung Alle",
 		"setInterval": "Intervall Festlegen",
 		"temperature": "Temperatur",
+		"detectSoilType": "Bodentyp Erkennen",
+		"detectSolarPanelDamages": "Solarpanel-Schäden Erkennen",
 		"humidity": "Luftfeuchtigkeit",
 		"currentRoutines": "Aktuelle Routinen",
 		"edit": "Bearbeiten",

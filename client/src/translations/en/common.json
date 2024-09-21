@@ -160,6 +160,8 @@
 		"updateEvery": "Update Every",
 		"setInterval": "Set Interval",
 		"temperature": "Temperature",
+		"detectSoilType": "Detect Soil Type",
+		"detectSolarPanelDamages": "Detect Solar Panel Damages",
 		"humidity": "Humidity",
 		"currentRoutines": "Current Routines",
 		"edit": "Edit",

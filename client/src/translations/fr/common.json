@@ -132,6 +132,8 @@
 		"welcome": "Bienvenue sur le Tableau de Bord Octo-Tree",
 		"aiChatTitle": "Chat IA Octo-Tree",
 		"aiChatDescription": "Discutez avec Octo-Tree pour obtenir de l'aide avec votre jardin et gérer vos routines !",
+		"detectSoilType": "Détecter le Type de Sol",
+		"detectSolarPanelDamages": "Détecter les Dommages sur le Panneau Solaire",
 		"clearChat": "Effacer le Chat",
 		"connectionStatus": "État de la Connexion",
 		"connected": "Connecté au serveur",
