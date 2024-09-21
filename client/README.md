@@ -1,67 +1,82 @@
-# Vite React App with Redux Toolkit, Axios, and Socket.IO
+# Octo-Tree Frontend
 
-This project is a Vite-based React application that utilizes Redux Toolkit for state management, Axios for API requests, and Socket.IO for real-time communication.
+This is the frontend for the Octo-Tree IoT system, built using **React** with **TypeScript**. It communicates with the backend server via the API, allowing for real-time data display and remote control of IoT devices.
 
 ## Features
 
-- **Vite**: Fast and efficient development server and build tool.
-- **React**: Modern JavaScript library for building user interfaces.
-- **Redux Toolkit**: Simplified Redux development with integrated tools.
-- **Axios**: Promise-based HTTP client for the browser and Node.js.
-- **Socket.IO**: Real-time bidirectional event-based communication.
-
-## Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-
-- Node.js (v14.x or higher) and npm installed on your machine.
-- The server code (located in a separate folder outside this project) must be running.
-- Environment variables must be set.
+- **Real-Time Device Monitoring**: Displays sensor data such as temperature, humidity, pressure, and light levels.
+- **Remote Control**: Send commands to IoT devices such as turning on/off LEDs, activating water pumps, and adjusting solar panel servos.
+- **WebSocket Communication**: Enables real-time updates for device state changes and sensor data.
+- **Simple Configuration**: Utilizes a single environment variable for easy setup.
 
 ## Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Asterki/octo-tree.git
-   cd vite-react-app
-   ```
+### Prerequisites
 
-2. **Install dependencies:**
+- **Node.js**: Ensure Node.js and npm are installed on your machine.
+
+### Environment Variable
+
+Create a `.env` file at the root of the project with the following content:
+
+```bash
+VITE_API_URL="http://localhost:3000"
+```
+
+This points to the backend server, where real-time updates and sensor data are handled.
+
+### Steps
+
+1. Clone or download this repository.
+2. Install the dependencies:
+
    ```bash
    npm install
    ```
 
-3. **Set up environment variables:**
-   
-   Create a `.env` file in the root of the project and add the necessary environment variables.
+3. Run the application:
 
-   Example:
-   ```bash
-   REACT_APP_API_URL=http://localhost:5000/api
-   REACT_APP_SOCKET_URL=http://localhost:5000
-   ```
-
-4. **Start the development server:**
    ```bash
    npm run dev
    ```
 
-5. **Run the server (outside of this folder):**
-
-   Make sure your server is running, as the app depends on it for API requests and Socket.IO communication.
-
-6. **Build for production:**
-   ```bash
-   npm run build
-   ```
-
-7. **Preview the production build:**
-   ```bash
-   npm run preview
-   ```
+4. Access the app at `http://localhost:5173` (default port for Vite).
 
 ## Usage
 
-- The application will be running on `http://localhost:3000` by default.
-- Ensure the server is running on the specified URL in the environment variables for successful API requests and real-time communication.
+Once the app is running, it will connect to the backend server using the API URL defined in the `.env` file. You can view live data from the sensors and control the IoT devices.
 
+### Pages
+
+- **Dashboard**: Displays real-time sensor data and controls for IoT devices such as the LED, water pump, and solar panel servos.
+- **Routines**: Manage device configurations and set thresholds for automated controls.
+
+### Example Interactions
+
+- **View Sensor Data**: The dashboard automatically updates with the latest readings for temperature, humidity, pressure, and light levels.
+- **Control Devices**: Toggle the LED, run the water pump, or adjust the solar panel's servo motor.
+
+## Technologies
+
+- **React**: User interface development.
+- **TypeScript**: Type-safe development.
+- **Vite**: For a fast development environment.
+- **Socket.IO**: Real-time communication with the backend.
+- **Chart.js**: Showing real-time statistics.
+
+## API
+
+All API requests are made to the backend defined in the `VITE_API_URL` environment variable. Ensure that the backend is running and accessible.
+
+### Example API Endpoints
+
+- **GET /sensors**: Retrieve current sensor readings.
+- **POST /control**: Send control commands for actuators like the LED or water pump.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Contact
+
+For any questions or issues, feel free to contact the [Octo-Tree project](https://asterki.tech).

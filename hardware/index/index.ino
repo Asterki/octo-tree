@@ -9,10 +9,10 @@
 
 
 // Define the pins for the sensors (you might not need these if you're using BME280)
-const int humidityPin = 35;
+const int humidityPin = 17;
 const int lightPin1 = 4;
 const int lightPin2 = 16;
-const int servoPin = 16;
+const int servoPin = 10;
 const int pumpPin = 15;
 const int soilHumidityPin = 7;
 const int sensorSDAPin = 8;
