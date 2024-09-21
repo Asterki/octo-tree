@@ -59,7 +59,7 @@ const Routines = () => {
 	const updateRoutine = async () => {
 		if (selectedRoutine === -1) return
 		const routine = routines[selectedRoutine]
-		
+
 		try {
 			await axios({
 				url: `${
@@ -150,8 +150,10 @@ const Routines = () => {
 								value: 0,
 							},
 						},
-						checkInterval: 180000,
-						nextExecutionInterval: new Date(Date.now() + 180000).toISOString()
+						checkInterval: 10,
+						nextExecutionInterval: new Date(
+							Date.now() + (10*1000*60) // 10 minutes
+						).toISOString(),
 					},
 				},
 			}
@@ -165,7 +167,7 @@ const Routines = () => {
 				method: 'post',
 				data: newRoutine, // Directly send newRoutine
 				withCredentials: true,
-			});
+			})
 
 			await fetchRoutines()
 
@@ -210,7 +212,7 @@ const Routines = () => {
 			<Navbar />
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch justify-center md:mt-16 mt-32">
-				<div className="w-2/12 py-4 bg-neutral-200 dark:bg-gray-700 dark:text-white min-h-screen box-border border-r-2 border-neutral-300 dark:border-gray-600 flex flex-col itmes-center">
+				<div className="border-b-2 md:border-b-0 md:w-2/12 w-full h-64 overflow-y-scroll py-4 bg-neutral-200 dark:bg-gray-700 dark:text-white md:min-h-screen box-border border-r-2 border-neutral-300 dark:border-gray-600 flex flex-col itmes-center">
 					<h1 className="text-xl font-bold px-2">
 						{t('routines.currentRoutines')}
 					</h1>
@@ -241,7 +243,7 @@ const Routines = () => {
 				</div>
 
 				{selectedRoutine === -1 && (
-					<div className="w-10/12 py-4 min-h-screen">
+					<div className="md:w-10/12 w-full py-4 min-h-screen">
 						<h1 className="text-xl font-bold px-2">
 							{t('routines.selectRoutine')}
 						</h1>
