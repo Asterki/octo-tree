@@ -355,12 +355,12 @@ const Dashboard = () => {
 					{user && (
 						<p className="text-2xl">
 							{t('dashboard.welcome')}{' '}
-							<b>{(user as { email: string }).email}</b>
+							<b className="md:block hidden">{(user as { email: string }).email}</b>
 						</p>
 					)}
 				</div>
 
-				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white dark:bg-gray-800 dark:text-white p-4 md:w-1/3">
+				<section className="w-11/12 flex flex-col items-center justify-start gap-2 rounded-md shadow-lg bg-white dark:bg-gray-800 dark:text-white p-4 md:w-1/3 md:my-0 my-2">
 					<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
 						{t('dashboard.connectionStatus')}
 					</h1>
@@ -403,22 +403,24 @@ const Dashboard = () => {
 
 					<div className="flex gap-2">
 						<button
-							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600"
+							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600 flex flex-col items-center justify-center"
 							onClick={() => soilImageInputRef.current?.click()}
 						>
 							<FontAwesomeIcon
 								icon={faPlantWilt}
 								className="text-3xl"
 							/>
+							Detect Soil Type
 						</button>
 						<button
-							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600"
+							className="h-32 w-1/2 rounded-md bg-neutral-200 dark:bg-gray-600 flex flex-col items-center justify-center"
 							onClick={() => panelImageInputRef.current?.click()}
 						>
 							<FontAwesomeIcon
 								icon={faSolarPanel}
 								className="text-3xl"
 							/>
+							Detect Solar Panel Damages
 						</button>
 					</div>
 				</section>
@@ -432,7 +434,7 @@ const Dashboard = () => {
 							{t('dashboard.aiChatDescription')}
 						</p>
 					</div>
-					<div className="gap-2 w-full h-96 overflow-y-scroll overflow-x-hidden px-32 my-2">
+					<div className="gap-2 w-full h-96 overflow-y-scroll overflow-x-hidden md:px-32 px-2 my-2">
 						{currentChat.map((chat, index) => (
 							<div key={index} className="gap-2 my-2">
 								<p>
@@ -441,7 +443,7 @@ const Dashboard = () => {
 							</div>
 						))}
 					</div>
-					<div className="flex items-center justify-center w-full gap-2 px-32">
+					<div className="flex items-center justify-center w-full gap-2 md:px-32 px-2">
 						<input
 							type="text"
 							ref={aiQuestionInputRef}
@@ -449,13 +451,13 @@ const Dashboard = () => {
 							className="p-2 border border-neutral-200 dark:border-gray-600 dark:bg-gray-600 rounded-md w-full focus:border-emerald-600 dark:focus:border-emerald-500 transition-all dark:outline-emerald-500 outline-emerald-600"
 						/>
 						<button
-							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
+							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12 md:w-3/12"
 							onClick={askQuestionToAI}
 						>
 							{t('dashboard.send')}
 						</button>
 						<button
-							className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12"
+							className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md my-2 w-2/12 md:w-3/12"
 							onClick={() => setCurrentChat([])}
 						>
 							{t('dashboard.clearChat')}
