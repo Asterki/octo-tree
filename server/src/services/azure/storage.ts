@@ -17,7 +17,6 @@ class AzureStorageService {
 		this.blobServiceClient = BlobServiceClient.fromConnectionString(
 			this.connectionString
 		)
-		this.printContainers()
 	}
 
 	public static getInstance() {
@@ -35,6 +34,9 @@ class AzureStorageService {
 	}
 
 	async createContainer(containerName: string): Promise<void> {
+		// First check if the container already exists
+		if (this.blobServiceClient.getContainerClient(containerName)) return
+
 		const containerClient =
 			this.blobServiceClient.getContainerClient(containerName)
 		await containerClient.create()
