@@ -152,7 +152,7 @@ const Routines = () => {
 						},
 						checkInterval: 10,
 						nextExecutionInterval: new Date(
-							Date.now() + (10*1000*60) // 10 minutes
+							Date.now() + 10 * 1000 * 60 // 10 minutes
 						).toISOString(),
 					},
 				},
@@ -267,6 +267,30 @@ const Routines = () => {
 									setRoutines(newRoutines)
 								}}
 							/>
+						</div>
+
+						<br />
+
+						<h1 className="text-xl font-bold px-2">
+							{t('routines.active')}
+						</h1>
+						<div className="px-2 flex gap-2 items-center justify-start">
+							<input
+								type="checkbox"
+								checked={routines[selectedRoutine].active}
+								onChange={(e) => {
+									const newRoutines = [...routines]
+									newRoutines[selectedRoutine].active =
+										e.target.checked
+									setRoutines(newRoutines)
+								}}
+								className="dark:bg-gray-600 dark:text-white"
+							/>
+							<p>
+								{routines[selectedRoutine].active
+									? t('routines.active')
+									: t('routines.inactive')}
+							</p>
 						</div>
 
 						<br />

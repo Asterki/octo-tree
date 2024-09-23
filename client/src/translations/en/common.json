@@ -106,6 +106,8 @@
 		}
 	},
 	"routines": {
+		"active": "Active",
+		"inactive": "Inactive",
 		"currentRoutines": "Current Routines",
 		"addRoutine": "Add Routine",
 		"selectRoutine": "Select a Routine to begin",
