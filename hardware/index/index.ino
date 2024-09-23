@@ -62,10 +62,15 @@ void handleEvent(const char *payload)
 
   if (eventName == "pump")
   {
-    int timeInSeconds = params["time"];
-    digitalWrite(pumpPin, HIGH);
-    delay(timeInSeconds * 1000);
-    digitalWrite(pumpPin, LOW);
+    // Don't enable the pump if the soil humidity is too high
+    int soilHumidity = analogRead(soilHumidityPin);
+    if (soilHumidity < 1000)
+    {
+      int time = params["time"];
+      digitalWrite(pumpPin, HIGH);
+      delay(time * 1000);
+      digitalWrite(pumpPin, LOW);
+    }
   }
 
   if (eventName == "servo")
