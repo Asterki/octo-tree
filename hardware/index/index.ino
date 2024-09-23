@@ -70,6 +70,24 @@ void handleEvent(const char *payload)
       digitalWrite(pumpPin, HIGH);
       delay(time * 1000);
       digitalWrite(pumpPin, LOW);
+    } else {
+      // Send a message to the server saying the soil humidity is too high
+      DynamicJsonDocument doc(1024);
+      JsonArray array = doc.to<JsonArray>();
+
+      array.add("soil_humidity_high");
+
+      JsonObject param1 = array.createNestedObject();
+      param1["board_id"] = boardID;
+      param1["board_key"] = boardKey;
+
+      String output;
+
+      serializeJson(doc, output);
+
+      // Send event
+      socketIO.sendEVENT(output);
+      Serial.println(output);
     }
   }
 

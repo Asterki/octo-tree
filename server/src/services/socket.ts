@@ -3,6 +3,7 @@ import { createServer } from 'http'
 
 import bcrypt from 'bcrypt'
 import { PrismaClient } from '@prisma/client'
+import EmailService from './email'
 
 const prisma = new PrismaClient()
 
@@ -117,6 +118,46 @@ class SocketServer {
 							data: board.sensorData,
 						})
 					})
+			})
+
+			socket.on('soil_humidity_high', async (data) => {
+				const { board_id, board_key } = data
+				if (!board_id || !board_key) return
+
+				let board = await prisma.board.findFirst({
+					where: {
+						id: board_id,
+					},
+					include: {
+						user: true,
+					},
+				})
+
+				if (!board) return
+
+				// Compare the key using bcrypt
+				// if (!bcrypt.compareSync(data.key, board.sensorShareToken)) return
+
+				// Get the board's user
+				const user = await prisma.user.findFirst({
+					where: {
+						id: board.user_id!,
+					},
+				})
+
+				if (!user) return
+
+				// Send the notification
+				EmailService.getInstance().sendEmail(
+					'High soil humidity',
+					`
+					<p>The soil humidity is too high.</p>
+					<p>Board ID: ${board_id}</p>
+					<p>Time: ${new Date().toLocaleString()}</p>
+					`,
+					user.email
+				)
+			
 			})
 		})
 
