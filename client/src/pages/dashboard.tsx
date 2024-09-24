@@ -170,6 +170,8 @@ const Dashboard = () => {
 
 				reader.readAsDataURL(file as Blob)
 
+				console.log(response.data.analysis)
+
 				setImageAnalysis({
 					showing: true,
 					confidence: response.data.analysis[0].confidence,
@@ -366,8 +368,8 @@ const Dashboard = () => {
 			<Navbar />
 
 			{imageAnalysis.showing && (
-				<div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
-					<div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4">
+				<div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50 ">
+					<div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4 md:w-1/2 w-11/12">
 						<h1 className="text-2xl text-center font-bold">
 							{t('dashboard.analysisResult')}
 						</h1>
