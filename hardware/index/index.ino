@@ -12,7 +12,6 @@
 const int humidityPin = 17;
 const int lightPin1 = 4;
 const int lightPin2 = 16;
-const int servoPin = 10;
 const int pumpPin = 15;
 const int soilHumidityPin = 7;
 const int sensorSDAPin = 8;
@@ -22,12 +21,13 @@ const int ledLightPin = 11;
 
 SocketIOclient socketIO; // Create an instance of the SocketIO client
 Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
+Servo servo1; // Create the servo object
 
 IPAddress clientIP(172, 212, 229, 131);
 IPAddress serverIP(172, 212, 229, 131);
 
 
-const int serverPort = 443;
+const int serverPort = 3000;
 const String serverURL = "https://octo-tree.asterkionline.com";
 const String boardID = "123123123";
 const String boardKey = "123123123";
@@ -99,11 +99,19 @@ void handleEvent(const char *payload)
 
     if (light1 > light2)
     {
-    // panelServo.write(panelServoPin, 0);
+      for (int posDegrees = 0; posDegrees <= 180; posDegrees++) {
+        servo1.write(posDegrees);
+        Serial.println(posDegrees);
+        delay(20);
+      }
     }
     else
     {
-    // panelServo.write(panelServoPin, 180);
+      for (int posDegrees = 180; posDegrees >= 0; posDegrees--) {
+        servo1.write(posDegrees);
+        Serial.println(posDegrees);
+        delay(20);
+      }
     }
   }
 }
@@ -229,7 +237,7 @@ void setup()
   pinMode(lightPin1, INPUT);
   pinMode(lightPin2, INPUT);
   pinMode(soilHumidityPin, INPUT);
-  //panelServo.attach(servoPin);
+  servo1.attach(panelServoPin);
 }
 
 unsigned long messageTimestamp = 0;
@@ -255,6 +263,7 @@ void loop()
     param1["temperature"] = bme.readTemperature();
     param1["humidity"] = bme.readHumidity();
     param1["pressure"] = bme.readPressure() / 100.0F;
+    param1["soil_humidity"] = analogRead(soilHumidityPin);
     param1["light1"] = analogRead(lightPin1);
     param1["light2"] = analogRead(lightPin2);
     param1["board_id"] = boardID;
