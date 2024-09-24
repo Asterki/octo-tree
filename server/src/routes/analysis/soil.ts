@@ -82,9 +82,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 		const buffer = Buffer.from(file.toString(), 'base64')
 		const storage = AzureStorageService.getInstance()
-		await storage.createContainer('soil-images')
+		await storage.createContainer('uploads')
 		const url = await storage.uploadFile(
-			'soil-images',
+			'uploads',
 			`${imageID}.png`,
 			rawData
 		)

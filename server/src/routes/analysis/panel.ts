@@ -83,9 +83,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 		// Save the image
 		const storage = AzureStorageService.getInstance()
-		await storage.createContainer('soil-images')
+		await storage.createContainer('uploads')
 		const url = await storage.uploadFile(
-			'panel-images',
+			'uploads',
 			`${imageID}.png`,
 			rawData
 		)
