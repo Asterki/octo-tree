@@ -142,6 +142,7 @@
 	"dashboard": {
 		"analysis": "Analyse",
 		"confidence": "Vertrauen",
+		"description": "Beschreibung",
 		"imgres-electrical": "Elektrischer Schaden",
 		"imgres-electrical-desc": "Elektrischer Schaden wurde an Ihrem Solarpanel festgestellt, eine sofortige Reparatur ist erforderlich.",
 		"imgres-physical": "Physischer Schaden",

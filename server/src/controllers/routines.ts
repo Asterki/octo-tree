@@ -143,12 +143,14 @@ class RoutineController {
 				})
 		}
 
+		console.log(routine.actions)
+
 		if (routine.actions.rotatePanel.active) {
 			// Rotate the panel
 			this.socket
 				.getClient()
 				.to(`board_${routine.boardId}`)
-				.emit('rotate_panel', {
+				.emit('servo', {
 					state: 1,
 				})
 		}

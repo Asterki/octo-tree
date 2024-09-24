@@ -141,6 +141,7 @@
 	"dashboard": {
 		"analysis": "Análisis",
 		"confidence": "Confianza",
+		"description": "Descripción",
 		"imgres-electrical": "Daño Eléctrico",
 		"imgres-electrical-desc": "Se ha detectado un daño eléctrico en su panel solar, se requiere una reparación inmediata.",
 		"imgres-physical": "Daño Físico",

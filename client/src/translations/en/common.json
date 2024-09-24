@@ -143,6 +143,7 @@
 	"dashboard": {
 		"analysis": "Analysis",
 		"confidence": "Confidence",
+		"description": "Description",
 		"imgres-electrical": "Electrical Damage",
 		"imgres-electrical-desc": "Electrical damage has been detected on your solar panel, immediate repair is required.",
 		"imgres-physical": "Physical Damage",

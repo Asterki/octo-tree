@@ -130,6 +130,11 @@ const Dashboard = () => {
 		const input = type == 'soil' ? soilImageInputRef : panelImageInputRef
 		const file = (input.current as HTMLInputElement).files?.[0]
 
+		// Check if there's a file
+		if (!file) {
+			return
+		}
+
 		const formData = new FormData()
 		formData.append(`${type}image`, file as Blob)
 
@@ -170,8 +175,6 @@ const Dashboard = () => {
 
 				reader.readAsDataURL(file as Blob)
 
-				console.log(response.data.analysis)
-
 				setImageAnalysis({
 					showing: true,
 					confidence: response.data.analysis[0].confidence,
@@ -182,7 +185,10 @@ const Dashboard = () => {
 						language.dashboard[
 							`imgres-${response.data.analysis[0].name}-desc`
 						],
-				})
+				});
+
+				// Clear the file input
+				(input.current as HTMLInputElement).value = '';
 			})
 	}
 
@@ -386,7 +392,7 @@ const Dashboard = () => {
 							{t('dashboard.confidence')})
 							<br />
 							<br />
-							<b>Description:</b>{' '}
+							<b>{t('dashboard.description')}:</b>{' '}
 							{imageAnalysis.description}
 						</p>
 

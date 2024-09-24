@@ -141,6 +141,7 @@
 	"dashboard": {
 		"analysis": "Analyse",
 		"confidence": "Confiance",
+		"description": "Description",
 		"imgres-electrical": "Dommage Électrique",
 		"imgres-electrical-desc": "Un dommage électrique a été détecté sur votre panneau solaire, une réparation immédiate est nécessaire.",
 		"imgres-physical": "Dommage Physique",
