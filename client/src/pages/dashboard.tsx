@@ -71,10 +71,17 @@ const Dashboard = () => {
 		content: '',
 	})
 
-    const [imageAnalysis, setImageAnalysis] = React.useState({
-        showing: false,
-        result: {}
-    })
+	const [imageAnalysis, setImageAnalysis] = React.useState<{
+		showing: boolean
+		confidence: number
+		name: string
+		description: string
+	}>({
+		showing: false,
+		confidence: 0,
+		name: '',
+		description: '',
+	})
 
 	const [routines, setRoutines] = React.useState<Routine[]>([])
 	const [currentChat, setCurrentChat] = React.useState([
@@ -93,6 +100,7 @@ const Dashboard = () => {
 	const panelImageInputRef = React.useRef<HTMLInputElement>(null)
 	const soilImageInputRef = React.useRef<HTMLInputElement>(null)
 	const aiQuestionInputRef = React.useRef<HTMLInputElement>(null)
+	const analysisResultImageRef = React.useRef<HTMLImageElement>(null)
 
 	const executeRoutine = async (routineID: number) => {
 		try {
@@ -140,11 +148,39 @@ const Dashboard = () => {
 					withCredentials: true,
 				}
 			)
-			.then((response) => {
-                setImageAnalysis({
-                    showing: true,
-                    result: response.data.result,
-                })
+			.then(async (response) => {
+				// Load the language variables because i18 only supports lazy loading
+				const languages = {
+					en: await import('../translations/en/common.json'),
+					es: await import('../translations/es/common.json'),
+					fr: await import('../translations/fr/common.json'),
+					de: await import('../translations/de/common.json'),
+				}
+
+				const language =
+					// @ts-expect-error ewjqioejqwioe
+					languages[navigator!.language!.split('-')![0]!]!
+
+				// Load the image in the analysis result
+				const reader = new FileReader()
+				reader.onload = () => {
+					analysisResultImageRef.current!.src =
+						reader.result as string
+				}
+
+				reader.readAsDataURL(file as Blob)
+
+				setImageAnalysis({
+					showing: true,
+					confidence: response.data.analysis[0].confidence,
+					name: language.dashboard[
+						`imgres-${response.data.analysis[0].name}`
+					],
+					description:
+						language.dashboard[
+							`imgres-${response.data.analysis[0].name}-desc`
+						],
+				})
 			})
 	}
 
@@ -329,32 +365,54 @@ const Dashboard = () => {
 			{/* Navbar */}
 			<Navbar />
 
-            {imageAnalysis.showing && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center">
-                    <div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4">
-                        <h1 className="text-2xl text-center font-bold">
-                            {t('dashboard.analysisResult')}
-                        </h1>
-                        <p>
-                            {/* <b>Analysis:</b> {imageAnalysis.result.soil} */}
-                        </p>
+			{imageAnalysis.showing && (
+				<div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+					<div className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-4">
+						<h1 className="text-2xl text-center font-bold">
+							{t('dashboard.analysisResult')}
+						</h1>
+						<p>
+							<img
+								src=""
+								ref={analysisResultImageRef}
+								alt=""
+								className="w-full h-96 object-cover rounded-md"
+							/>
+							<b>{t('dashboard.analysis')}:</b>{' '}
+							{imageAnalysis.name} (
+							{(imageAnalysis.confidence * 100).toFixed(2)}%{' '}
+							{t('dashboard.confidence')})
+							<br />
+							<br />
+							<b>Description:</b>{' '}
+							{imageAnalysis.description}
+						</p>
 
-                        <button
-                            className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2"
-                            onClick={() => setImageAnalysis({ showing: false, result: {} })}
-                        >
-                            {t('dashboard.close')}
-                        </button>
-                    </div>
-                </div>
-            )}
+						<button
+							className="bg-emerald-600 text-white px-4 py-2 rounded-md shadow-md my-2 text-center"
+							onClick={() =>
+								setImageAnalysis({
+									showing: false,
+									confidence: 0,
+									name: '',
+									description: '',
+								})
+							}
+						>
+							{t('dashboard.close')}
+						</button>
+					</div>
+				</div>
+			)}
 
 			<main className="flex md:flex-row md:flex-wrap flex-col items-center md:items-stretch gap-2 justify-center md:mt-16 mt-32 py-8">
 				<div className="w-full text-center">
 					{user && (
 						<p className="text-2xl">
 							{t('dashboard.welcome')}{' '}
-							<b className="md:block hidden">{(user as { email: string }).email}</b>
+							<b className="md:block hidden">
+								{(user as { email: string }).email}
+							</b>
 						</p>
 					)}
 				</div>
@@ -419,7 +477,7 @@ const Dashboard = () => {
 								icon={faSolarPanel}
 								className="text-3xl"
 							/>
-							{t("dashboard.detectSolarPanelDamages")}
+							{t('dashboard.detectSolarPanelDamages')}
 						</button>
 					</div>
 				</section>
@@ -427,7 +485,7 @@ const Dashboard = () => {
 				<section className="w-11/12 bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg p-2 my-2 md:w-[calc(91.66%+0.6rem)]">
 					<div>
 						<h1 className="text-slate-700 dark:text-neutral-200 text-2xl text-center font-bold">
-						{t('dashboard.aiChatTitle')}
+							{t('dashboard.aiChatTitle')}
 						</h1>
 						<p className="text-center">
 							{t('dashboard.aiChatDescription')}
