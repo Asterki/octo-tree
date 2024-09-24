@@ -7,7 +7,7 @@ import { rateLimit } from 'express-rate-limit'
 // import RedisClient from '../../services/redis'
 
 import AzureStorageService from '../../services/azure/storage'
-import SoilAnalysisService from '../../services/azure/soil_analysis'
+import ComputerVisionService from '../../services/azure/computervision'
 import { v4 as uuidv4 } from 'uuid'
 
 import { NextFunction, Request, Response } from 'express'
@@ -90,8 +90,8 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		)
 
 		// Analyze the image
-		const analysis = SoilAnalysisService.getInstance()
-		const result = await analysis.analyzeImage(url)
+		const analysis = ComputerVisionService.getInstance()
+		const result = await analysis.analyzeImage('soil', url)
 
 		// Save the analysis to the cache
 		// await cache.set(

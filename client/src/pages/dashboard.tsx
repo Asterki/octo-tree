@@ -119,7 +119,6 @@ const Dashboard = () => {
 	}
 
 	const uploadImage = (type: 'soil' | 'panel') => {
-		setRoutines([])
 		const input = type == 'soil' ? soilImageInputRef : panelImageInputRef
 		const file = (input.current as HTMLInputElement).files?.[0]
 

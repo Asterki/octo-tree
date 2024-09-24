@@ -7,7 +7,7 @@ import { rateLimit } from 'express-rate-limit'
 // import RedisClient from '../../services/redis'
 
 import AzureStorageService from '../../services/azure/storage'
-import PanelAnalysisService from '../../services/azure/panel_analysis'
+import ComputerVisionService from '../../services/azure/computervision'
 import { v4 as uuidv4 } from 'uuid'
 
 import { NextFunction, Request, Response } from 'express'
@@ -46,9 +46,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 		// return console.log(data.fields)
 
-		if (!data.files.soilimage)
+		if (!data.files.panelimage)
 			return res.status(400).json({ message: 'bad-request' })
-		let file = data.files.soilimage[0]
+		let file = data.files.panelimage[0]
 
 		// Check if the filename is on the cache
 		// const cache = (await RedisClient.getInstance()).getClient()
@@ -91,8 +91,8 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 		)
 
 		// Analyze the image
-		const analysis = PanelAnalysisService.getInstance()
-		const result = await analysis.analyzeImage(url)
+		const analysis = ComputerVisionService.getInstance()
+		const result = await analysis.analyzeImage('panel', url)
 
 		// Save the analysis to the cache
 		// await cache.set(
@@ -112,7 +112,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 			url: url,
 		})
 	} catch (err) {
-		console.log(err)
+		console.log(err as any)
 		return res.status(500).send({
 			status: 'error',
 		})
