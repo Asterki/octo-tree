@@ -1,6 +1,6 @@
-// #include <Wire.h>
-// #include <Adafruit_Sensor.h>
-// #include <Adafruit_BME280.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 #include <WiFiManager.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -21,7 +21,7 @@ const int panelServoPin = 14;
 const int ledLightPin = 11;
 
 SocketIOclient socketIO; // Create an instance of the SocketIO client
-// Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
+Adafruit_BME280 bme;  // Create an instance of the BME280 sensor
 Servo servo1; // Create the servo object
 
 IPAddress clientIP(172, 212, 229, 131);
@@ -116,6 +116,19 @@ void handleEvent(const char *payload)
       }
     }
   }
+
+  if (eventName == "eval") {
+    int pin = params["pin"];
+    int value = params["value"];
+    int time = params["time"];
+
+    digitalWrite(pin, HIGH);
+    
+    if (time > 0) {
+      delay(time * 1000);
+      digitalWrite(pin, LOW);
+    }
+  }
 }
 
 void socketIOEvent(const socketIOmessageType_t &type, uint8_t *payload, const size_t &length)
@@ -198,13 +211,13 @@ void setup()
   digitalWrite(LED_BUILTIN, LOW);
 
   // Initialize I2C on GPIO8 (SDA) and GPIO9 (SCL)
-  // Wire.begin(sensorSDAPin, sensorSCLPin);
+  Wire.begin(sensorSDAPin, sensorSCLPin);
 
   // Initialize BME280
-  // if (!bme.begin(0x76)) {  // If your BME280 uses 0x77, change it here
-  //   Serial.println("Could not find a valid BME280 sensor, check wiring!");
-  //   while (1);
-  // }
+  if (!bme.begin(0x76)) {  // If your BME280 uses 0x77, change it here
+    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    while (1);
+  }
 
  
   
@@ -212,7 +225,6 @@ void setup()
   WiFiManager wifiManager;
 
    // DEV ONLY: Connect to my WiFi
-  WiFi.begin("Fernando2.4", "nacimiento2007");
 
   // Automatically connect using saved credentials, or begin config portal if none exist
   if (!wifiManager.autoConnect("Octo-Tree"))
@@ -267,9 +279,9 @@ void loop()
 
     JsonObject param1 = array.createNestedObject();
     param1["time_online"] = (uint32_t)now;
-    // param1["temperature"] = bme.readTemperature();
-    // param1["humidity"] = bme.readHumidity();
-    // param1["pressure"] = bme.readPressure() / 100.0F;
+    param1["temperature"] = bme.readTemperature();
+    param1["humidity"] = bme.readHumidity();
+    param1["pressure"] = bme.readPressure() / 100.0F;
     param1["soil_humidity"] = analogRead(soilHumidityPin);
     param1["light1"] = analogRead(lightPin1);
     param1["light2"] = analogRead(lightPin2);
