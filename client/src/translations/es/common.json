@@ -179,7 +179,7 @@
 		"connectionStatus": "Estado de la Conexión",
 		"connected": "Conectado al servidor",
 		"disconnected": "Desconectado del servidor",
-		"soilSolarPanelAnalysis": "Análisis de Tipo de Suelo",
+		"soilSolarPanelAnalysis": "Análisis de Suelo y Panel Solar",
 		"panelPositionOrientation": "Posición y Orientación del Panel",
 		"autoMode": "Modo Automático",
 		"manualMode": "Modo Manual",
