@@ -140,4 +140,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any inquiries or contributions, please reach out to the [Octo-Tree team](https://asterkionline.com).
+For any inquiries or contributions, please reach out to me [Asterki Dev](https://asterkionline.com).
